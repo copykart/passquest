@@ -4,7 +4,6 @@ import { getPostsByCategory } from '../../lib/posts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CategoryPills from '../../components/CategoryPills.astro';
 import BlogCard from '../../components/BlogCard.astro';
-import Newsletter from '../../components/Newsletter.astro';
 
 export async function getStaticPaths() {
   return CATEGORIES.map((c) => ({ params: { topic: c.slug } }));
@@ -47,6 +46,4 @@ const description = cat.blurb;
       }
     </div>
   </main>
-
-  <Newsletter />
 </BaseLayout>

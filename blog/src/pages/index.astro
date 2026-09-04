@@ -5,8 +5,7 @@ import { categoryName } from '../site.config';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CategoryPills from '../components/CategoryPills.astro';
 import BlogCard from '../components/BlogCard.astro';
-import AppCta from '../components/AppCta.astro';
-import Newsletter from '../components/Newsletter.astro';
+import AppShowcase from '../components/AppShowcase.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import JsonLd from '../components/JsonLd.astro';
 
@@ -101,14 +100,7 @@ const itemList = {
 
       {/* Pagination: add paginate() here once there are more than ~15 posts. */}
 
-      <div class="home-cta-wrap">
-        <AppCta
-          title="Know exactly when you're ready"
-          description="The AI-powered exam app with a predictive live score that updates after every session. Free to start, no card required."
-        />
-      </div>
+      <AppShowcase />
     </div>
   </main>
-
-  <Newsletter />
 </BaseLayout>

@@ -1,0 +1,107 @@
+---
+import { SITE } from '../site.config';
+
+/* The download CTA band from passquest.app's own footer-cta section,
+   reused here so the blog and the app site share the exact same pitch.
+   Homepage only — see AppCta.astro for the plainer text+badges version
+   used after posts and in the side rail. */
+---
+
+<section class="app-showcase">
+  <div class="as-inner">
+    <div class="as-text">
+      <h2>Your band is closer than you think.</h2>
+      <p>Download PassQuest and start closing the gap today.</p>
+      <div class="ac-stores">
+        <a
+          class="store-btn filled"
+          href={SITE.playStore}
+          target="_blank"
+          rel="noopener"
+          aria-label="Get PassQuest on Google Play"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1Z"
+              fill="#00C3FF"></path>
+            <path
+              d="m16.3 15.9-3.2-3.2v-.2l3.2-3.2.1.1 3.8 2.2c1.1.6 1.1 1.6 0 2.2l-3.9 2.1Z"
+              fill="#FFD400"></path>
+            <path
+              d="m16.4 15.8-3.3-3.3-9.4 9.4c.4.4 1 .4 1.7.1l11-6.2"
+              fill="#FF3333"></path>
+            <path
+              d="M16.4 9.2 5.4 3C4.7 2.6 4.1 2.7 3.7 3.1l9.4 9.4 3.3-3.3Z"
+              fill="#00D26A"></path>
+          </svg>
+          <span class="lbl"><small>GET IT ON</small><b>Google Play</b></span>
+        </a>
+        <a
+          class="store-btn outline"
+          href={`${SITE.mainSite}/#download`}
+          target="_blank"
+          rel="noopener"
+          aria-label="PassQuest coming soon to the App Store"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M16.4 12.7c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.2 1-4.1 2.5-1.7 3-.4 7.4 1.3 9.9.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.5ZM14 5.4c.7-.8 1.1-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3Z"
+            ></path>
+          </svg>
+          <span class="lbl"><small>COMING SOON TO</small><b>App Store</b></span>
+        </a>
+      </div>
+      <p class="as-note">Free to download · 7-day Pro trial · No card</p>
+    </div>
+
+    <div class="as-phone-wrap" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span class="tabular">9:41</span>
+            <span class="dots"
+              ><i></i><i></i><i></i><i></i><span class="batt"></span></span
+            >
+          </div>
+          <p class="screen-greeting">You're exam ready 🎉</p>
+          <div class="readiness-card">
+            <div class="rc-top">
+              <span class="rc-label">Readiness</span>
+              <span class="rc-score tabular">91%</span>
+            </div>
+            <div class="rc-bar"><i style="width:91%"></i></div>
+            <p class="rc-note">
+              Predicted band <b>7.5</b> — booked for Saturday
+            </p>
+          </div>
+          <div class="screen-stats">
+            <div><div class="s-num tabular">42</div><div class="s-lbl">Streak 🔥</div></div>
+            <div><div class="s-num tabular">1,204</div><div class="s-lbl">Questions</div></div>
+            <div><div class="s-num tabular">Legend</div><div class="s-lbl">Rank</div></div>
+          </div>
+          <span class="screen-cta">Review weak spots →</span>
+          <div class="skill-row sk-teal">
+            <span class="sk-name">Listening</span>
+            <span class="sk-track"><i style="width:88%"></i></span>
+            <span class="sk-val">88%</span>
+          </div>
+          <div class="skill-row sk-purple">
+            <span class="sk-name">Reading</span>
+            <span class="sk-track"><i style="width:85%"></i></span>
+            <span class="sk-val">85%</span>
+          </div>
+          <div class="skill-row sk-gold">
+            <span class="sk-name">Writing</span>
+            <span class="sk-track"><i style="width:79%"></i></span>
+            <span class="sk-val">79%</span>
+          </div>
+          <div class="skill-row sk-teal">
+            <span class="sk-name">Speaking</span>
+            <span class="sk-track"><i style="width:82%"></i></span>
+            <span class="sk-val">82%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

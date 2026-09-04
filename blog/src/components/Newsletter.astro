@@ -1,5 +1,9 @@
 ---
-/* Newsletter signup.
+/* Newsletter signup — slides in from the bottom once the reader has
+   scrolled ~70% down the page, instead of sitting inline in the flow.
+   Dismissing it (X, submit, or Esc) hides it for the rest of the tab
+   session (sessionStorage), so it never nags twice in one visit.
+
    Wired to a GoHighLevel form. Replace GHL_FORM_ACTION with the POST
    endpoint from your GHL form embed ("Integrate > raw HTML" gives a
    <form action="https://...leadconnectorhq.com/..."> URL), or swap the
@@ -8,29 +12,64 @@ const GHL_FORM_ACTION =
   'https://api.leadconnectorhq.com/widget/form/REPLACE_WITH_FORM_ID';
 ---
 
-<section class="newsletter">
-  <div class="container">
-    <div class="inner">
-      <h2>Exam news, in your inbox</h2>
-      <p>
-        Test-date changes, scholarship deadlines and new comparison guides —
-        once a week, no spam.
-      </p>
-      <form action={GHL_FORM_ACTION} method="POST" target="_blank">
-        <label class="visually-hidden" for="nl-email">Email address</label>
-        <input
-          type="email"
-          id="nl-email"
-          name="email"
-          placeholder="you@email.com"
-          required
-        />
-        <button type="submit">Subscribe</button>
-      </form>
-      <p class="fineprint">
-        By subscribing you agree to our
-        <a href="https://passquest.app/privacy/">Privacy Policy</a>.
-      </p>
-    </div>
-  </div>
-</section>
+<div class="nl-slidein" id="nlSlidein" role="complementary" aria-label="Newsletter signup">
+  <button class="nl-close" id="nlClose" type="button" aria-label="Dismiss">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M6 6l12 12M18 6 6 18"></path>
+    </svg>
+  </button>
+  <h3>Exam news, in your inbox</h3>
+  <p>Test-date changes, scholarship deadlines and new guides — once a week, no spam.</p>
+  <form id="nlForm" action={GHL_FORM_ACTION} method="POST" target="_blank">
+    <label class="visually-hidden" for="nl-email">Email address</label>
+    <input type="email" id="nl-email" name="email" placeholder="you@email.com" required />
+    <button type="submit">Subscribe</button>
+  </form>
+  <p class="fineprint">
+    By subscribing you agree to our
+    <a href="https://passquest.app/privacy/">Privacy Policy</a>.
+  </p>
+</div>
+
+<script>
+  (function () {
+    const KEY = 'pq-nl-dismissed';
+    let dismissed = false;
+    try {
+      dismissed = sessionStorage.getItem(KEY) === '1';
+    } catch (e) {}
+    if (dismissed) return;
+
+    const el = document.getElementById('nlSlidein');
+    const closeBtn = document.getElementById('nlClose');
+    const form = document.getElementById('nlForm');
+    if (!el) return;
+
+    function dismiss() {
+      el?.classList.remove('show');
+      try {
+        sessionStorage.setItem(KEY, '1');
+      } catch (e) {}
+    }
+
+    function onScroll() {
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - doc.clientHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      if (progress >= 0.7) {
+        el?.classList.add('show');
+        window.removeEventListener('scroll', onScroll);
+      }
+    }
+    /* only ever react to an actual scroll gesture — never fire on load,
+       even if the page happens to be short */
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    closeBtn?.addEventListener('click', dismiss);
+    form?.addEventListener('submit', () => {
+      try {
+        sessionStorage.setItem(KEY, '1');
+      } catch (e) {}
+    });
+  })();
+</script>

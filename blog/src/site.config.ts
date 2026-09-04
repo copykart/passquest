@@ -34,13 +34,28 @@ export const NAV_LINKS = [
   { label: 'Blog', href: '/' },
 ] as const;
 
-export const FOOTER_LINKS = [
-  { label: 'Home', href: `${SITE.mainSite}/` },
+/* Footer — mirrors passquest.app's own 4-column footer (minus the email
+   opt-in strip; the blog handles that with the Newsletter slide-in instead) */
+export const FOOTER_TAGLINE =
+  "The AI-powered IELTS app that tells you when you're ready.";
+
+export const FOOTER_PRODUCT_LINKS = [
+  { label: 'Features', href: `${SITE.mainSite}/#features` },
+  { label: 'Exams', href: `${SITE.mainSite}/#exams` },
+  { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
+  { label: 'FAQ', href: `${SITE.mainSite}/#faq` },
   { label: 'Blog', href: '/' },
+] as const;
+
+export const FOOTER_LEGAL_LINKS = [
   { label: 'Privacy', href: `${SITE.mainSite}/privacy/` },
   { label: 'Terms', href: `${SITE.mainSite}/terms/` },
   { label: 'Disclaimer', href: `${SITE.mainSite}/disclaimer/` },
-  { label: 'Contact', href: 'mailto:support@passquest.app' },
+] as const;
+
+export const FOOTER_CONTACT_LINKS = [
+  { label: 'support@passquest.app', href: 'mailto:support@passquest.app' },
+  { label: '(234) 706-4783-766', href: 'tel:+2347064783766' },
 ] as const;
 
 export const SOCIAL_LINKS = [
