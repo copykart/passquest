@@ -531,6 +531,11 @@ a.cat-chip:hover {
   font-size: 15px;
 }
 
+.home-cta-wrap {
+  max-width: var(--readw);
+  margin: 56px auto 64px;
+}
+
 /* =====================================================================
    POST PAGE
    ===================================================================== */
@@ -628,12 +633,14 @@ a.cat-chip:hover {
     grid-template-columns: minmax(0, var(--readw)) 1fr;
   }
 }
-.toc {
+.side-rail {
   display: none;
 }
 @media (min-width: 1080px) {
-  .toc {
-    display: block;
+  .side-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
     align-self: start;
     position: sticky;
     top: 104px;
@@ -970,11 +977,15 @@ a.cat-chip:hover {
   height: 16px;
 }
 
-.post-cta {
+/* =====================================================================
+   APP CTA — phone mock + Play/App Store badges. Used after the article
+   body, in the sticky side rail (compact), and on the blog home.
+   ===================================================================== */
+.app-cta {
   margin-top: 44px;
   border: 1px solid rgba(120, 86, 255, 0.32);
-  border-radius: 20px;
-  padding: 26px 28px;
+  border-radius: 22px;
+  padding: 28px;
   background: radial-gradient(
     130% 130% at 0% 0%,
     rgba(120, 86, 255, 0.14),
@@ -982,24 +993,259 @@ a.cat-chip:hover {
   );
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  gap: 28px;
 }
-.post-cta h3 {
+.app-cta .ac-body {
+  flex: 1;
+  min-width: 0;
+}
+.app-cta h3 {
   font-weight: 500;
-  font-size: 19px;
+  font-size: 20px;
   letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
-.post-cta p {
+.app-cta p {
   font-size: 14px;
   color: var(--grey);
+  margin-bottom: 16px;
+  max-width: 46ch;
 }
-.post-cta .nav-cta {
-  background: var(--purple);
+.app-cta .ac-stores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* phone mock — a fixed dark "screen" regardless of site theme, so it
+   reads as a real screenshot rather than themed chrome */
+.ac-phone {
+  flex-shrink: 0;
+  width: 118px;
+  aspect-ratio: 118 / 240;
+  padding: 7px;
+  border-radius: 26px;
+  background: linear-gradient(160deg, #2a2a35, #0f0f14);
+  box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.5);
+}
+.ac-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 19px;
+  background: #0a0a0f;
+  overflow: hidden;
+  padding: 16px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ac-notch {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 6px;
+  border-radius: 4px;
+  background: #000;
+}
+.ac-greet {
+  align-self: flex-start;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 10px 0 8px;
+}
+.ac-ring {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: conic-gradient(#9a80ff 295deg, rgba(255, 255, 255, 0.12) 0deg);
+}
+.ac-ring::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: #0a0a0f;
+}
+.ac-ring-num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
   color: #fff;
+}
+.ac-ring-num small {
+  font-size: 8px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.ac-ring-label {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 6px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ac-skills {
+  width: 100%;
+  display: grid;
+  gap: 5px;
+  margin-bottom: auto;
+}
+.ac-skill {
+  display: block;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.ac-skill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: var(--w);
+  border-radius: 3px;
+}
+.ac-skill.l::after {
+  background: #00c896;
+}
+.ac-skill.r::after {
+  background: #9a80ff;
+}
+.ac-skill.w::after {
+  background: #f5a623;
+}
+.ac-skill.s::after {
+  background: #ff4d4d;
+}
+.ac-go {
+  width: 100%;
+  margin-top: 10px;
+  padding: 6px 0;
+  border-radius: 8px;
+  background: rgba(120, 86, 255, 0.28);
+  color: #e4dbff;
+  font-size: 7px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* compact = the sticky side-rail card */
+.app-cta.compact {
+  flex-direction: column;
+  text-align: center;
+  padding: 22px 20px;
+  margin-top: 0;
+}
+.app-cta.compact .ac-phone {
+  width: 84px;
+  margin-bottom: 16px;
+}
+.app-cta.compact h3 {
+  font-size: 16px;
+}
+.app-cta.compact p {
+  font-size: 13px;
+  max-width: none;
+}
+.app-cta.compact .ac-stores {
+  flex-direction: column;
+  width: 100%;
+}
+.app-cta.compact .store-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* =====================================================================
+   STORE BADGES — Google Play / App Store, matches passquest.app
+   ===================================================================== */
+.store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 16px;
+  padding: 12px 18px;
+  min-width: 172px;
+  transition: transform 0.18s var(--ease), opacity 0.2s var(--ease),
+    background 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.store-btn:active {
+  transform: scale(0.98);
+}
+.store-btn svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.store-btn .lbl {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: left;
+}
+.store-btn .lbl small {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+.store-btn .lbl b {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.store-btn.filled {
+  background: var(--ink);
+  color: var(--bg);
+}
+.store-btn.filled:hover {
+  opacity: 0.9;
+}
+.store-btn.outline {
+  background: var(--elev);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.store-btn.outline:hover {
+  border-color: var(--line-hover);
+}
+.store-btn.small {
+  min-width: 0;
+  padding: 9px 14px;
+  border-radius: 12px;
+}
+.store-btn.small svg {
+  width: 18px;
+  height: 18px;
+}
+.store-btn.small .lbl b {
+  font-size: 13px;
+}
+.store-btn.small .lbl small {
+  font-size: 9px;
+}
+@media (max-width: 640px) {
+  .app-cta:not(.compact) {
+    flex-direction: column;
+    text-align: center;
+  }
+  .app-cta:not(.compact) .ac-phone {
+    margin: 0 auto;
+  }
+  .app-cta:not(.compact) p {
+    max-width: none;
+  }
+  .app-cta:not(.compact) .ac-stores {
+    justify-content: center;
+  }
 }
 
 .author-box {
@@ -1223,10 +1469,6 @@ a.cat-chip:hover {
   }
   .post-grid {
     grid-template-columns: 1fr;
-  }
-  .post-cta {
-    flex-direction: column;
-    align-items: flex-start;
   }
   .prose {
     font-size: 16px;

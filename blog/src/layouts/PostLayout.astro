@@ -13,6 +13,7 @@ import Toc from '../components/Toc.astro';
 import Faq from '../components/Faq.astro';
 import ShareRow from '../components/ShareRow.astro';
 import BlogCard from '../components/BlogCard.astro';
+import AppCta from '../components/AppCta.astro';
 import Newsletter from '../components/Newsletter.astro';
 import JsonLd from '../components/JsonLd.astro';
 
@@ -156,21 +157,7 @@ const schema = {
 
           <Faq faqs={d.faqs} />
 
-          <div class="post-cta">
-            <div>
-              <h3>Know exactly when you're ready</h3>
-              <p>
-                PassQuest gives you a predictive live score that updates after
-                every practice session.
-              </p>
-            </div>
-            <a
-              class="nav-cta"
-              href={SITE.playStore}
-              target="_blank"
-              rel="noopener">Get the app ↓</a
-            >
-          </div>
+          <AppCta />
 
           <ShareRow title={d.title} path={path} />
 
@@ -184,7 +171,10 @@ const schema = {
           </aside>
         </div>
 
-        <Toc headings={headings} />
+        <aside class="side-rail">
+          <Toc headings={headings} />
+          <AppCta compact title="Know when you're ready" description="Free app · live readiness score" />
+        </aside>
       </div>
 
       {
