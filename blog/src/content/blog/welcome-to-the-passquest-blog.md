@@ -4,8 +4,11 @@ description: "What this blog covers — exam guides, head-to-head comparisons, s
 pubDate: 2026-09-01
 category: exam-news
 author: passquest-team
-heroImage: /images/blog/welcome.svg
-heroAlt: "The PassQuest blog cover with the PassQuest bolt mark on a dark purple gradient"
+heroImage: "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600"
+heroAlt: "A fountain pen resting on an open spiral notebook on a wooden desk"
+heroCredit:
+  name: "Aaron Burden"
+  url: "https://unsplash.com/@aaronburden?utm_source=passquest_blog&utm_medium=referral"
 featured: true
 tags: ["about", "announcements"]
 faqs:

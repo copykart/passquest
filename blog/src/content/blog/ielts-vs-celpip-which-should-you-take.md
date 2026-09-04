@@ -4,8 +4,11 @@ description: "A side-by-side look at IELTS and CELPIP — format, scoring, cost,
 pubDate: 2026-09-03
 category: comparisons
 author: passquest-team
-heroImage: /images/blog/ielts-vs-celpip.svg
-heroAlt: "IELTS versus CELPIP shown as two overlapping purple circles on a dark background"
+heroImage: "https://images.unsplash.com/photo-1483546416237-76fd26bbcdd1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600"
+heroAlt: "A sharpened pencil resting on the open pages of a notebook"
+heroCredit:
+  name: "Jan Kahánek"
+  url: "https://unsplash.com/@honza_kahanek?utm_source=passquest_blog&utm_medium=referral"
 tags: ["ielts", "celpip", "canada", "immigration"]
 faqs:
   - q: "Is CELPIP easier than IELTS?"

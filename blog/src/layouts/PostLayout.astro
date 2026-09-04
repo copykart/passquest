@@ -115,11 +115,43 @@ const schema = {
         <span aria-current="page">{d.title}</span>
       </nav>
 
+      <figure class="post-hero">
+        <img
+          class="ph-img"
+          src={d.heroImage}
+          alt={d.heroAlt}
+          width="1200"
+          height="675"
+          fetchpriority="high"
+        />
+        <div class="ph-scrim" aria-hidden="true"></div>
+        <div class="ph-overlay">
+          <a class="cat-chip" href={`/topic/${d.category}/`}>
+            {categoryName(d.category)}
+          </a>
+          <h1>{d.title}</h1>
+        </div>
+        {
+          d.heroCredit && (
+            <figcaption>
+              Photo by{' '}
+              <a href={d.heroCredit.url} target="_blank" rel="noopener">
+                {d.heroCredit.name}
+              </a>{' '}
+              on{' '}
+              <a
+                href="https://unsplash.com/?utm_source=passquest_blog&utm_medium=referral"
+                target="_blank"
+                rel="noopener"
+              >
+                Unsplash
+              </a>
+            </figcaption>
+          )
+        }
+      </figure>
+
       <header class="post-header">
-        <a class="cat-chip" href={`/topic/${d.category}/`}>
-          {categoryName(d.category)}
-        </a>
-        <h1>{d.title}</h1>
         <p class="lede">{d.description}</p>
         <div class="byline">
           <img src={author.avatar} alt={author.name} width="38" height="38" />
@@ -137,16 +169,6 @@ const schema = {
           </div>
         </div>
       </header>
-
-      <figure class="post-hero">
-        <img
-          src={d.heroImage}
-          alt={d.heroAlt}
-          width="1200"
-          height="675"
-          fetchpriority="high"
-        />
-      </figure>
 
       <div class="post-shell">
         <div>

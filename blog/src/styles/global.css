@@ -598,14 +598,6 @@ a.cat-chip:hover {
 .post-header {
   margin-bottom: 26px;
 }
-.post-header h1 {
-  margin: 14px 0 18px;
-  font-weight: 500;
-  font-size: clamp(28px, 4.6vw, 42px);
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  color: var(--ink);
-}
 .post-header .lede {
   font-size: 18px;
   color: var(--grey);
@@ -636,21 +628,67 @@ a.cat-chip:hover {
   color: var(--grey-soft);
 }
 
+/* minimalist photo-background hero: the title sits directly on the image,
+   a bottom scrim keeps it legible regardless of the photo underneath */
 .post-hero {
-  margin: 28px 0 8px;
+  position: relative;
+  margin: 0 0 28px;
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--elev);
 }
-.post-hero img {
+.post-hero .ph-img {
   width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
   display: block;
+}
+.post-hero .ph-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 6, 10, 0) 35%,
+    rgba(6, 6, 10, 0.55) 72%,
+    rgba(6, 6, 10, 0.86) 100%
+  );
+}
+.post-hero .ph-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 28px 30px 26px;
+}
+.post-hero .ph-overlay .cat-chip {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.post-hero .ph-overlay h1 {
+  margin-top: 12px;
+  color: #fff;
+  font-weight: 500;
+  font-size: clamp(26px, 4.2vw, 40px);
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+  max-width: 24ch;
 }
 .post-hero figcaption {
   font-size: 12px;
   color: var(--grey-soft);
   padding: 10px 14px;
+}
+@media (max-width: 560px) {
+  .post-hero .ph-img {
+    aspect-ratio: 4 / 5;
+  }
+  .post-hero .ph-overlay {
+    padding: 22px 20px 20px;
+  }
 }
 
 /* layout: body + sticky TOC rail */

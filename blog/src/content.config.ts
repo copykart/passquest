@@ -22,6 +22,10 @@ const blog = defineCollection({
     heroAlt: z.string().min(4),
     /* optional 1200x630 social image; falls back to heroImage */
     ogImage: z.string().optional(),
+    /* required credit when heroImage is a stock photo (e.g. Unsplash) */
+    heroCredit: z
+      .object({ name: z.string(), url: z.string() })
+      .optional(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
     /* renders the FAQ block + FAQPage structured data */
