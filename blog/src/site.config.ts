@@ -8,7 +8,7 @@ export const SITE = {
   /* Used in <title> suffix and structured data */
   title: 'PassQuest Blog',
   description:
-    'Exam guides, comparisons, scholarship deadlines and relocation news for IELTS, CELPIP, SAT, GRE and TOEFL — from the team behind the PassQuest app.',
+    'IELTS guides, band-score strategies, scholarship deadlines and relocation news — from the team behind the PassQuest app.',
   /* Production origin — must match astro.config.mjs `site` */
   url: 'https://blog.passquest.app',
   /* Marketing site (GoHighLevel) */
@@ -52,13 +52,16 @@ export const SOCIAL_LINKS = [
 ] as const;
 
 /* Blog categories. `slug` is the URL + the value writers put in frontmatter
-   (`category: japa`). `name` is the display label. */
+   (`category: japa`). `name` is the display label.
+
+   CELPIP/SAT/GRE/TOEFL are intentionally not live categories yet — PassQuest
+   only supports IELTS today, and a browsable category with zero (or
+   near-zero) posts is thin content that actively hurts SEO. "Comparisons"
+   stays: "IELTS vs CELPIP"-style posts are high-intent search/AEO content
+   even though CELPIP itself has no dedicated section. Re-add an exam here
+   the day the app (and the content plan) actually supports it. */
 export const CATEGORIES = [
   { slug: 'ielts', name: 'IELTS', blurb: 'Band scores, question types and study plans for IELTS Academic and General Training.' },
-  { slug: 'celpip', name: 'CELPIP', blurb: 'Everything on Canada’s computer-delivered English test.' },
-  { slug: 'sat', name: 'SAT', blurb: 'Digital SAT scoring, sections and prep strategy.' },
-  { slug: 'gre', name: 'GRE', blurb: 'GRE sections, scoring and grad-school admissions.' },
-  { slug: 'toefl', name: 'TOEFL', blurb: 'TOEFL iBT format, scoring and practice.' },
   { slug: 'comparisons', name: 'Comparisons', blurb: 'Head-to-head breakdowns to help you pick the right exam.' },
   { slug: 'scholarships', name: 'Scholarships', blurb: 'Funding, eligibility and deadlines for study abroad.' },
   { slug: 'japa', name: 'Japa / Relocation', blurb: 'Visa routes, PR pathways and the real cost of moving abroad.' },

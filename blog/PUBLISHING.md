@@ -39,9 +39,13 @@ faqs:                                               # optional — renders the F
 ---
 ```
 
-**Categories** (`slug` → label): `ielts` · `celpip` · `sat` · `gre` · `toefl` ·
-`comparisons` · `scholarships` · `japa` (Japa / Relocation) · `exam-news` ·
-`travel` (Travel Updates). Edit the list in `src/site.config.ts`.
+**Categories** (`slug` → label): `ielts` · `comparisons` · `scholarships` ·
+`japa` (Japa / Relocation) · `exam-news` · `travel` (Travel Updates). PassQuest
+only supports IELTS today, so CELPIP/SAT/GRE/TOEFL aren't live categories —
+don't set `category` to one of those slugs (the frontmatter schema will
+reject it). A CELPIP-vs-etc. angle still belongs under `comparisons` — it's
+just not a standalone section until the app supports that exam. Edit the
+list in `src/site.config.ts`.
 
 ## 3. Body
 

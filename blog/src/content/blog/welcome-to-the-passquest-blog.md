@@ -12,7 +12,7 @@ faqs:
   - q: "How often do you publish?"
     a: "Roughly once a week, plus quick updates whenever a test board changes dates, fees or format."
   - q: "Which exams do you cover?"
-    a: "IELTS, CELPIP, SAT, GRE and TOEFL — the exams supported in the PassQuest app — along with scholarships and relocation topics that matter to test-takers."
+    a: "IELTS today — it's the exam PassQuest supports right now, so it's where we're putting the depth: guides, band-score strategy, scholarships and relocation content. CELPIP, SAT, GRE and TOEFL are on the app roadmap, and we'll open dedicated coverage for each as they launch."
 ---
 
 If you are preparing for an English or admissions test, most of the advice online is either years out of date or written to sell you a course. This blog is our attempt at something more useful: clear, current guides from the team that builds [PassQuest](https://passquest.app), an AI exam-prep app with a predictive live score that tells you when you are actually ready.

@@ -12,6 +12,6 @@
   <rect width="1200" height="675" fill="url(#bg)"/>
   <rect width="1200" height="675" fill="url(#glow)"/>
   <path d="M690 150 560 420h95l-28 170 165-260H690V150Z" fill="#9a80ff" opacity="0.9"/>
-  <text x="90" y="360" fill="#f1f1f3" font-family="Inter, sans-serif" font-size="64" font-weight="600" letter-spacing="-2">The PassQuest Blog</text>
+  <text x="90" y="360" fill="#f1f1f3" font-family="Inter, sans-serif" font-size="64" font-weight="600" letter-spacing="-2">PassQuest Blog</text>
   <text x="92" y="410" fill="#a1a1aa" font-family="Inter, sans-serif" font-size="26">Guides · comparisons · exam news · scholarships</text>
 </svg>
