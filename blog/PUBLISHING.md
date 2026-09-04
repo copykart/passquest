@@ -92,14 +92,42 @@ table-of-contents (shown as a sticky rail on desktop when a post has 3+ headings
 **In-content image:** `![alt text](/images/blog/<slug>-1.webp)` — always write real
 alt text.
 
-## 4. Hero image
+## 4. Hero image — the standard
 
-- Drop the file in `public/images/blog/`.
-- **Pre-compress**: WebP, ~1600px wide, aim for < 200 KB. (No build-time
-  optimisation is wired in — what you commit is what ships.)
-- Aspect ratio ~16:9. The card crops to 16:9, the post hero shows it ~16:9.
-- For best social sharing also export a 1200×630 PNG/JPG and set `ogImage`.
-- Placeholder SVGs are in `public/images/blog/` — replace them.
+Every post gets a real photo (sourced via the Unsplash MCP connector), used as
+a background with the category chip + title overlaid on it. This is settled —
+don't revert to flat graphics or SVG placeholders.
+
+**It must actually depict the post's topic. Not "studying" in general —
+the specific thing the post is about.** A comparison post needs an image that
+reads as a comparison/choice (two paths, a fork, opposing arrows), not generic
+notebook-and-pen stock. A post about a scholarship needs something that reads
+as funding/opportunity, not a random classroom. If a search only turns up
+generic "studying" stock for a specific topic, **say so and propose 2–3
+alternatives instead of shipping the generic one** — don't default to
+whatever photo is merely on-theme-adjacent.
+
+Steps:
+
+1. Search Unsplash (single focused concept per query — see the tool's own
+   guidance) for something that specifically matches the post's subject.
+2. Pick a landscape photo with a clear negative-space area (sky, blank
+   surface, blurred background) — the bottom-third gets a dark scrim + white
+   title text on top of it, so a photo that's busy corner-to-corner won't
+   leave the title legible.
+3. Use the `regular` URL from the search result (`&w=1080` or bump to
+   `&w=1600` for extra sharpness) directly as `heroImage` — no need to
+   download/host it locally.
+4. Set `heroAlt` to describe the actual photo (not the post topic).
+5. Set `heroCredit: { name, url }` from the result's `user.name` /
+   `user.links.html` (append `?utm_source=passquest_blog&utm_medium=referral`)
+   — required by Unsplash's attribution terms, and it renders automatically
+   as a small credit line under the hero.
+
+**Do not touch the hero markup structure** in `PostLayout.astro` /
+`global.css` (`.ph-frame` / `.ph-scrim` / `.ph-overlay`) without re-reading
+the comment above `.ph-frame` in `global.css` — the frame exists specifically
+to keep the overlaid title from drifting into the photo-credit line below it.
 
 ## 5. Ship it
 

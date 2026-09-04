@@ -638,6 +638,12 @@ a.cat-chip:hover {
   border: 1px solid var(--line);
   background: var(--elev);
 }
+/* .ph-frame is the positioning root for the image + scrim + overlay —
+   kept separate from <figure> so the figcaption (a normal-flow sibling
+   below it) can never stretch this box and throw off "bottom: 0" */
+.post-hero .ph-frame {
+  position: relative;
+}
 .post-hero .ph-img {
   width: 100%;
   aspect-ratio: 2 / 1;
@@ -651,7 +657,7 @@ a.cat-chip:hover {
     180deg,
     rgba(6, 6, 10, 0) 35%,
     rgba(6, 6, 10, 0.55) 72%,
-    rgba(6, 6, 10, 0.86) 100%
+    rgba(6, 6, 10, 0.9) 100%
   );
 }
 .post-hero .ph-overlay {
@@ -659,7 +665,7 @@ a.cat-chip:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 28px 30px 26px;
+  padding: 24px 30px 24px;
 }
 .post-hero .ph-overlay .cat-chip {
   background: rgba(255, 255, 255, 0.14);

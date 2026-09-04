@@ -116,20 +116,22 @@ const schema = {
       </nav>
 
       <figure class="post-hero">
-        <img
-          class="ph-img"
-          src={d.heroImage}
-          alt={d.heroAlt}
-          width="1200"
-          height="675"
-          fetchpriority="high"
-        />
-        <div class="ph-scrim" aria-hidden="true"></div>
-        <div class="ph-overlay">
-          <a class="cat-chip" href={`/topic/${d.category}/`}>
-            {categoryName(d.category)}
-          </a>
-          <h1>{d.title}</h1>
+        <div class="ph-frame">
+          <img
+            class="ph-img"
+            src={d.heroImage}
+            alt={d.heroAlt}
+            width="1200"
+            height="675"
+            fetchpriority="high"
+          />
+          <div class="ph-scrim" aria-hidden="true"></div>
+          <div class="ph-overlay">
+            <a class="cat-chip" href={`/topic/${d.category}/`}>
+              {categoryName(d.category)}
+            </a>
+            <h1>{d.title}</h1>
+          </div>
         </div>
         {
           d.heroCredit && (
