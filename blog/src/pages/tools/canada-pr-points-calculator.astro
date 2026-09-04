@@ -1,0 +1,1106 @@
+---
+/* =====================================================================
+   CANADA PR POINTS CALCULATOR — Express Entry CRS score tool.
+
+   Implements IRCC's published Comprehensive Ranking System (1200-point)
+   grid: core/human-capital factors, spouse factors, skill transferability,
+   and additional points (PNP, Canadian study, sibling, French bonus).
+   Arranged-employment/job-offer points are NOT included — IRCC removed
+   them for all Express Entry programs on 25 Mar 2025.
+
+   This is an independent estimate, not an IRCC product — the disclaimer
+   callout and FAQ say so explicitly. All scoring math lives client-side
+   in the script block below; nothing here calls an external API.
+
+   Conversion goal: PassQuest. The language section is where CRS points
+   and IELTS prep intersect, so that's where the product gets surfaced —
+   inline while the visitor is entering their band scores, then again as
+   a personalised "point gap" in the results panel, then in the standard
+   AppCta close. No email-capture flow here (this static site has no
+   serverless backend) — the ask is always "get the app".
+   ===================================================================== */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppCta from '../../components/AppCta.astro';
+import Faq from '../../components/Faq.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { SITE } from '../../site.config';
+
+const SKILLS = ['listening', 'reading', 'writing', 'speaking'] as const;
+const SKILL_LABEL: Record<(typeof SKILLS)[number], string> = {
+  listening: 'Listening',
+  reading: 'Reading',
+  writing: 'Writing',
+  speaking: 'Speaking',
+};
+
+const IELTS_BANDS = [
+  9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0,
+];
+const CELPIP_SCORES = [12, 11, 10, 9, 8, 7, 6, 5, 4, 'M'] as const;
+const CLB_LEVELS = [10, 9, 8, 7, 6, 5, 4] as const;
+const clbOptionLabel = (v: number) =>
+  v === 10 ? 'CLB 10 or higher' : v === 4 ? 'CLB 4 or below' : `CLB ${v}`;
+
+const EDU_OPTIONS = [
+  ['none', 'Less than secondary (high school)'],
+  ['secondary', 'Secondary diploma (high school)'],
+  ['oneyear', 'One-year post-secondary program/certificate'],
+  ['twoyear', 'Two-year post-secondary program'],
+  ['bachelor', "Bachelor's degree (3+ year program)"],
+  ['twocreds', 'Two or more credentials, one being 3+ years'],
+  ['masters', "Master's degree, or professional degree needed to practise (law, medicine, etc.)"],
+  ['phd', 'Doctoral degree (PhD)'],
+] as const;
+
+const canonicalPath = '/tools/canada-pr-points-calculator/';
+
+const faqs = [
+  {
+    q: 'What is a CRS score, and why does it matter?',
+    a: 'CRS stands for Comprehensive Ranking System — the point score IRCC uses to rank every profile in the Express Entry pool. IRCC periodically invites the highest-ranked candidates to apply for permanent residence. There is no fixed passing score; it moves with every draw, so a higher CRS score simply means more, and more frequent, invitations.',
+  },
+  {
+    q: 'How many CRS points is my English test worth?',
+    a: 'Up to 136 points from your first-language score alone (34 points × 4 abilities, if you have no spouse), plus up to another 50 points through skill transferability if it\'s paired with your education or work experience. Language is usually the single largest factor a candidate can still improve — see the calculator above for your own number.',
+  },
+  {
+    q: 'Is CELPIP or IELTS better for CRS points?',
+    a: 'Identical CRS points at the same CLB level — IRCC converts both to the same Canadian Language Benchmark scale, so a CLB 9 from CELPIP is worth exactly the same as a CLB 9 from IELTS. The choice comes down to format and availability, not points. <a href="/ielts-vs-celpip-which-should-you-take/">Compare the two tests here</a>.',
+  },
+  {
+    q: 'Does a job offer still add CRS points?',
+    a: 'No. IRCC removed the additional points for arranged employment (previously 50 or 200 points) for all Express Entry programs on 25 March 2025. A valid job offer can still help in other ways — provincial nomination eligibility, for example — but it no longer adds bonus CRS points directly, which is why this calculator doesn\'t ask for one.',
+  },
+  {
+    q: "What's a competitive CRS score right now?",
+    a: 'It depends entirely on the draw type and changes every round — general draws, category-based draws (which target specific occupations or French speakers) and provincial-nomination draws all clear at different scores. Rather than quote a number that\'s likely stale by the time you read this, check IRCC\'s own <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html" target="_blank" rel="noopener">rounds of invitations page</a> for the current cut-offs.',
+  },
+  {
+    q: 'Do I need to enter my spouse\'s information?',
+    a: 'Only if your spouse or common-law partner will immigrate with you as an accompanying applicant. If they are, their education, language and Canadian work experience are all worth points too — up to 40 in total — and the core-factor tables shift slightly to make room for them.',
+  },
+  {
+    q: 'What\'s the fastest way to raise my CRS score?',
+    a: 'For most candidates it\'s language. Jumping from CLB 7 to CLB 9 across all four abilities is worth up to 50 points directly, plus more through skill transferability — often more than a full year of extra Canadian work experience is worth. Provincial nomination (+600) is bigger, but you need to qualify for a specific stream first; a higher band score is entirely in your own hands.',
+  },
+  {
+    q: 'Is this calculator official?',
+    a: 'No — it\'s an independent tool built from IRCC\'s published CRS criteria, kept as accurate as we can make it, but not affiliated with or endorsed by IRCC. Skill-transferability and additional-points rules in particular have edge cases this tool simplifies. Always confirm your real score in your own Express Entry profile before making decisions.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Canada PR Points Calculator (CRS Score Calculator)',
+    url: SITE.url + canonicalPath,
+    description:
+      "Free calculator for Canada's Express Entry Comprehensive Ranking System (CRS) score — age, education, language, work experience, spouse factors and additional points.",
+    applicationCategory: 'UtilityApplication',
+    operatingSystem: 'Any (web browser)',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@type': 'Organization', name: SITE.publisher.legalName },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/<[^>]+>/g, '') },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="Canada PR Points Calculator — Free CRS Score Tool"
+  description="Calculate your Express Entry CRS score in minutes — age, education, language, work experience, spouse factors and provincial nomination, all in one free calculator."
+  type="website"
+>
+  <JsonLd slot="head" schema={jsonLd} />
+
+  <main class="calc-page">
+    <div class="container">
+      <div class="page-head calc-head">
+        <span class="cat-chip">Free tool</span>
+        <h1>Canada PR Points Calculator</h1>
+        <p>
+          Estimate your Express Entry <strong>Comprehensive Ranking System (CRS)</strong>
+          score — the number IRCC uses to rank every candidate in the pool.
+          Fill in what applies to you; your score updates as you go, and
+          it never leaves your browser.
+        </p>
+        <div class="trust-row">
+          <span>Built from IRCC's official CRS grid</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span>Updated for the 2025 job-offer-points removal</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span>No sign-up</span>
+        </div>
+      </div>
+
+      <form class="calc-shell" id="crsForm" autocomplete="off">
+        <!-- ============================= RESULTS (order:-1 on mobile) ============================= -->
+        <aside class="calc-results" aria-label="Your estimated CRS score">
+          <div class="res-card">
+            <span class="section-label">Your estimated score</span>
+            <div class="res-ring" id="resRing" style="--pct:0">
+              <div class="res-ring-inner">
+                <b id="resTotal">0</b>
+                <small>/ 1200</small>
+              </div>
+            </div>
+            <ul class="res-breakdown" id="resBreakdown">
+              <li>
+                <span>Core / human capital</span>
+                <b id="resCore">0</b><i>/ 500</i>
+              </li>
+              <li>
+                <span>Skill transferability</span>
+                <b id="resTransfer">0</b><i>/ 100</i>
+              </li>
+              <li>
+                <span>Additional points</span>
+                <b id="resAdditional">0</b><i>/ 600</i>
+              </li>
+            </ul>
+          </div>
+
+          <div class="res-boost" id="resBoost">
+            <span class="rb-icon" aria-hidden="true">↑</span>
+            <p id="resBoostText">Fill in your language scores to see how many points a higher band is worth.</p>
+            <a
+              class="rb-cta"
+              href={SITE.playStore}
+              target="_blank"
+              rel="noopener"
+            >
+              Train with PassQuest <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </aside>
+
+        <!-- ============================= FORM ============================= -->
+        <div class="calc-form">
+          <div class="cf-card">
+            <h2>You</h2>
+            <div class="cf-row">
+              <label for="marital">Spouse or common-law partner immigrating with you?</label>
+              <select id="marital" name="marital">
+                <option value="without">No — applying on my own</option>
+                <option value="with">Yes — they'll be an accompanying applicant</option>
+              </select>
+            </div>
+            <div class="cf-grid-2">
+              <div class="cf-row">
+                <label for="age">Your age</label>
+                <input type="number" id="age" name="age" min="16" max="90" value="29" inputmode="numeric" />
+              </div>
+              <div class="cf-row">
+                <label for="education">Highest level of education</label>
+                <select id="education" name="education">
+                  {EDU_OPTIONS.map(([v, label]) => (
+                    <option value={v} selected={v === 'bachelor'}>{label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="cf-card">
+            <h2>First official language</h2>
+            <p class="cf-hint">
+              The language you're strongest in — most candidates use IELTS or
+              CELPIP for English, or TEF/TCF Canada for French.
+            </p>
+            <div class="cf-row">
+              <label for="firstLangChoice">Which language is this?</label>
+              <select id="firstLangChoice" name="firstLangChoice">
+                <option value="english">English</option>
+                <option value="french">French</option>
+              </select>
+            </div>
+            <div class="cf-row" id="testTypeRow">
+              <label for="testType">How do you want to enter your score?</label>
+              <select id="testType" name="testType">
+                <option value="ielts">IELTS General Training band scores</option>
+                <option value="celpip">CELPIP-General scores</option>
+                <option value="direct">I already know my CLB level</option>
+              </select>
+            </div>
+
+            <div class="cf-skills" id="lang1-ielts" data-group="ielts">
+              {SKILLS.map((s) => (
+                <div class="cf-row cf-row-skill">
+                  <label for={`ielts-${s}`}>{SKILL_LABEL[s]}</label>
+                  <select id={`ielts-${s}`} data-skill={s} class="lang1-input">
+                    {IELTS_BANDS.map((b) => (
+                      <option value={b} selected={b === 7}>{b.toFixed(1)}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+
+            <div class="cf-skills" id="lang1-celpip" data-group="celpip" hidden>
+              {SKILLS.map((s) => (
+                <div class="cf-row cf-row-skill">
+                  <label for={`celpip-${s}`}>{SKILL_LABEL[s]}</label>
+                  <select id={`celpip-${s}`} data-skill={s} class="lang1-input">
+                    {CELPIP_SCORES.map((v) => (
+                      <option value={v} selected={v === 8}>{v}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+
+            <div class="cf-skills" id="lang1-direct" data-group="direct" hidden>
+              {SKILLS.map((s) => (
+                <div class="cf-row cf-row-skill">
+                  <label for={`clb1-${s}`}>{SKILL_LABEL[s]}</label>
+                  <select id={`clb1-${s}`} data-skill={s} class="lang1-input">
+                    {CLB_LEVELS.map((v) => (
+                      <option value={v} selected={v === 7}>{clbOptionLabel(v)}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+
+            <div class="cf-callout" id="langNudge">
+              <span aria-hidden="true">💡</span>
+              <p>
+                Every half-band jump can unlock more points below. PassQuest's
+                predictive score tells you which of these four you should fix
+                first — <a href={SITE.playStore} target="_blank" rel="noopener">try it free</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="cf-card">
+            <h2>Second official language <span class="optional">optional</span></h2>
+            <div class="cf-row cf-row-check">
+              <input type="checkbox" id="secondLangEnabled" name="secondLangEnabled" />
+              <label for="secondLangEnabled">I have a valid test result for my second official language too</label>
+            </div>
+            <div id="lang2Block" class="cf-skills" hidden>
+              <p class="cf-hint" id="lang2Hint">Enter your CLB/NCLC level per skill (convert your TEF Canada or TCF Canada score using IRCC's official table first).</p>
+              {SKILLS.map((s) => (
+                <div class="cf-row cf-row-skill">
+                  <label for={`clb2-${s}`}>{SKILL_LABEL[s]}</label>
+                  <select id={`clb2-${s}`} data-skill={s} class="lang2-input">
+                    {CLB_LEVELS.map((v) => (
+                      <option value={v} selected={v === 5}>{clbOptionLabel(v)}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="cf-card">
+            <h2>Work experience</h2>
+            <div class="cf-grid-2">
+              <div class="cf-row">
+                <label for="canExp">Skilled work experience <em>in Canada</em></label>
+                <select id="canExp" name="canExp">
+                  <option value="0">None</option>
+                  <option value="1">1 year</option>
+                  <option value="2">2 years</option>
+                  <option value="3">3 years</option>
+                  <option value="4">4 years</option>
+                  <option value="5">5 years or more</option>
+                </select>
+              </div>
+              <div class="cf-row">
+                <label for="foreignExp">Skilled work experience <em>outside Canada</em></label>
+                <select id="foreignExp" name="foreignExp">
+                  <option value="0">None</option>
+                  <option value="1">1 year</option>
+                  <option value="2">2 years</option>
+                  <option value="3">3 years or more</option>
+                </select>
+              </div>
+            </div>
+            <div class="cf-row cf-row-check">
+              <input type="checkbox" id="tradeCert" name="tradeCert" />
+              <label for="tradeCert">I hold a certificate of qualification in a skilled trade, issued by a Canadian province, territory or federal body</label>
+            </div>
+          </div>
+
+          <div class="cf-card" id="spouseCard" hidden>
+            <h2>Spouse / common-law partner</h2>
+            <div class="cf-row">
+              <label for="spouseEducation">Their highest level of education</label>
+              <select id="spouseEducation" name="spouseEducation">
+                {EDU_OPTIONS.map(([v, label]) => (
+                  <option value={v} selected={v === 'bachelor'}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <p class="cf-hint">Their language score, per skill (CLB level — convert IELTS/CELPIP with the table above if needed).</p>
+            <div class="cf-skills">
+              {SKILLS.map((s) => (
+                <div class="cf-row cf-row-skill">
+                  <label for={`spouse-${s}`}>{SKILL_LABEL[s]}</label>
+                  <select id={`spouse-${s}`} data-skill={s} class="spouseLang-input">
+                    {CLB_LEVELS.map((v) => (
+                      <option value={v} selected={v === 6}>{clbOptionLabel(v)}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+            <div class="cf-row">
+              <label for="spouseCanExp">Their skilled work experience in Canada</label>
+              <select id="spouseCanExp" name="spouseCanExp">
+                <option value="0">None</option>
+                <option value="1">1 year</option>
+                <option value="2">2 years</option>
+                <option value="3">3 years</option>
+                <option value="4">4 years</option>
+                <option value="5">5 years or more</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cf-card">
+            <h2>Additional points</h2>
+            <div class="cf-row cf-row-check">
+              <input type="checkbox" id="pnp" name="pnp" />
+              <label for="pnp">I have a provincial nomination (PNP) <b>+600</b></label>
+            </div>
+            <div class="cf-row">
+              <label for="canadianStudy">Post-secondary study completed in Canada</label>
+              <select id="canadianStudy" name="canadianStudy">
+                <option value="none">None</option>
+                <option value="short">1–2 year credential</option>
+                <option value="long">3+ year credential, or a Master's/doctoral degree</option>
+              </select>
+            </div>
+            <div class="cf-row cf-row-check">
+              <input type="checkbox" id="sibling" name="sibling" />
+              <label for="sibling">I have a sibling (18+) who is a Canadian citizen or PR, living in Canada <b>+15</b></label>
+            </div>
+            <p class="cf-hint">
+              French-language bonus points (+25/+50) are calculated
+              automatically above if one of your two languages is French at
+              NCLC 7 or higher.
+            </p>
+          </div>
+
+          <div class="cf-note">
+            No job-offer field — IRCC removed arranged-employment CRS points for every Express Entry program in March 2025, so it's no longer part of the score.
+          </div>
+        </div>
+      </form>
+
+      <section class="prose calc-explainer">
+        <h2>How the CRS score is built</h2>
+        <p>
+          Every Express Entry profile is scored out of <strong>1,200 points</strong>,
+          split across three buckets. <strong>Core/human capital factors</strong> —
+          age, education, language and Canadian work experience, plus your
+          spouse's if they're coming with you — cap at 500. <strong>Skill
+          transferability</strong>, which rewards combinations like a strong
+          degree paired with a strong language score, caps at 100.
+          <strong>Additional points</strong> — mainly a provincial nomination,
+          worth 600 on its own — cap at 600. IRCC invites candidates from the
+          top of that ranked pool in regular draws.
+        </p>
+
+        <div class="tldr">
+          <strong>Three fastest ways to raise your score</strong>
+          <ul>
+            <li><strong>Raise your language score.</strong> It's the one factor almost every candidate can still improve, and it pays out twice — once directly, once again through skill transferability.</li>
+            <li><strong>Qualify for a provincial nomination.</strong> Worth +600 outright, more than any other single factor — but you need to meet a specific province's stream criteria first.</li>
+            <li><strong>Bank Canadian work or study experience.</strong> Slower to earn, but it stacks with everything else and never expires within your profile.</li>
+          </ul>
+        </div>
+
+        <p>
+          Of those three, language is the only one you can move this month.
+          The jump from CLB 7 to CLB 9 across all four skills — roughly an
+          IELTS 6.0 to an 8.0/7.0/7.0/7.0 — is worth up to 50 points on its
+          own, before skill transferability adds more. That's frequently the
+          difference between sitting in the pool and getting an invitation.
+          See <a href="/ielts-vs-celpip-which-should-you-take/">IELTS vs CELPIP</a>
+          if you haven't picked a test yet.
+        </p>
+
+        <div class="callout">
+          <strong>Not official</strong>
+          <p>
+            This tool estimates your score using IRCC's published CRS
+            criteria; it isn't affiliated with or endorsed by IRCC, and it
+            simplifies a few edge cases in the skill-transferability and
+            additional-points rules. Always confirm your real score inside
+            your own Express Entry profile, and check IRCC's site for the
+            current rules before making a decision.
+          </p>
+        </div>
+      </section>
+
+      <Faq faqs={faqs} />
+
+      <AppCta
+        title="Know exactly when you're ready to hit that band score"
+        description="PassQuest gives you a predictive live score after every practice session, so you know precisely which skill is holding your CRS score back — download free, no card required."
+      />
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  /* =====================================================================
+     CRS SCORING ENGINE — see IRCC's published Comprehensive Ranking
+     System criteria. Point tables below are transcribed from that grid;
+     skill-transferability and additional-points sections are simplified
+     (documented inline) and disclosed as an estimate in the UI.
+     ===================================================================== */
+
+  type Skill = 'listening' | 'reading' | 'writing' | 'speaking';
+  const SKILLS: Skill[] = ['listening', 'reading', 'writing', 'speaking'];
+
+  // ---- IELTS General Training -> CLB, per skill (official conversion table) ----
+  const IELTS_CLB: Record<Skill, [number, number][]> = {
+    listening: [[8.5, 10], [8.0, 9], [7.5, 8], [6.0, 7], [5.5, 6], [5.0, 5], [4.5, 4]],
+    reading: [[8.0, 10], [7.0, 9], [6.5, 8], [6.0, 7], [5.0, 6], [4.0, 5], [3.5, 4]],
+    writing: [[7.5, 10], [7.0, 9], [6.5, 8], [6.0, 7], [5.5, 6], [5.0, 5], [4.0, 4]],
+    speaking: [[7.5, 10], [7.0, 9], [6.5, 8], [6.0, 7], [5.5, 6], [5.0, 5], [4.0, 4]],
+  };
+  function ieltsToCLB(skill: Skill, band: number): number {
+    for (const [th, clb] of IELTS_CLB[skill]) if (band >= th) return clb;
+    return 0;
+  }
+  function celpipToCLB(score: string): number {
+    if (score === 'M') return 0;
+    const n = Number(score);
+    return n < 4 ? 0 : Math.min(10, n);
+  }
+  // clamp any raw CLB (0 = "below CLB4") into the {4..10} keys the point tables use
+  const clampCLB = (v: number) => (v < 4 ? 4 : Math.min(10, v));
+
+  // ---- Age (0-indexed by integer age 17-45; outside that range = 0) ----
+  const AGE_WITH_SPOUSE: Record<number, number> = {
+    17: 0, 18: 90, 19: 95, 20: 100, 21: 100, 22: 100, 23: 100, 24: 100, 25: 100,
+    26: 100, 27: 100, 28: 100, 29: 100, 30: 95, 31: 90, 32: 85, 33: 80, 34: 75,
+    35: 70, 36: 65, 37: 60, 38: 55, 39: 50, 40: 45, 41: 35, 42: 25, 43: 15, 44: 5, 45: 0,
+  };
+  const AGE_WITHOUT_SPOUSE: Record<number, number> = {
+    17: 0, 18: 99, 19: 105, 20: 110, 21: 110, 22: 110, 23: 110, 24: 110, 25: 110,
+    26: 110, 27: 110, 28: 110, 29: 110, 30: 105, 31: 99, 32: 94, 33: 88, 34: 83,
+    35: 77, 36: 72, 37: 66, 38: 61, 39: 55, 40: 50, 41: 39, 42: 28, 43: 17, 44: 6, 45: 0,
+  };
+  function pointsAge(age: number, hasSpouse: boolean): number {
+    const table = hasSpouse ? AGE_WITH_SPOUSE : AGE_WITHOUT_SPOUSE;
+    const clamped = Math.max(17, Math.min(45, Math.round(age)));
+    return table[clamped] ?? 0;
+  }
+
+  // ---- Education ----
+  const EDU_WITH_SPOUSE: Record<string, number> = {
+    none: 0, secondary: 28, oneyear: 84, twoyear: 91, bachelor: 112, twocreds: 119, masters: 126, phd: 140,
+  };
+  const EDU_WITHOUT_SPOUSE: Record<string, number> = {
+    none: 0, secondary: 30, oneyear: 90, twoyear: 98, bachelor: 120, twocreds: 128, masters: 135, phd: 150,
+  };
+  const SPOUSE_EDU: Record<string, number> = {
+    none: 0, secondary: 2, oneyear: 6, twoyear: 7, bachelor: 8, twocreds: 9, masters: 10, phd: 10,
+  };
+  // used by skill-transferability: does this level count as "post-secondary" / "advanced"?
+  const EDU_ORDER = ['none', 'secondary', 'oneyear', 'twoyear', 'bachelor', 'twocreds', 'masters', 'phd'];
+  const eduIndex = (key: string) => EDU_ORDER.indexOf(key);
+
+  // ---- Language points per ability ----
+  const LANG1_PER_ABILITY = {
+    with: { 4: 0, 5: 6, 6: 8, 7: 16, 8: 22, 9: 29, 10: 32 } as Record<number, number>,
+    without: { 4: 0, 5: 6, 6: 9, 7: 17, 8: 23, 9: 31, 10: 34 } as Record<number, number>,
+  };
+  const LANG2_PER_ABILITY: Record<number, number> = { 4: 0, 5: 1, 6: 1, 7: 3, 8: 3, 9: 6, 10: 6 };
+  const SPOUSE_LANG_PER_ABILITY: Record<number, number> = { 4: 0, 5: 1, 6: 1, 7: 3, 8: 3, 9: 5, 10: 5 };
+
+  // ---- Work experience ----
+  const CAN_EXP = {
+    with: { 0: 0, 1: 35, 2: 46, 3: 56, 4: 63, 5: 70 } as Record<number, number>,
+    without: { 0: 0, 1: 40, 2: 53, 3: 64, 4: 72, 5: 80 } as Record<number, number>,
+  };
+  const SPOUSE_CAN_EXP: Record<number, number> = { 0: 0, 1: 5, 2: 7, 3: 8, 4: 9, 5: 10 };
+
+  // ---- Skill transferability (max 100) ----
+  function eduLangPoints(eduKey: string, minCLB1: number): number {
+    const idx = eduIndex(eduKey);
+    const hasPS = idx >= 2, advanced = idx >= 5;
+    if (!hasPS) return 0;
+    if (advanced) return minCLB1 >= 9 ? 50 : minCLB1 >= 7 ? 25 : 0;
+    return minCLB1 >= 9 ? 25 : minCLB1 >= 7 ? 13 : 0;
+  }
+  function eduCanExpPoints(eduKey: string, canYears: number): number {
+    const idx = eduIndex(eduKey);
+    const hasPS = idx >= 2, advanced = idx >= 5;
+    if (!hasPS) return 0;
+    const tier = canYears >= 2 ? 2 : canYears >= 1 ? 1 : 0;
+    if (advanced) return tier >= 2 ? 50 : tier >= 1 ? 25 : 0;
+    return tier >= 2 ? 25 : tier >= 1 ? 13 : 0;
+  }
+  function foreignLangPoints(foreignYears: number, minCLB1: number): number {
+    const tier = foreignYears >= 3 ? 2 : foreignYears >= 1 ? 1 : 0;
+    if (tier === 0) return 0;
+    if (tier === 2) return minCLB1 >= 9 ? 50 : minCLB1 >= 7 ? 25 : 0;
+    return minCLB1 >= 9 ? 25 : minCLB1 >= 7 ? 13 : 0;
+  }
+  function foreignCanExpPoints(foreignYears: number, canYears: number): number {
+    const ftier = foreignYears >= 3 ? 2 : foreignYears >= 1 ? 1 : 0;
+    const ctier = canYears >= 2 ? 2 : canYears >= 1 ? 1 : 0;
+    if (ftier === 0 || ctier === 0) return 0;
+    if (ftier === 2) return ctier >= 2 ? 50 : 25;
+    return ctier >= 2 ? 25 : 13;
+  }
+  function tradeCertPoints(hasCert: boolean, minCLB1: number): number {
+    if (!hasCert) return 0;
+    return minCLB1 >= 7 ? 50 : minCLB1 >= 5 ? 25 : 0;
+  }
+
+  // ---- Additional points (max 600) ----
+  function frenchBonus(
+    firstLangIsFrench: boolean,
+    lang1CLB: number[],
+    secondEnabled: boolean,
+    secondLangIsFrench: boolean,
+    lang2CLB: number[]
+  ): number {
+    let frenchAbilities: number[] | null = null;
+    let englishAbilities: number[] | null = null;
+    if (firstLangIsFrench) frenchAbilities = lang1CLB;
+    else englishAbilities = lang1CLB;
+    if (secondEnabled) {
+      if (secondLangIsFrench) frenchAbilities = lang2CLB;
+      else englishAbilities = lang2CLB;
+    }
+    if (!frenchAbilities) return 0;
+    const minFrench = Math.min(...frenchAbilities);
+    if (minFrench < 7) return 0;
+    const minEnglish = englishAbilities ? Math.min(...englishAbilities) : 0;
+    return minEnglish >= 5 ? 50 : 25;
+  }
+
+  interface State {
+    hasSpouse: boolean;
+    age: number;
+    education: string;
+    firstLangIsFrench: boolean;
+    lang1CLB: number[]; // clamped, order = SKILLS
+    secondEnabled: boolean;
+    secondLangIsFrench: boolean;
+    lang2CLB: number[];
+    canExp: number;
+    foreignExp: number;
+    tradeCert: boolean;
+    spouseEducation: string;
+    spouseLangCLB: number[];
+    spouseCanExp: number;
+    pnp: boolean;
+    canadianStudy: 'none' | 'short' | 'long';
+    sibling: boolean;
+  }
+
+  function computeScore(s: State) {
+    const spouseKey = s.hasSpouse ? 'with' : 'without';
+    const minCLB1 = Math.min(...s.lang1CLB);
+
+    // -- core / human capital --
+    const age = pointsAge(s.age, s.hasSpouse);
+    const edu = (s.hasSpouse ? EDU_WITH_SPOUSE : EDU_WITHOUT_SPOUSE)[s.education] ?? 0;
+    const lang1 = s.lang1CLB.reduce((sum, clb) => sum + (LANG1_PER_ABILITY[spouseKey][clb] ?? 0), 0);
+    let lang2 = 0;
+    if (s.secondEnabled) {
+      lang2 = s.lang2CLB.reduce((sum, clb) => sum + (LANG2_PER_ABILITY[clb] ?? 0), 0);
+      lang2 = Math.min(lang2, s.hasSpouse ? 22 : 24);
+    }
+    const canExp = (s.hasSpouse ? CAN_EXP.with : CAN_EXP.without)[Math.min(5, s.canExp)] ?? 0;
+
+    let spouseEdu = 0, spouseLang = 0, spouseExp = 0;
+    if (s.hasSpouse) {
+      spouseEdu = SPOUSE_EDU[s.spouseEducation] ?? 0;
+      spouseLang = Math.min(20, s.spouseLangCLB.reduce((sum, clb) => sum + (SPOUSE_LANG_PER_ABILITY[clb] ?? 0), 0));
+      spouseExp = SPOUSE_CAN_EXP[Math.min(5, s.spouseCanExp)] ?? 0;
+    }
+    const core = Math.min(500, age + edu + lang1 + lang2 + canExp + spouseEdu + spouseLang + spouseExp);
+
+    // -- skill transferability (max 100) --
+    const eduPair = Math.min(50, eduLangPoints(s.education, minCLB1) + eduCanExpPoints(s.education, s.canExp));
+    const expPair = Math.min(50, foreignLangPoints(s.foreignExp, minCLB1) + foreignCanExpPoints(s.foreignExp, s.canExp));
+    const cert = tradeCertPoints(s.tradeCert, minCLB1);
+    const transfer = Math.min(100, eduPair + expPair + cert);
+
+    // -- additional (max 600) --
+    const french = frenchBonus(s.firstLangIsFrench, s.lang1CLB, s.secondEnabled, s.secondLangIsFrench, s.lang2CLB);
+    const studyPts = s.canadianStudy === 'long' ? 30 : s.canadianStudy === 'short' ? 15 : 0;
+    const siblingPts = s.sibling ? 15 : 0;
+    const additional = Math.min(600, (s.pnp ? 600 : 0) + studyPts + siblingPts + french);
+
+    const total = Math.min(1200, core + transfer + additional);
+    return { core, transfer, additional, total, minCLB1 };
+  }
+
+  // ---------------------------------------------------------------------
+  // DOM wiring
+  // ---------------------------------------------------------------------
+  (function () {
+    const form = document.getElementById('crsForm') as HTMLFormElement | null;
+    if (!form) return;
+
+    const $ = <T extends Element = Element>(sel: string) => form.querySelector(sel) as T;
+    const $$ = (sel: string) => Array.from(form.querySelectorAll(sel)) as HTMLElement[];
+
+    const firstLangChoice = $('#firstLangChoice') as HTMLSelectElement;
+    const testTypeRow = $('#testTypeRow') as HTMLElement;
+    const testType = $('#testType') as HTMLSelectElement;
+    const marital = $('#marital') as HTMLSelectElement;
+    const spouseCard = $('#spouseCard') as HTMLElement;
+    const secondLangEnabled = $('#secondLangEnabled') as HTMLInputElement;
+    const lang2Block = $('#lang2Block') as HTMLElement;
+
+    function readLang1CLB(): number[] {
+      const group = testType.value; // ielts | celpip | direct
+      const activeGroup = firstLangChoice.value === 'french' ? 'direct' : group;
+      return SKILLS.map((skill) => {
+        if (activeGroup === 'ielts') {
+          const el = $(`#ielts-${skill}`) as HTMLSelectElement;
+          return clampCLB(ieltsToCLB(skill, Number(el.value)));
+        }
+        if (activeGroup === 'celpip') {
+          const el = $(`#celpip-${skill}`) as HTMLSelectElement;
+          return clampCLB(celpipToCLB(el.value));
+        }
+        const el = $(`#clb1-${skill}`) as HTMLSelectElement;
+        return clampCLB(Number(el.value));
+      });
+    }
+    function readLang2CLB(): number[] {
+      return SKILLS.map((skill) => clampCLB(Number(($(`#clb2-${skill}`) as HTMLSelectElement).value)));
+    }
+    function readSpouseLangCLB(): number[] {
+      return SKILLS.map((skill) => clampCLB(Number(($(`#spouse-${skill}`) as HTMLSelectElement).value)));
+    }
+
+    function readState(): State {
+      const hasSpouse = marital.value === 'with';
+      return {
+        hasSpouse,
+        age: Number(($('#age') as HTMLInputElement).value) || 0,
+        education: ($('#education') as HTMLSelectElement).value,
+        firstLangIsFrench: firstLangChoice.value === 'french',
+        lang1CLB: readLang1CLB(),
+        secondEnabled: secondLangEnabled.checked,
+        secondLangIsFrench: firstLangChoice.value !== 'french', // second is always the *other* official language
+        lang2CLB: secondLangEnabled.checked ? readLang2CLB() : [4, 4, 4, 4],
+        canExp: Number(($('#canExp') as HTMLSelectElement).value),
+        foreignExp: Number(($('#foreignExp') as HTMLSelectElement).value),
+        tradeCert: ($('#tradeCert') as HTMLInputElement).checked,
+        spouseEducation: ($('#spouseEducation') as HTMLSelectElement)?.value ?? 'none',
+        spouseLangCLB: hasSpouse ? readSpouseLangCLB() : [4, 4, 4, 4],
+        spouseCanExp: hasSpouse ? Number(($('#spouseCanExp') as HTMLSelectElement).value) : 0,
+        pnp: ($('#pnp') as HTMLInputElement).checked,
+        canadianStudy: ($('#canadianStudy') as HTMLSelectElement).value as State['canadianStudy'],
+        sibling: ($('#sibling') as HTMLInputElement).checked,
+      };
+    }
+
+    function render() {
+      const state = readState();
+      const result = computeScore(state);
+
+      (document.getElementById('resTotal') as HTMLElement).textContent = String(result.total);
+      (document.getElementById('resCore') as HTMLElement).textContent = String(result.core);
+      (document.getElementById('resTransfer') as HTMLElement).textContent = String(result.transfer);
+      (document.getElementById('resAdditional') as HTMLElement).textContent = String(result.additional);
+      const ring = document.getElementById('resRing') as HTMLElement;
+      ring.style.setProperty('--pct', String(Math.min(100, (result.total / 1200) * 100)));
+
+      // "boost" panel: what would maxing first-language CLB add?
+      const boosted: State = { ...state, lang1CLB: state.lang1CLB.map(() => 9) };
+      const boostedResult = computeScore(boosted);
+      const delta = boostedResult.total - result.total;
+      const boostText = document.getElementById('resBoostText') as HTMLElement;
+      const langWord = state.firstLangIsFrench ? 'NCLC 9' : 'CLB 9 (IELTS ~8.0/7.0/7.0/7.0)';
+
+      if (delta > 0) {
+        boostText.innerHTML = `Reaching <strong>${langWord}</strong> across all four skills would add up to <strong>${delta} more CRS points</strong>.`;
+      } else if (!state.pnp) {
+        boostText.innerHTML = `Your language score is already near-maxed. A <strong>provincial nomination</strong> adds 600 points outright — the single biggest lever left.`;
+      } else {
+        boostText.innerHTML = `You're scoring at the top of the language and PNP factors — nice work.`;
+      }
+    }
+
+    // ---- visibility toggles ----
+    function syncTestTypeVisibility() {
+      const isFrench = firstLangChoice.value === 'french';
+      testTypeRow.hidden = isFrench;
+      const group = isFrench ? 'direct' : testType.value;
+      $$('.cf-skills[data-group]').forEach((el) => {
+        el.hidden = el.getAttribute('data-group') !== group;
+      });
+      (document.getElementById('langNudge') as HTMLElement).hidden = isFrench;
+      const lang2Hint = document.getElementById('lang2Hint') as HTMLElement;
+      lang2Hint.textContent = isFrench
+        ? "Enter your CLB level per skill (convert your IELTS or CELPIP score using the table above if needed)."
+        : "Enter your CLB/NCLC level per skill (convert your TEF Canada or TCF Canada score using IRCC's official table first).";
+    }
+    function syncSpouseVisibility() {
+      spouseCard.hidden = marital.value !== 'with';
+    }
+    function syncLang2Visibility() {
+      lang2Block.hidden = !secondLangEnabled.checked;
+    }
+
+    firstLangChoice.addEventListener('change', () => { syncTestTypeVisibility(); render(); });
+    testType.addEventListener('change', () => { syncTestTypeVisibility(); render(); });
+    marital.addEventListener('change', () => { syncSpouseVisibility(); render(); });
+    secondLangEnabled.addEventListener('change', () => { syncLang2Visibility(); render(); });
+    form.addEventListener('input', render);
+    form.addEventListener('change', render);
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    syncTestTypeVisibility();
+    syncSpouseVisibility();
+    syncLang2Visibility();
+    render();
+  })();
+</script>
+
+<style>
+  /* several classes below set their own `display`, which beats the UA
+     stylesheet's `[hidden]{display:none}` at equal specificity — pin it
+     back down so the JS-toggled `hidden` attribute always wins */
+  [hidden] {
+    display: none !important;
+  }
+
+  .calc-head {
+    padding-top: 132px;
+  }
+  .calc-head .cat-chip {
+    margin-bottom: 14px;
+  }
+  .calc-head h1 {
+    font-weight: 500;
+    font-size: clamp(30px, 5vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    max-width: 18ch;
+  }
+  .calc-head p {
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--grey);
+    max-width: 62ch;
+  }
+  .trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--grey-soft);
+  }
+  .trust-row .dot {
+    opacity: 0.6;
+  }
+
+  /* ---- shell layout: results first in source (mobile), reordered on desktop ---- */
+  .calc-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;
+    margin: 30px 0 56px;
+  }
+  .calc-results {
+    order: -1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .calc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  @media (min-width: 1020px) {
+    .calc-shell {
+      grid-template-columns: minmax(0, 1fr) 360px;
+      align-items: start;
+      gap: 34px;
+    }
+    .calc-form {
+      order: 1;
+    }
+    .calc-results {
+      order: 2;
+      position: sticky;
+      top: 104px;
+    }
+  }
+
+  /* ---- cards ---- */
+  .cf-card {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 22px 24px;
+    background: var(--card);
+  }
+  .cf-card h2 {
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .cf-card h2 .optional {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--grey-soft);
+    margin-left: 8px;
+  }
+  .cf-hint {
+    font-size: 13px;
+    color: var(--grey-soft);
+    margin: 6px 0 14px;
+  }
+  .cf-row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 14px;
+  }
+  .cf-row label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .cf-row label em {
+    color: var(--grey-soft);
+    font-style: normal;
+  }
+  .cf-row label b {
+    color: var(--purple-ink);
+    font-weight: 600;
+  }
+  .cf-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+  }
+  .cf-row-check {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .cf-row-check input[type='checkbox'] {
+    margin-top: 3px;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--purple);
+    flex-shrink: 0;
+  }
+  .cf-row-check label {
+    font-weight: 400;
+    color: var(--grey);
+  }
+  input[type='number'],
+  select {
+    width: 100%;
+    background: var(--elev);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 11px 14px;
+    color: var(--ink);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s var(--ease);
+  }
+  input[type='number']:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--purple);
+  }
+  .cf-skills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 16px;
+    margin-top: 6px;
+  }
+  .cf-row-skill {
+    margin-top: 12px;
+  }
+
+  .cf-callout {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(120, 86, 255, 0.3);
+    background: radial-gradient(120% 140% at 0% 0%, rgba(120, 86, 255, 0.12), var(--card) 65%);
+    font-size: 13px;
+  }
+  .cf-callout p {
+    color: var(--grey);
+    margin: 0;
+  }
+  .cf-callout a {
+    color: var(--purple-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cf-note {
+    font-size: 12px;
+    color: var(--grey-soft);
+    padding: 4px 4px 0;
+  }
+
+  /* ---- results card ---- */
+  .res-card {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 22px;
+    background: var(--card);
+    text-align: center;
+  }
+  .res-ring {
+    --pct: 0;
+    width: 148px;
+    height: 148px;
+    margin: 16px auto 6px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(
+      var(--purple) calc(var(--pct) * 1%),
+      var(--fill-soft) 0
+    );
+    transition: background 0.3s var(--ease);
+  }
+  .res-ring-inner {
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .res-ring-inner b {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .res-ring-inner small {
+    font-size: 12px;
+    color: var(--grey-soft);
+  }
+  .res-breakdown {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+    text-align: left;
+  }
+  .res-breakdown li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--grey);
+    padding-top: 10px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .res-breakdown li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .res-breakdown b {
+    color: var(--ink);
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .res-breakdown i {
+    font-style: normal;
+    color: var(--grey-soft);
+    font-size: 12px;
+  }
+
+  .res-boost {
+    border: 1px solid rgba(120, 86, 255, 0.32);
+    border-radius: 20px;
+    padding: 20px;
+    background: radial-gradient(130% 130% at 0% 0%, rgba(120, 86, 255, 0.14), var(--card) 62%);
+  }
+  .rb-icon {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(120, 86, 255, 0.16);
+    color: var(--purple-ink);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .res-boost p {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .res-boost strong {
+    color: var(--ink);
+  }
+  .rb-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 11px 18px;
+    width: 100%;
+    justify-content: center;
+    transition: opacity 0.2s var(--ease);
+  }
+  .rb-cta:hover {
+    opacity: 0.88;
+  }
+
+  .calc-explainer {
+    margin: 8px 0 0;
+    max-width: var(--readw);
+  }
+
+  @media (max-width: 640px) {
+    .calc-head {
+      padding-top: 116px;
+    }
+    .cf-grid-2,
+    .cf-skills {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</BaseLayout>

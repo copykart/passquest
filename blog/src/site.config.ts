@@ -48,6 +48,7 @@ export const FOOTER_TAGLINE =
 
 export const FOOTER_PRODUCT_LINKS = [
   { label: 'Blog', href: '/' },
+  { label: 'PR Points Calculator', href: '/tools/canada-pr-points-calculator/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
