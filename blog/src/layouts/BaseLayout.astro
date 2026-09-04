@@ -14,7 +14,6 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   noindex?: boolean;
-  navCurrent?: string;
 }
 const {
   title,
@@ -24,7 +23,6 @@ const {
   publishedTime,
   modifiedTime,
   noindex,
-  navCurrent = 'blog',
 } = Astro.props;
 ---
 
@@ -43,7 +41,7 @@ const {
     <slot name="head" />
   </head>
   <body>
-    <Nav current={navCurrent} />
+    <Nav />
     <slot />
     <Footer />
     <Newsletter />

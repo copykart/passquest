@@ -1,16 +1,10 @@
 ---
-import { SITE, NAV_LINKS } from '../site.config';
-
-/* which nav link is "current" — pass 'blog' on blog pages */
-interface Props {
-  current?: string;
-}
-const { current } = Astro.props;
+import { SITE, NAV_LINKS, MAIN_SITE_LINK } from '../site.config';
 ---
 
 <header class="nav" id="nav">
   <div class="container">
-    <a class="brand" href={`${SITE.mainSite}/`} aria-label="PassQuest home">
+    <a class="brand" href="/" aria-label="PassQuest Blog home">
       <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true">
         <path
           d="M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z"
@@ -41,21 +35,19 @@ const { current } = Astro.props;
     </a>
 
     <nav class="nav-links" aria-label="Primary">
-      {
-        NAV_LINKS.map((l) => (
-          <a
-            href={l.href}
-            aria-current={
-              current === 'blog' && l.label === 'Blog' ? 'page' : undefined
-            }
-          >
-            {l.label}
-          </a>
-        ))
-      }
+      {NAV_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
 
     <span class="nav-spacer"></span>
+
+    <a
+      class="nav-visit"
+      href={MAIN_SITE_LINK.href}
+      target="_blank"
+      rel="noopener"
+    >
+      {MAIN_SITE_LINK.label} <span aria-hidden="true">↗</span>
+    </a>
 
     <button
       class="theme-toggle"
@@ -98,6 +90,9 @@ const { current } = Astro.props;
 <div class="menu-scrim" id="menuScrim"></div>
 <div class="mobile-menu" id="mobileMenu">
   {NAV_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+  <a class="mm-visit" href={MAIN_SITE_LINK.href} target="_blank" rel="noopener">
+    {MAIN_SITE_LINK.label} <span aria-hidden="true">↗</span>
+  </a>
   <a class="nav-cta" href={SITE.playStore} target="_blank" rel="noopener">
     Get the app ↓
   </a>

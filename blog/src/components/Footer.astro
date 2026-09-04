@@ -27,7 +27,7 @@ const SOCIAL_ICONS: Record<string, string> = {
 <footer class="site-foot">
   <div class="container footer-main">
     <div class="footer-brand">
-      <a class="brand" href={`${SITE.mainSite}/`} aria-label="PassQuest home">
+      <a class="brand" href="/" aria-label="PassQuest Blog home">
         <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true">
           <path
             d="M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z"
@@ -70,7 +70,17 @@ const SOCIAL_ICONS: Record<string, string> = {
 
     <div class="footer-col">
       <h4>Product</h4>
-      {FOOTER_PRODUCT_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+      {
+        FOOTER_PRODUCT_LINKS.map((l) => (
+          <a
+            href={l.href}
+            target={'external' in l && l.external ? '_blank' : undefined}
+            rel={'external' in l && l.external ? 'noopener' : undefined}
+          >
+            {l.label}
+          </a>
+        ))
+      }
     </div>
 
     <div class="footer-col">

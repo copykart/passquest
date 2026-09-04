@@ -26,13 +26,20 @@ export const SITE = {
   defaultOgImage: '/images/og-default.jpg',
 } as const;
 
-/* Primary nav — points back to the marketing site, plus the blog itself */
+/* Primary nav — deep-links to sections on the marketing site. The blog's
+   own home is reached via the logo (see Nav.astro), so no "Blog" item here. */
 export const NAV_LINKS = [
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
-  { label: 'Blog', href: '/' },
 ] as const;
+
+/* The one explicit, visually distinct way off the blog and onto the main
+   product site — opens in a new tab so a reader doesn't lose their place. */
+export const MAIN_SITE_LINK = {
+  label: 'Visit PassQuest',
+  href: `${SITE.mainSite}/`,
+} as const;
 
 /* Footer — mirrors passquest.app's own 4-column footer (minus the email
    opt-in strip; the blog handles that with the Newsletter slide-in instead) */
@@ -40,11 +47,12 @@ export const FOOTER_TAGLINE =
   "The AI-powered IELTS app that tells you when you're ready.";
 
 export const FOOTER_PRODUCT_LINKS = [
+  { label: 'Blog', href: '/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
   { label: 'FAQ', href: `${SITE.mainSite}/#faq` },
-  { label: 'Blog', href: '/' },
+  { label: 'PassQuest App', href: `${SITE.mainSite}/`, external: true },
 ] as const;
 
 export const FOOTER_LEGAL_LINKS = [
