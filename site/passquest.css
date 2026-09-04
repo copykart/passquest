@@ -1,0 +1,1028 @@
+/* =====================================================================
+   PASSQUEST — homepage stylesheet (extracted from passquest.html)
+   ===================================================================== */
+
+/* =====================================================================
+   PASSQUEST — LIVE PRODUCT LANDING PAGE
+   Design system reverse-engineered from necta.framer.website
+   ---------------------------------------------------------------------
+   White page · near-black text · Inter 500 headlines, tight tracking
+   Pastel rainbow gradient is the only decorative accent
+   One short title + one sentence per block
+   ---------------------------------------------------------------------
+   Round 1: NAV + HERO (two-column, left-aligned)
+   Round 2: EXAM TICKER + FEATURES
+   ===================================================================== */
+
+:root{
+  /* ---- DARK THEME — the site default. Light is opt-in via [data-theme="light"]. ---- */
+  --bg:#0b0b0f;
+  --ink:#f1f1f3;
+  --grey:#a1a1aa;
+  --grey-soft:#7b7b85;
+  --line:rgba(255,255,255,0.13);
+  --line-soft:rgba(255,255,255,0.07);
+  --line-strong:rgba(255,255,255,0.22);
+  --line-hover:rgba(255,255,255,0.34);
+
+  --card:#15151b;
+  --elev:#1b1b22;
+  --seg-bg:rgba(255,255,255,0.06);
+  --fill-soft:rgba(255,255,255,0.08);
+  --avatar-bg:#282830;
+  --mock-bg:linear-gradient(180deg,rgba(120,86,255,0.14),rgba(120,86,255,0.04));
+
+  --nav-bg:rgba(20,20,26,0.72);
+  --nav-bg-scrolled:rgba(17,17,22,0.55);
+  --menu-bg:rgba(15,15,20,0.68);
+
+  --featured-bg:#1b1b25;
+  --featured-shadow:0 40px 80px -30px rgba(120,86,255,0.30);
+  --featured-ring:rgba(120,86,255,0.45);
+
+  /* app-screen accents (only inside the dark phone UI) */
+  --purple:#7856FF;
+  --purple-lt:#9a80ff;
+  --teal:#00C896;
+  --gold:#F5A623;
+  --red:#FF4D4D;
+
+  /* Necta's signature pastel rainbow */
+  --spectrum:linear-gradient(100deg,#ffd7c2 0%,#ffc7e3 26%,#e6d3ff 52%,#cfe0ff 76%,#ccefe0 100%);
+
+  --maxw:1160px;
+  --section:104px;
+  --r-lg:36px;
+  --r-md:24px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* ---- LIGHT THEME — applied only when the visitor explicitly toggles to it ---- */
+:root[data-theme="light"]{
+  --bg:#ffffff;
+  --ink:#0a0a0a;
+  --grey:#646464;
+  --grey-soft:#8a8a8a;
+  --line:rgba(10,10,10,0.10);
+  --line-soft:rgba(10,10,10,0.06);
+  --line-strong:rgba(10,10,10,0.16);
+  --line-hover:rgba(10,10,10,0.28);
+
+  --card:#ffffff;
+  --elev:#ffffff;
+  --seg-bg:rgba(10,10,10,0.05);
+  --fill-soft:rgba(10,10,10,0.07);
+  --avatar-bg:#f0f0f0;
+  --mock-bg:linear-gradient(180deg,#f7f4ff,#eee9fb);
+
+  --nav-bg:rgba(255,255,255,0.78);
+  --nav-bg-scrolled:rgba(255,255,255,0.62);
+  --menu-bg:rgba(255,255,255,0.74);
+
+  --featured-bg:#0f0f14;
+  --featured-shadow:0 40px 80px -32px rgba(20,10,40,0.5);
+  --featured-ring:transparent;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-weight:400;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+img{max-width:100%;display:block}
+ul{list-style:none}
+
+/* ---------- layout helpers ---------- */
+.container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.section{padding:var(--section) 0}
+section[id]{scroll-margin-top:90px}
+
+.section-tag{
+  display:inline-block;
+  font-size:15px;font-weight:500;letter-spacing:-0.02em;
+  background:var(--spectrum);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:16px;
+}
+.section-head h2{
+  font-weight:500;
+  font-size:clamp(27px,3.4vw,40px);
+  line-height:1.18;
+  letter-spacing:-0.035em;
+  color:var(--ink);
+}
+.section-head p{color:var(--grey);font-size:15px;line-height:1.6;max-width:44ch}
+
+.tabular{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* scroll reveal — only hides when JS is present to bring it back */
+.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .js .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* =====================================================================
+   NAV  — aiwa.codes style: transparent + full width at the top of the
+   page, then on scroll it CONDENSES into a centred glass "pill" with a
+   curved translucent background and NO border / line / demarcation.
+   Same behaviour on every screen size.
+   ===================================================================== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;
+  padding:14px 16px 0;
+  pointer-events:none;              /* only the row itself catches events */
+}
+.nav .container{
+  pointer-events:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  width:100%;max-width:var(--maxw);   /* full width at the top */
+  padding:8px 10px;
+  border-radius:999px;border:0;       /* never a border */
+  background:transparent;
+  transition:max-width .5s var(--ease),padding .5s var(--ease),
+             background .35s var(--ease),backdrop-filter .35s var(--ease),
+             -webkit-backdrop-filter .35s var(--ease),box-shadow .35s var(--ease);
+}
+/* condensed capsule = frosted glass: translucent fill + heavy backdrop blur */
+.nav.scrolled .container{
+  max-width:720px;                    /* condensed, centred capsule */
+  padding:8px 10px 8px 22px;
+  background:var(--nav-bg-scrolled);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  backdrop-filter:blur(28px) saturate(180%);
+  box-shadow:0 14px 44px -18px rgba(20,10,40,0.24);
+}
+/* while the mobile menu is open the pill fills + spans the full width so it
+   lines up with the dropdown card below it */
+.nav.open .container{
+  max-width:var(--maxw);
+  background:var(--nav-bg-scrolled);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  backdrop-filter:blur(28px) saturate(180%);
+  box-shadow:0 14px 44px -18px rgba(20,10,40,0.24);
+}
+
+.brand{display:inline-flex;align-items:center;flex-shrink:0;color:var(--ink)}
+.brand-logo{height:25px;width:auto;display:block;transition:height .5s var(--ease)}
+.nav.scrolled .brand-logo{height:23px}
+
+.nav-links{display:flex;align-items:center;gap:26px;margin:0 auto}
+.nav-links a{font-size:14px;font-weight:400;color:var(--ink);opacity:.8;transition:opacity .2s var(--ease)}
+.nav-links a:hover{opacity:1}
+
+.nav-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--ink);color:var(--bg);font-size:14px;font-weight:500;
+  border-radius:999px;padding:11px 20px;flex-shrink:0;
+  transition:transform .18s var(--ease),opacity .2s var(--ease);
+}
+.nav-cta:hover{opacity:.88}
+.nav-cta:active{transform:scale(.97)}
+
+/* ---- round icon buttons in the pill: theme toggle + hamburger ---- */
+.theme-toggle,.nav-toggle{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  border:1px solid var(--line);background:var(--elev);color:var(--ink);
+  display:grid;place-items:center;
+  transition:border-color .2s var(--ease),background .2s var(--ease),transform .18s var(--ease);
+}
+.theme-toggle:hover,.nav-toggle:hover{border-color:var(--line-hover)}
+.theme-toggle:active,.nav-toggle:active{transform:scale(.92)}
+.theme-toggle svg{width:18px;height:18px;display:block}
+/* default = dark → show the sun (click to go light); light shows the moon */
+.theme-toggle .tt-moon{display:none}
+.theme-toggle .tt-sun{display:block}
+:root[data-theme="light"] .theme-toggle .tt-sun{display:none}
+:root[data-theme="light"] .theme-toggle .tt-moon{display:block}
+
+.nav-toggle{display:none}
+.nav-toggle span,.nav-toggle span::before,.nav-toggle span::after{content:"";display:block;width:16px;height:2px;border-radius:2px;background:var(--ink);position:relative;transition:transform .28s var(--ease),opacity .2s var(--ease)}
+.nav-toggle span::before{position:absolute;top:-5.5px}
+.nav-toggle span::after{position:absolute;top:5.5px}
+.nav.open .nav-toggle span{background:transparent}
+.nav.open .nav-toggle span::before{transform:translateY(5.5px) rotate(45deg)}
+.nav.open .nav-toggle span::after{transform:translateY(-5.5px) rotate(-45deg)}
+
+/* ---- dim scrim behind the open menu (no blur) ---- */
+.menu-scrim{
+  position:fixed;inset:0;z-index:98;
+  background:rgba(0,0,0,0.42);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+}
+.menu-scrim.show{opacity:1;pointer-events:auto}
+
+/* ---- mobile menu = floating rounded frosted-glass card under the pill ---- */
+.mobile-menu{
+  display:none;position:fixed;top:72px;left:16px;right:16px;z-index:99;
+  background:var(--menu-bg);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);
+  backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:14px;
+  box-shadow:0 34px 70px -22px rgba(20,10,40,0.45);
+  transform:translateY(-14px) scale(.97);transform-origin:top center;
+  opacity:0;pointer-events:none;
+  transition:transform .34s var(--ease),opacity .26s var(--ease);
+}
+.mobile-menu.show{transform:none;opacity:1;pointer-events:auto}
+.mobile-menu a{
+  display:block;font-size:18px;font-weight:500;letter-spacing:-0.02em;color:var(--ink);
+  padding:15px 14px;border-radius:14px;
+  transition:background .2s var(--ease);
+}
+.mobile-menu a:hover,.mobile-menu a:active{background:var(--fill-soft)}
+.mobile-menu .mm-cta{
+  display:flex;gap:10px;margin-top:10px;padding:6px;
+}
+.mobile-menu .mm-cta .nav-cta{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:15px;font-size:15px;
+  color:var(--bg);background:var(--ink);border-radius:999px;
+}
+
+/* =====================================================================
+   HERO  — two-column, left-aligned (Necta desktop)
+   ===================================================================== */
+.hero{position:relative;padding:0;overflow:hidden}
+.hero::after{  /* faint grid */
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 30% 25%,#000 25%,transparent 78%);
+  mask-image:radial-gradient(ellipse 80% 70% at 30% 25%,#000 25%,transparent 78%);
+  pointer-events:none;z-index:0;
+}
+.hero .container{
+  position:relative;z-index:1;
+  min-height:750px;
+  display:flex;align-items:center;
+  padding:120px 0 80px;   /* extra top room to clear the floating nav */
+}
+.hero-copy{width:100%;max-width:560px;position:relative;z-index:1}
+
+/* left column */
+.trust{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--grey);margin-bottom:24px}
+.trust-text{white-space:nowrap}
+.trust-avatars{display:flex}
+.trust-avatars span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--avatar-bg);border:2px solid var(--bg);margin-left:-9px}
+.trust-avatars span:first-child{margin-left:0}
+.trust-stars{color:var(--gold);letter-spacing:1px;font-size:12px}
+.trust b{color:var(--ink);font-weight:600}
+
+.hero h1{
+  font-weight:500;
+  font-size:clamp(32px,4.8vw,50px);
+  line-height:1.14;letter-spacing:-0.04em;
+  max-width:20ch;margin-bottom:20px;color:var(--ink);
+}
+/* the exam word after "…ready for" cycles through the exams we cover */
+.exam-rotator{
+  display:inline-grid;vertical-align:bottom;
+  overflow:hidden;height:1.16em;white-space:nowrap;
+}
+.exam-rotator .er-word{
+  grid-area:1/1;font-weight:600;color:var(--purple);
+  opacity:0;transform:translateY(0.7em);
+  animation:examCycle 13s var(--ease) infinite;
+}
+:root[data-theme="light"] .exam-rotator .er-word{color:#6a45f5}
+.exam-rotator .er-word:nth-child(1){animation-delay:0s}
+.exam-rotator .er-word:nth-child(2){animation-delay:2.6s}
+.exam-rotator .er-word:nth-child(3){animation-delay:5.2s}
+.exam-rotator .er-word:nth-child(4){animation-delay:7.8s}
+.exam-rotator .er-word:nth-child(5){animation-delay:10.4s}
+@keyframes examCycle{
+  0%,2%{opacity:0;transform:translateY(0.7em)}
+  5%,20%{opacity:1;transform:translateY(0)}
+  24%,100%{opacity:0;transform:translateY(-0.7em)}
+}
+@media (prefers-reduced-motion:reduce){
+  .exam-rotator{height:auto}
+  .exam-rotator .er-word{animation:none}
+  .exam-rotator .er-word:not(:first-child){display:none}
+  .exam-rotator .er-word:first-child{opacity:1;transform:none}
+}
+.hero-sub{font-size:17px;line-height:1.6;color:var(--grey);max-width:46ch;margin-bottom:32px}
+
+.store-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.store-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  border-radius:16px;padding:12px 20px;min-width:180px;
+  transition:transform .18s var(--ease),opacity .2s var(--ease),background .2s var(--ease),border-color .2s var(--ease);
+}
+.store-btn:active{transform:scale(.98)}
+.store-btn svg{width:22px;height:22px;flex-shrink:0}
+.store-btn .lbl{display:flex;flex-direction:column;line-height:1.2;text-align:left}
+.store-btn .lbl small{font-size:10px;font-weight:400;letter-spacing:.02em;white-space:nowrap;opacity:.7}
+.store-btn .lbl b{font-size:15px;font-weight:600;white-space:nowrap}
+.store-btn.filled{background:var(--ink);color:var(--bg)}
+.store-btn.filled:hover{opacity:.9}
+.store-btn.outline{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.store-btn.outline:hover{border-color:var(--line-hover)}
+
+.hero-note{font-size:13px;color:var(--grey)}
+
+/* ---------------------------------------------------------------------
+   PHONE  — one large realistic device used everywhere.
+   HERO + BENEFITS  → shown in full (resting on / floating above a panel).
+   DEEP-DIVE + FOOTER + FEATURE CARDS → cropped so only the top ~half
+   shows, projecting up out of a fixed-height stage.
+   --------------------------------------------------------------------- */
+/* HERO visual is pinned to the right of the container and extends past the
+   hero's bottom edge; .hero{overflow:hidden} clips the hand at that sharp line */
+.hero-visual{
+  position:absolute;z-index:0;
+  right:-14px;top:132px;   /* clears the floating nav pill with room to spare */
+  width:min(510px,48vw);
+}
+
+/* gradient panel behind the deep-dive phones */
+.stage{
+  position:relative;
+  border-radius:var(--r-lg);
+  background:var(--spectrum);
+  overflow:hidden;
+  display:flex;justify-content:center;
+}
+
+/* HERO — hand + phone photo with the live app screen composited in
+   (proportions modelled on necta.framer.website: upright phone, screen
+   overlay at left 13% / top 1.7% / 46% × 72.8% of the image, no rotation) */
+.hero-device{
+  position:relative;
+  width:100%;
+  margin:0;
+  aspect-ratio:800 / 1076;
+  filter:drop-shadow(0 40px 55px rgba(20,10,40,0.18));
+}
+.hero-device-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;z-index:1;pointer-events:none}
+.hero-device-screen{
+  position:absolute;left:13%;top:1.7%;width:46%;height:72.8%;
+  z-index:2;overflow:hidden;border-radius:10px;background:#0a090f;
+}
+.hds-inner{width:300px;padding:14px 11px 20px;transform:scale(.8);transform-origin:top left}
+
+.phone{
+  position:relative;width:var(--phone-w,300px);margin:0;flex-shrink:0;
+  border-radius:56px;padding:6px;
+  background:linear-gradient(135deg,#54545c 0%,#17171a 20%,#0d0d0f 52%,#2a2a30 84%,#101013 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.05),0 60px 90px -34px rgba(20,10,40,0.5);
+}
+/* side buttons — action + volume rocker on the left, power on the right */
+.phone::before{content:"";position:absolute;left:-3px;top:118px;width:3px;height:24px;background:#141416;border-radius:3px 0 0 3px;box-shadow:0 42px 0 #141416,0 92px 0 #141416}
+.phone::after{content:"";position:absolute;right:-3px;top:150px;width:3px;height:64px;background:#141416;border-radius:0 3px 3px 0}
+.phone-screen{
+  position:relative;width:100%;
+  border-radius:50px;background:#0a090f;overflow:hidden;
+  padding:20px 20px 32px;text-align:left;
+}
+/* only the deep-dive stage forces the tall runs-off-the-edge silhouette */
+.stage .phone-screen{min-height:560px}
+/* dynamic island */
+.phone-screen::before{content:"";position:absolute;top:13px;left:50%;transform:translateX(-50%);width:92px;height:25px;background:#000;border-radius:99px;z-index:6}
+.status-bar{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);padding:6px 6px 16px}
+.status-bar .dots{display:flex;gap:3px;align-items:center}
+.status-bar .dots i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.6);display:block}
+.status-bar .batt{width:24px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,0.5);position:relative}
+.status-bar .batt::after{content:"";position:absolute;inset:2px;right:7px;background:rgba(255,255,255,0.8);border-radius:1px}
+.screen-greeting{font-size:16px;font-weight:600;color:rgba(255,255,255,0.92);margin:8px 2px 18px}
+
+.readiness-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:18px;margin-bottom:16px}
+.readiness-card .rc-top{display:flex;align-items:baseline;justify-content:space-between}
+.readiness-card .rc-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.readiness-card .rc-score{font-size:40px;font-weight:700;letter-spacing:-.03em;color:#fff}
+.readiness-card .rc-bar{height:8px;border-radius:99px;background:rgba(255,255,255,0.1);margin:13px 0 10px;overflow:hidden}
+.readiness-card .rc-bar i{display:block;height:100%;width:62%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple-lt))}
+.readiness-card .rc-note{font-size:13px;color:rgba(255,255,255,0.55);font-weight:500}
+.readiness-card .rc-note b{color:var(--gold)}
+
+.screen-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.screen-stats div{background:rgba(255,255,255,0.04);border-radius:15px;padding:13px 6px;text-align:center}
+.screen-stats .s-num{font-size:19px;font-weight:700;letter-spacing:-.02em;color:#fff}
+.screen-stats .s-lbl{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;margin-top:3px}
+
+.screen-cta{display:block;width:100%;text-align:center;background:var(--purple);color:#fff;font-size:14px;font-weight:600;padding:14px;border-radius:15px;margin-bottom:20px}
+
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:13px}
+.skill-row .sk-name{width:78px;flex-shrink:0;color:rgba(255,255,255,0.55);font-weight:500}
+.skill-row .sk-track{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,0.09);overflow:hidden}
+.skill-row .sk-track i{display:block;height:100%;border-radius:99px}
+.skill-row .sk-val{width:42px;flex-shrink:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.sk-teal i{background:var(--teal)} .sk-teal .sk-val{color:var(--teal)}
+.sk-purple i{background:var(--purple-lt)} .sk-purple .sk-val{color:var(--purple-lt)}
+.sk-red i{background:var(--red)} .sk-red .sk-val{color:var(--red)}
+.sk-gold i{background:var(--gold)} .sk-gold .sk-val{color:var(--gold)}
+
+/* =====================================================================
+   EXAM TICKER
+   ===================================================================== */
+.ticker{padding:76px 0}
+.ticker-label{text-align:center;font-size:13px;color:var(--grey);margin-bottom:24px}
+.ticker-viewport{
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+}
+.ticker-track{display:flex;width:max-content;will-change:transform;animation:ticker var(--ticker-dur,24s) linear infinite}
+.ticker-set{display:flex;flex-shrink:0}
+.ticker-item{display:flex;align-items:center;padding:0 34px;white-space:nowrap;flex-shrink:0}
+@keyframes ticker{to{transform:translateX(calc(var(--ticker-shift,50%) * -1))}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none;flex-wrap:wrap;justify-content:center;gap:12px 0}}
+
+/* exam brand lockups (mark + wordmark) — reused in ticker + tabs */
+/* official exam brand logos — served from the filesafe CDN */
+.xlogo-img{height:22px;width:auto;max-width:132px;object-fit:contain;display:block}
+.ticker .xlogo-img{height:22px;filter:grayscale(1) opacity(.5)}
+/* de-saturated marks (ticker + inactive tabs) flip to light silhouettes on dark
+   — dark is the default, so this applies unless the visitor toggled to light */
+:root:not([data-theme="light"]) .ticker .xlogo-img,
+:root:not([data-theme="light"]) .exam-tab[aria-selected="false"] .xlogo-img{
+  filter:grayscale(1) brightness(0) invert(1) opacity(.55);
+}
+
+/* =====================================================================
+   FEATURES
+   ===================================================================== */
+.features .section-head{
+  display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:end;
+  margin-bottom:52px;
+}
+.features .section-head .sh-left{max-width:520px}
+.features .section-head h2{max-width:13em}
+.features .section-head p{justify-self:end}
+
+/* ---- 2 x 2 card grid ---- */
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+/* neutral outline at rest; lights up with an accent glow on hover (same
+   pattern as the testimonial cards) */
+.feature-card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  transition:background .3s var(--ease),border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.feature-card:hover{
+  background:radial-gradient(120% 110% at 100% 100%,rgba(120,86,255,0.10),var(--card) 58%);
+  border-color:rgba(120,86,255,0.34);
+  transform:translateY(-4px);
+  box-shadow:0 36px 70px -34px rgba(20,10,40,0.22),0 2px 8px rgba(0,0,0,0.05);
+}
+.fc-copy{padding:28px 32px 32px}
+.fc-copy h3{font-weight:500;font-size:20px;letter-spacing:-0.03em;margin-bottom:8px}
+.fc-copy p{font-size:14px;color:var(--grey);line-height:1.6;max-width:44ch}
+
+/* tinted stage that crops the phone at the card's bottom edge */
+.fc-mock{
+  position:relative;
+  height:322px;
+  overflow:hidden;
+  display:flex;justify-content:center;
+  background:
+    radial-gradient(130% 90% at 72% 0%,rgba(120,86,255,0.13),transparent 62%),
+    var(--mock-bg);
+}
+
+/* ---- phone frame inside a card: big device cropped at the card's bottom edge ---- */
+.card-phone{
+  position:relative;width:288px;margin-top:38px;
+  border-radius:52px 52px 0 0;padding:6px 6px 0;
+  background:linear-gradient(135deg,#54545c 0%,#17171a 20%,#0d0d0f 52%,#2a2a30 84%,#101013 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.05),0 40px 66px -30px rgba(20,10,40,0.5);
+}
+/* side buttons — action + volume rocker on the left, power on the right */
+.card-phone::before{content:"";position:absolute;left:-3px;top:98px;width:3px;height:22px;background:#141416;border-radius:3px 0 0 3px;box-shadow:0 36px 0 #141416,0 78px 0 #141416;z-index:1}
+.card-phone::after{content:"";position:absolute;right:-3px;top:124px;width:3px;height:54px;background:#141416;border-radius:0 3px 3px 0;z-index:1}
+.card-phone .cp-screen{
+  position:relative;
+  background:#0a090f;
+  border-radius:46px 46px 0 0;
+  padding:46px 20px 26px;
+  min-height:330px;
+  color:#fff;
+}
+/* dynamic island */
+.card-phone .cp-screen::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:23px;background:#000;border-radius:99px;z-index:6}
+.cp-notch{display:none}
+.cp-title{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(255,255,255,0.45);margin-bottom:16px;
+}
+
+/* shared: labelled progress bar */
+.cp-bar{display:flex;align-items:center;gap:11px;margin-bottom:13px;font-size:13px}
+.cp-bar .b-name{width:76px;flex-shrink:0;color:rgba(255,255,255,0.7)}
+.cp-bar .b-track{flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden}
+.cp-bar .b-track i{display:block;height:100%;border-radius:99px}
+.cp-bar .b-val{width:30px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* shared: alert chip */
+.cp-alert{
+  margin-top:15px;display:flex;gap:8px;align-items:flex-start;
+  border-radius:13px;padding:11px 13px;font-size:12px;line-height:1.45;
+  background:rgba(255,77,77,0.12);border:1px solid rgba(255,77,77,0.22);color:#ffb0b0;
+}
+.cp-alert.amber{background:rgba(245,166,35,0.12);border-color:rgba(245,166,35,0.25);color:#ffd79a}
+
+/* screen 2: session */
+.cp-q{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:14px;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.85)}
+.cp-opts{margin-top:11px;display:flex;flex-direction:column;gap:7px}
+.cp-opts span{padding:10px 12px;border-radius:11px;background:rgba(255,255,255,0.04);font-size:12.5px;color:rgba(255,255,255,0.72)}
+.cp-opts span.ok{background:rgba(0,200,150,0.14);border:1px solid rgba(0,200,150,0.3);color:#7ff0d0}
+.cp-xp{margin-top:13px;display:flex;justify-content:space-between;align-items:center;background:rgba(245,166,35,0.13);border:1px solid rgba(245,166,35,0.26);border-radius:12px;padding:10px 13px;font-size:12.5px;font-weight:600;color:#ffd79a}
+
+/* screen 3: readiness ring + climb */
+.cp-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:4px 0}
+.cp-ring{
+  width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(closest-side,#0b0a10 77%,transparent 78%),conic-gradient(var(--teal) 0 74%,rgba(255,255,255,0.08) 74%);
+  display:grid;place-items:center;
+}
+.cp-ring b{font-size:31px;font-weight:700;letter-spacing:-.03em}
+.cp-climb{display:flex;align-items:flex-end;gap:6px;height:38px}
+.cp-climb i{width:11px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--teal),rgba(0,200,150,0.35))}
+.cp-ok{display:flex;align-items:center;gap:7px;font-size:12px;color:#7ff0d0;background:rgba(0,200,150,0.12);border:1px solid rgba(0,200,150,0.24);border-radius:99px;padding:8px 14px}
+
+/* screen 4: sub-skill band scores */
+.cp-skill{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px}
+.cp-skill .s-name{color:rgba(255,255,255,0.75)}
+.cp-skill .s-right{display:flex;align-items:center;gap:9px}
+.cp-skill .s-tag{font-size:10px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);letter-spacing:.02em}
+.cp-skill .s-band{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px;color:#fff}
+.cp-skill.low .s-band{color:var(--red)}
+.cp-skill.low .s-tag{background:rgba(255,77,77,0.16);color:#ffb0b0}
+
+/* screen title line reused across the taller phone screens */
+.scr-title{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600;color:rgba(255,255,255,0.9);margin:8px 2px 18px}
+.scr-title small{font-size:12px;font-weight:500;color:rgba(255,255,255,0.4)}
+
+/* progression screen bits (benefits centre phone + deep-dive row 3) */
+.bp-rank{display:flex;align-items:center;gap:12px;margin:8px 0 18px}
+.bp-badge{width:42px;height:42px;border-radius:13px;background:rgba(245,166,35,0.16);display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.bp-rank b{font-size:16px;display:block;color:#fff}
+.bp-rank small{font-size:12px;color:rgba(255,255,255,0.45)}
+.bp-streak{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:17px;padding:16px;margin-bottom:14px}
+.bp-streak b{font-size:34px;font-weight:700;letter-spacing:-.04em;color:var(--gold)}
+.bp-streak span{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.45}
+.bp-streak small{color:rgba(255,255,255,0.4)}
+.bp-xp{background:rgba(255,255,255,0.04);border-radius:15px;padding:14px 15px;margin-bottom:14px}
+.bp-xp-top{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:10px;letter-spacing:.04em}
+.bp-xp-bar{height:7px;border-radius:99px;background:rgba(255,255,255,0.1);overflow:hidden}
+.bp-xp-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple-lt))}
+.bp-next{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#d9c9ff;background:rgba(120,86,255,0.14);border:1px solid rgba(120,86,255,0.28);border-radius:12px;padding:11px 13px}
+
+/* =====================================================================
+   BENEFITS  — centred phone with flanking callouts (Necta pattern)
+   ===================================================================== */
+.benefits{text-align:center}
+.benefits .section-head{margin-bottom:0}
+.benefits h2{max-width:16ch;margin:0 auto}
+.benefits-stage{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:56px;align-items:center;
+  margin-top:64px;text-align:left;
+}
+/* BENEFITS — phone render (mid-section.png). The screen area is baked DARK
+   (#0a0a0f) directly into the PNG, so the frame image is the base layer (z1) and
+   the app UI is simply laid ON TOP (z2), inset inside the visible screen area.
+   No separate dark fill, no bleed hacks, no gaps — the PNG's own baked screen
+   handles every edge and corner. Content is flex-centred in the screen box, so
+   its left/right margins are even. */
+.benefits-mid{position:relative;display:flex;justify-content:center;
+  filter:drop-shadow(0 42px 55px rgba(20,10,40,0.20))}
+.bm-device{
+  position:relative;width:320px;aspect-ratio:595 / 1024;
+  overflow:hidden;
+}
+.bm-img{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;pointer-events:none}
+.bm-screen{
+  position:absolute;left:10.5%;top:3%;width:84%;height:96%;
+  z-index:2;overflow:hidden;background:transparent;
+  display:flex;justify-content:center;
+}
+/* subtle glass glare so the composited UI reads as a lit screen */
+.bm-screen::before{
+  content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
+  background:linear-gradient(133deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.03) 12%,rgba(255,255,255,0) 30%);
+}
+.bm-inner{width:300px;padding:44px 12px 0;transform:scale(.8);transform-origin:top center;position:relative;z-index:1}
+.bm-inner .screen-greeting{margin:6px 2px 12px}
+.bm-inner .readiness-card{margin-bottom:12px;padding:16px}
+.bm-inner .screen-stats{margin-bottom:12px}
+.bm-inner .skill-row{margin-bottom:9px}
+.bm-inner .cp-alert{margin-top:10px}
+.benefit-col{display:flex;flex-direction:column;gap:36px}
+.benefit-col.r{text-align:right}
+.benefit-item .bi-icon{
+  display:block;width:30px;height:30px;margin:0 0 13px;
+  color:var(--ink);
+}
+.benefit-item .bi-icon svg{width:100%;height:100%;display:block}
+.benefit-col.r .bi-icon{margin-left:auto}
+.benefit-item h4{font-weight:500;font-size:15px;letter-spacing:-0.02em;margin-bottom:5px}
+.benefit-item p{font-size:13px;color:var(--grey);line-height:1.55;max-width:32ch}
+.benefit-col.r .benefit-item p{margin-left:auto}
+
+/* =====================================================================
+   DEEP DIVE  — alternating phone + copy rows (Necta "Control" pattern)
+   ===================================================================== */
+.deep .section-head{text-align:center;margin-bottom:0}
+.deep .section-head h2{max-width:16ch;margin:0 auto}
+.deep-row{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-top:80px}
+.deep-row:nth-of-type(2){margin-top:56px}
+.deep-row.flip .deep-visual{order:2}
+.deep-copy h3{font-weight:500;font-size:clamp(23px,2.8vw,32px);line-height:1.2;letter-spacing:-0.035em;margin-bottom:14px;max-width:18ch}
+.deep-copy p{font-size:15px;color:var(--grey);line-height:1.65;max-width:46ch;margin-bottom:24px}
+.link-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--bg);font-size:14px;font-weight:500;border-radius:14px;padding:11px 20px;transition:opacity .2s var(--ease),transform .18s var(--ease)}
+.link-btn:hover{opacity:.9}
+.link-btn:active{transform:scale(.97)}
+/* DEEP-DIVE — big phone cropped to its top half (see shared .stage rule) */
+.stage{height:430px;align-items:flex-start;padding-top:46px;--phone-w:312px}
+.stage .phone{margin:0}
+
+/* =====================================================================
+   EXAMS  — vertical tab list + panel (matches the site card language)
+   ===================================================================== */
+.exams .section-head{text-align:center;margin-bottom:52px}
+.exams .section-head h2{max-width:18ch;margin:0 auto}
+.exams .section-head p{margin:14px auto 0}
+
+.exams-layout{display:grid;grid-template-columns:236px 1fr;gap:22px;align-items:start}
+
+/* tab list */
+.exam-tabs{display:flex;flex-direction:column;gap:10px;scrollbar-width:none;-ms-overflow-style:none}
+.exam-tabs::-webkit-scrollbar{display:none}
+.exam-tab{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:17px 18px;border-radius:20px;border:1px solid var(--line-soft);
+  background:var(--card);cursor:pointer;text-align:left;font:inherit;
+  box-shadow:0 2px 8px rgba(0,0,0,0.02);
+  transition:border-color .2s var(--ease),box-shadow .25s var(--ease),transform .18s var(--ease);
+}
+.exam-tab:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.exam-tab[aria-selected="true"]{
+  border-color:var(--line-strong);
+  box-shadow:0 26px 50px -30px rgba(20,10,40,0.28),0 2px 8px rgba(0,0,0,0.03);
+}
+.exam-tab .xlogo-img{height:20px}
+.exam-tab[aria-selected="false"] .xlogo-img{filter:grayscale(1) opacity(.55)}
+.exam-tab .et-status{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.exam-tab .et-status.live{color:var(--teal)}
+.exam-tab .et-status.soon{color:var(--grey-soft)}
+
+/* panel = plain container; the cards inside carry the styling */
+.exam-panel{padding:0}
+.exam-panel[hidden]{display:none}
+
+/* IELTS — 2x2 skill card grid (same card language as Features) */
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.skill-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:24px;
+  transition:background .3s var(--ease),border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.skill-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 30px 60px -34px rgba(20,10,40,0.22),0 2px 8px rgba(0,0,0,0.05);
+}
+/* on hover each card lights up in its OWN accent colour */
+.skill-card.s-listening:hover{border-color:rgba(0,200,150,0.42);background:radial-gradient(120% 120% at 100% 0%,rgba(0,200,150,0.12),var(--card) 55%)}
+.skill-card.s-reading:hover{border-color:rgba(120,86,255,0.42);background:radial-gradient(120% 120% at 100% 0%,rgba(120,86,255,0.12),var(--card) 55%)}
+.skill-card.s-writing:hover{border-color:rgba(245,166,35,0.45);background:radial-gradient(120% 120% at 100% 0%,rgba(245,166,35,0.13),var(--card) 55%)}
+.skill-card.s-speaking:hover{border-color:rgba(255,77,77,0.42);background:radial-gradient(120% 120% at 100% 0%,rgba(255,77,77,0.12),var(--card) 55%)}
+.skill-card .sc-icon{
+  display:grid;place-items:center;width:44px;height:44px;border-radius:13px;margin-bottom:14px;
+}
+.skill-card .sc-icon svg{width:24px;height:24px;display:block}
+.skill-card h4{font-weight:500;font-size:15px;letter-spacing:-0.02em;margin-bottom:5px}
+.skill-card p{font-size:13px;color:var(--grey);line-height:1.55}
+.skill-card.s-listening .sc-icon{color:var(--teal);background:rgba(0,200,150,0.12)}
+.skill-card.s-reading .sc-icon{color:var(--purple);background:rgba(120,86,255,0.12)}
+.skill-card.s-writing .sc-icon{color:var(--gold);background:rgba(245,166,35,0.13)}
+.skill-card.s-speaking .sc-icon{color:var(--red);background:rgba(255,77,77,0.12)}
+
+/* Coming soon — one clean site card */
+.soon-card{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r-lg);
+  box-shadow:0 30px 60px -36px rgba(20,10,40,0.18),0 2px 8px rgba(0,0,0,0.03);
+  padding:30px 32px;
+}
+.soon .sp-pct{font-size:46px;font-weight:600;letter-spacing:-0.04em;line-height:1}
+.soon .sp-pct span{font-size:16px;color:var(--grey);font-weight:500;margin-left:6px}
+.soon-bar{height:8px;border-radius:99px;background:var(--fill-soft);overflow:hidden;margin:16px 0}
+.soon-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ink),var(--grey))}
+.soon p{font-size:14px;color:var(--grey);line-height:1.6;max-width:44ch}
+.soon-form{display:flex;gap:6px;max-width:400px;margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:5px;background:var(--elev)}
+.soon-form input{flex:1;border:0;outline:0;padding:9px 10px;font:inherit;background:transparent;color:var(--ink)}
+.soon-form button{background:var(--ink);color:var(--bg);border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600;white-space:nowrap;transition:opacity .2s var(--ease),transform .18s var(--ease)}
+.soon-form button:hover{opacity:.9}
+.soon-form button:active{transform:scale(.97)}
+
+/* =====================================================================
+   TESTIMONIALS  — Necta-style card carousel
+   ===================================================================== */
+.reviews .section-head{text-align:center;margin-bottom:44px}
+.reviews .section-head h2{max-width:16ch;margin:0 auto}
+
+.rv-carousel{position:relative}
+.rv-track{
+  display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;
+  /* generous padding so the card hover-lift + shadow aren't clipped by the
+     scroll container; negative top margin keeps the section spacing intact */
+  padding:34px 20px 60px;margin:-28px -20px 0;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.rv-track::-webkit-scrollbar{display:none}
+.rv-card{
+  flex:0 0 clamp(280px,32%,360px);scroll-snap-align:start;
+  background:var(--card);
+  border:1px solid var(--line-soft);border-radius:var(--r-md);
+  box-shadow:none;
+  padding:26px;display:flex;flex-direction:column;
+  transition:background .3s var(--ease),border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);
+}
+.rv-card:hover{
+  background:radial-gradient(120% 120% at 100% 0%,rgba(120,86,255,0.12),var(--card) 55%);
+  border-color:rgba(120,86,255,0.30);
+  transform:translateY(-4px);
+  box-shadow:0 36px 70px -34px rgba(20,10,40,0.24),0 2px 8px rgba(0,0,0,0.04);
+}
+.rv-stars{color:var(--gold);letter-spacing:2px;font-size:13px;margin-bottom:14px}
+.rv-quote{font-size:15px;line-height:1.6;color:var(--ink);flex:1}
+.rv-who{display:flex;align-items:center;gap:11px;margin-top:22px}
+.rv-avatar{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:16px;
+  background:var(--avatar-bg);border:1px solid var(--line-soft);
+}
+.rv-name{font-weight:600;font-size:13px;letter-spacing:-0.01em}
+.rv-role{font-size:12px;color:var(--grey)}
+
+.rv-nav{display:flex;justify-content:center;gap:12px;margin-top:-14px}
+.rv-btn{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--line);background:var(--elev);
+  display:grid;place-items:center;color:var(--ink);
+  transition:border-color .2s var(--ease),transform .18s var(--ease),opacity .2s var(--ease);
+}
+.rv-btn:hover{border-color:var(--line-hover)}
+.rv-btn:active{transform:scale(.94)}
+.rv-btn svg{width:17px;height:17px}
+
+/* =====================================================================
+   PRICING
+   ===================================================================== */
+.pricing .section-head{text-align:center;margin-bottom:30px}
+.pricing .section-head h2{max-width:18ch;margin:0 auto}
+.pricing .section-head p{margin:14px auto 0}
+
+.pr-toggles{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:46px}
+.seg{display:inline-flex;background:var(--seg-bg);border-radius:12px;padding:4px}
+.seg button{
+  border:0;background:transparent;cursor:pointer;font:inherit;
+  font-size:13px;font-weight:600;color:var(--grey);
+  padding:8px 16px;border-radius:9px;transition:color .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease);
+}
+.seg button[aria-pressed="true"]{background:var(--elev);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,0.10)}
+.pr-save{font-size:12px;font-weight:600;color:var(--teal);background:rgba(0,200,150,0.12);padding:5px 10px;border-radius:99px}
+
+.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.pr-card{
+  background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r-lg);
+  box-shadow:0 30px 60px -36px rgba(20,10,40,0.16),0 2px 8px rgba(0,0,0,0.03);
+  padding:30px;display:flex;flex-direction:column;
+}
+/* featured card is dark in light mode (anchor of the grid); in dark mode it
+   lifts to a lighter surface with a purple ring so it still reads as featured */
+.pr-card.featured{
+  background:var(--featured-bg);color:#fff;
+  border:1px solid var(--featured-ring);
+  box-shadow:var(--featured-shadow);
+  transform:translateY(-14px);
+}
+.pr-badge{
+  align-self:flex-start;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:5px 10px;border-radius:99px;margin-bottom:16px;
+  background:var(--spectrum);color:#111;
+}
+.pr-name{font-weight:600;font-size:16px;letter-spacing:-0.02em}
+.pr-price{display:flex;align-items:baseline;gap:4px;margin:12px 0 4px}
+.pr-price .pr-amount{font-size:40px;font-weight:600;letter-spacing:-0.04em;line-height:1}
+.pr-price .pr-suffix{font-size:13px;color:var(--grey)}
+.pr-card.featured .pr-price .pr-suffix{color:rgba(255,255,255,0.6)}
+.pr-sub{font-size:12.5px;color:var(--grey);min-height:18px}
+.pr-card.featured .pr-sub{color:rgba(255,255,255,0.6)}
+.pr-cta{
+  display:block;text-align:center;margin:22px 0 24px;
+  font-size:14px;font-weight:600;border-radius:13px;padding:12px;
+  transition:opacity .2s var(--ease),transform .18s var(--ease),border-color .2s var(--ease);
+}
+.pr-cta:active{transform:scale(.98)}
+.pr-cta.solid{background:var(--ink);color:var(--bg)}
+.pr-cta.solid:hover{opacity:.9}
+.pr-card.featured .pr-cta.solid{background:#fff;color:#0f0f14}
+.pr-cta.outline{border:1px solid var(--line);color:var(--ink)}
+.pr-cta.outline:hover{border-color:var(--line-hover)}
+.pr-feats{display:flex;flex-direction:column;gap:11px}
+.pr-feats li{display:flex;gap:10px;font-size:13px;line-height:1.45;color:var(--grey)}
+.pr-card.featured .pr-feats li{color:rgba(255,255,255,0.72)}
+.pr-feats li svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:var(--teal)}
+.pr-note{text-align:center;font-size:13px;color:var(--grey-soft);margin-top:32px}
+
+/* =====================================================================
+   FAQ  — clean accordion
+   ===================================================================== */
+.faq .section-head{text-align:center;margin-bottom:40px}
+.faq .section-head h2{max-width:16ch;margin:0 auto}
+.faq-list{max-width:760px;margin:0 auto}
+.faq-item{border-top:1px solid var(--line)}
+.faq-item:last-child{border-bottom:1px solid var(--line)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:22px 4px;text-align:left;font:inherit;cursor:pointer;background:none;border:0;
+  font-size:16px;font-weight:500;letter-spacing:-0.02em;color:var(--ink);
+}
+.faq-icon{position:relative;width:16px;height:16px;flex-shrink:0}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;left:50%;top:50%;background:var(--ink);border-radius:1px;
+  transform:translate(-50%,-50%);transition:transform .3s var(--ease),opacity .3s var(--ease);
+}
+.faq-icon::before{width:16px;height:2px}
+.faq-icon::after{width:2px;height:16px}
+.faq-q[aria-expanded="true"] .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg);opacity:0}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .35s var(--ease)}
+.faq-a p{padding:0 4px 24px;font-size:14px;line-height:1.65;color:var(--grey);max-width:64ch}
+
+/* =====================================================================
+   FOOTER CTA  — full-bleed pastel gradient (Necta pattern)
+   ===================================================================== */
+/* the CTA sits on the bright pastel band in BOTH themes, so it keeps a
+   light-on-pastel token context regardless of the page theme */
+.footer-cta{
+  position:relative;overflow:hidden;background:var(--spectrum);
+  --ink:#0a0a0a;--grey:#3f3f46;--bg:#ffffff;--card:#ffffff;--elev:#ffffff;
+  --line:rgba(10,10,10,0.12);--line-hover:rgba(10,10,10,0.28);
+}
+.footer-cta .container{
+  position:relative;display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:start;
+  padding:88px 24px 0;
+}
+.fc-text h2{
+  font-weight:500;font-size:clamp(30px,4.4vw,46px);line-height:1.12;letter-spacing:-0.04em;
+  max-width:14ch;margin-bottom:16px;color:var(--ink);
+}
+.fc-text p{font-size:16px;color:rgba(10,10,10,0.6);margin-bottom:28px;max-width:40ch}
+.footer-cta .store-row{margin-bottom:14px}
+.fc-text .fc-note{font-size:11px;letter-spacing:.01em;color:rgba(10,10,10,0.5);margin-bottom:0}
+/* phone crop sits flush with the bottom of the gradient band — no empty
+   colour zone below it; the phone simply bleeds off the bottom of the band */
+.footer-cta .hero-visual{
+  position:relative;inset:auto;width:auto;height:340px;overflow:hidden;
+  margin:-40px 0 0;
+  display:flex;justify-content:center;align-items:flex-start;--phone-w:322px;
+}
+.footer-cta .phone{margin:0;box-shadow:0 50px 80px -34px rgba(20,10,40,0.35)}
+
+/* =====================================================================
+   NEWSLETTER STRIP + FOOTER
+   ===================================================================== */
+footer{background:var(--bg)}
+.newsletter{
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+  padding:56px 0;border-bottom:1px solid var(--line-soft);
+}
+.newsletter h3{font-weight:500;font-size:20px;letter-spacing:-0.03em;margin-bottom:6px}
+.newsletter p{font-size:14px;color:var(--grey)}
+.nl-form{display:flex;gap:6px;min-width:min(380px,80vw);border:1px solid var(--line);border-radius:12px;padding:5px;background:var(--elev)}
+.nl-form input{flex:1;border:0;outline:0;padding:10px 12px;font:inherit;background:transparent;color:var(--ink)}
+.nl-form button{background:var(--ink);color:var(--bg);border-radius:9px;padding:10px 18px;font-size:13px;font-weight:600;white-space:nowrap;transition:opacity .2s var(--ease),transform .18s var(--ease)}
+.nl-form button:hover{opacity:.9}
+.nl-form button:active{transform:scale(.97)}
+
+.footer-main{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;padding:56px 0 40px}
+.footer-brand .brand{margin-bottom:14px}
+.footer-brand p{font-size:13px;color:var(--grey);line-height:1.6;max-width:30ch;margin-bottom:18px}
+.socials{display:flex;gap:10px}
+.socials a{
+  width:34px;height:34px;border-radius:10px;border:1px solid var(--line-soft);
+  display:grid;place-items:center;color:var(--grey);
+  transition:color .2s var(--ease),border-color .2s var(--ease);
+}
+.socials a:hover{color:var(--ink);border-color:var(--line-strong)}
+.socials svg{width:16px;height:16px}
+.footer-col h4{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--grey-soft);margin-bottom:14px}
+.footer-col a,.footer-col span{display:block;font-size:13px;color:var(--grey);margin-bottom:10px}
+.footer-col a{transition:color .2s var(--ease)}
+.footer-col a:hover{color:var(--ink)}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding:22px 0 40px;border-top:1px solid var(--line-soft);
+  font-size:12px;color:var(--grey-soft);
+}
+.footer-bottom .store-row{margin:0;gap:8px}
+.footer-bottom .store-btn{min-width:0;padding:8px 14px;border-radius:12px}
+.footer-bottom .store-btn svg{width:18px;height:18px}
+.footer-bottom .store-btn .lbl b{font-size:13px}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width:980px){
+  :root{--section:80px}
+  .hero{padding:0}
+  .hero .container{min-height:0;display:flex;flex-direction:column;align-items:flex-start;padding:124px 24px 0;gap:28px;overflow:visible}
+  .hero-copy{max-width:none}
+  .hero h1{max-width:22ch}
+  /* Mobile hero phone: bigger so its (small) screen area fits the app UI at a
+     size comparable to the other mockups. Hard-clipped at the bottom like the
+     desktop hero. No fade. */
+  .hero-visual{
+    position:relative;left:0;right:auto;top:0;
+    width:100%;max-width:460px;margin:24px auto 0;
+    aspect-ratio:800 / 948;overflow:hidden;
+  }
+  .hero-device{width:100%;max-width:460px;margin:0}
+  .hds-inner{transform:scale(.665);transform-origin:top left}
+  .features .section-head{grid-template-columns:1fr;gap:14px;align-items:start}
+  .features .section-head p{justify-self:start}
+  .feature-grid{grid-template-columns:1fr}
+  .benefits-stage{grid-template-columns:1fr;gap:36px;justify-items:center;max-width:420px;margin-left:auto;margin-right:auto}
+  .benefits-mid{order:-1}
+  .benefit-col{gap:28px;width:100%}
+  .benefit-col.r{text-align:left}
+  .benefit-col.r .bi-icon,.benefit-col.r .benefit-item p{margin-left:0}
+  .deep-row{grid-template-columns:1fr;gap:34px;margin-top:64px}
+  .deep-row.flip .deep-visual{order:-1}
+  .exams-layout{grid-template-columns:1fr;gap:20px}
+  .exam-tabs{flex-direction:row;overflow-x:auto;gap:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .exam-tab{flex-direction:column;align-items:flex-start;gap:5px;min-width:130px;flex-shrink:0;padding:13px 15px}
+  .pr-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
+  .pr-card.featured{transform:none}
+  .footer-cta .container{grid-template-columns:1fr;gap:32px;padding:64px 24px 0;justify-items:start}
+  /* mobile: hard crop just below the readiness card (clean edge, NO fade), phone
+     bleeds flush with the bottom of the gradient band */
+  .footer-cta .hero-visual{width:100%;max-width:300px;margin:10px auto 0;height:298px;overflow:hidden}
+  .newsletter{grid-template-columns:1fr;gap:16px}
+  .footer-main{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-brand{grid-column:1 / -1}
+}
+@media (max-width:900px){
+  .nav-links{display:none}
+  .nav .container > .nav-cta{display:none}
+  .nav .container{gap:10px;padding:8px 8px 8px 16px}
+  .nav.scrolled .container{max-width:none;padding:8px 8px 8px 20px}
+  .nav .container > .theme-toggle{margin-left:auto}
+  .nav-toggle{display:grid}          /* theme toggle + hamburger live in the pill */
+  .mobile-menu{display:block}
+}
+@media (max-width:560px){
+  :root{--section:60px}
+  .container{padding:0 20px}
+  .hero .container{padding-top:112px}
+  /* rating text drops to its own second line */
+  .trust{gap:6px 10px}
+  .trust-text{flex-basis:100%}
+  /* hero phone: fixed ~390px so the app screen fills it at a readable size on
+     the common 375–430px phones (bleeds a few px, clipped by .hero{overflow}) */
+  .hero-visual{width:min(390px,104vw);max-width:none;margin:20px auto 0}
+  .hero-device{width:min(390px,104vw);max-width:none}
+  .hds-inner{transform:scale(.6);transform-origin:top left}
+  .deep-row{margin-top:56px}
+  .benefits-stage{margin-top:44px}
+  .rv-nav{margin-top:-16px}
+  .pr-note{margin-top:24px}
+  .hero h1{font-size:clamp(30px,8vw,38px);max-width:18ch}
+  .exam-rotator{display:grid;justify-items:start;height:1.12em}
+  .hero-sub{font-size:15px}
+  .store-row{flex-direction:column;align-items:stretch}
+  .store-btn{min-width:0;justify-content:center}
+  .stage{height:372px;--phone-w:288px}
+  .bm-device{width:290px}
+  .footer-cta .hero-visual{--phone-w:290px}
+  .card-phone{width:262px}
+  .ticker .xlogo-img{height:19px}
+  .ticker-item{padding:0 24px}
+  .faq-q{font-size:15px}
+  .footer-main{grid-template-columns:1fr 1fr}
+  .footer-bottom{flex-direction:column;align-items:flex-start;gap:16px}
+  .skill-grid{grid-template-columns:1fr}
+  .skill-card{padding:20px}
+  .soon-card{padding:24px 22px}
+  .rv-card{flex-basis:82%}
+  .pr-toggles{gap:12px}
+}

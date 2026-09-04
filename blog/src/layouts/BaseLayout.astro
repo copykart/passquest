@@ -1,0 +1,49 @@
+---
+import '../styles/global.css';
+import { SITE } from '../site.config';
+import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  navCurrent?: string;
+}
+const {
+  title,
+  description = SITE.description,
+  image,
+  type,
+  publishedTime,
+  modifiedTime,
+  noindex,
+  navCurrent = 'blog',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      noindex={noindex}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <Nav current={navCurrent} />
+    <slot />
+    <Footer />
+  </body>
+</html>

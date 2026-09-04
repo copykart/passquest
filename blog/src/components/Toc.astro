@@ -1,0 +1,48 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{
+  items.length > 2 && (
+    <nav class="toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ol>
+        {items.map((h) => (
+          <li class={`lvl-${h.depth}`}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<script>
+  /* highlight the section currently in view */
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('.toc a')
+  );
+  if (links.length) {
+    const map = new Map<string, HTMLAnchorElement>();
+    links.forEach((l) => map.set(l.getAttribute('href')!.slice(1), l));
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            links.forEach((l) => l.classList.remove('active'));
+            map.get(e.target.id)?.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -66% 0px' }
+    );
+    document
+      .querySelectorAll('.prose h2, .prose h3')
+      .forEach((h) => obs.observe(h));
+  }
+</script>

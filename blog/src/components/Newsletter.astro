@@ -1,0 +1,36 @@
+---
+/* Newsletter signup.
+   Wired to a GoHighLevel form. Replace GHL_FORM_ACTION with the POST
+   endpoint from your GHL form embed ("Integrate > raw HTML" gives a
+   <form action="https://...leadconnectorhq.com/..."> URL), or swap the
+   whole <form> for GHL's iframe embed snippet. */
+const GHL_FORM_ACTION =
+  'https://api.leadconnectorhq.com/widget/form/REPLACE_WITH_FORM_ID';
+---
+
+<section class="newsletter">
+  <div class="container">
+    <div class="inner">
+      <h2>Exam news, in your inbox</h2>
+      <p>
+        Test-date changes, scholarship deadlines and new comparison guides —
+        once a week, no spam.
+      </p>
+      <form action={GHL_FORM_ACTION} method="POST" target="_blank">
+        <label class="visually-hidden" for="nl-email">Email address</label>
+        <input
+          type="email"
+          id="nl-email"
+          name="email"
+          placeholder="you@email.com"
+          required
+        />
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="fineprint">
+        By subscribing you agree to our
+        <a href="https://passquest.app/privacy/">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+</section>

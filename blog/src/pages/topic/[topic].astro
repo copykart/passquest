@@ -1,0 +1,52 @@
+---
+import { SITE, CATEGORIES, categoryName } from '../../site.config';
+import { getPostsByCategory } from '../../lib/posts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryPills from '../../components/CategoryPills.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Newsletter from '../../components/Newsletter.astro';
+
+export async function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { topic: c.slug } }));
+}
+
+const { topic } = Astro.params;
+const cat = CATEGORIES.find((c) => c.slug === topic)!;
+const posts = await getPostsByCategory(topic!);
+const title = `${cat.name} guides & news`;
+const description = cat.blurb;
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <h1>{cat.name}</h1>
+        <p>{cat.blurb}</p>
+      </div>
+
+      <CategoryPills active={topic} />
+
+      {
+        posts.length > 0 ? (
+          <section aria-label={`${cat.name} posts`}>
+            <span class="section-label">
+              {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+            </span>
+            <div class="post-grid">
+              {posts.map((p) => (
+                <BlogCard post={p} showExcerpt />
+              ))}
+            </div>
+          </section>
+        ) : (
+          <p class="empty-note">
+            Nothing in {cat.name} yet. <a href="/">Browse all posts →</a>
+          </p>
+        )
+      }
+    </div>
+  </main>
+
+  <Newsletter />
+</BaseLayout>

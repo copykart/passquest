@@ -1,0 +1,30 @@
+---
+import type { Post } from '../lib/posts';
+import { readingTime } from '../lib/posts';
+import { categoryName } from '../site.config';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  post: Post;
+  showExcerpt?: boolean;
+}
+const { post, showExcerpt = false } = Astro.props;
+const { title, category, heroImage, heroAlt, pubDate } = post.data;
+const mins = readingTime(post.body);
+const href = `/${post.id}/`;
+---
+
+<article class="post-card">
+  <a href={href} class="thumb" aria-label={title} tabindex="-1">
+    <img src={heroImage} alt={heroAlt} loading="lazy" decoding="async" width="640" height="360" />
+  </a>
+  <div class="pc-body">
+    <a class="cat-chip" href={`/topic/${category}/`}>{categoryName(category)}</a>
+    <h3><a href={href}>{title}</a></h3>
+    {showExcerpt && <p class="pc-excerpt">{post.data.description}</p>}
+    <div class="meta-row">
+      <FormattedDate date={pubDate} />
+      <span class="dot"></span><span>{mins} min read</span>
+    </div>
+  </div>
+</article>

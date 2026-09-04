@@ -1,0 +1,129 @@
+---
+import { SITE, NAV_LINKS } from '../site.config';
+
+/* which nav link is "current" — pass 'blog' on blog pages */
+interface Props {
+  current?: string;
+}
+const { current } = Astro.props;
+---
+
+<header class="nav" id="nav">
+  <div class="container">
+    <a class="brand" href={`${SITE.mainSite}/`} aria-label="PassQuest home">
+      <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true">
+        <circle cx="64" cy="64" r="64" fill="#7C6AFF"></circle>
+        <path d="M72 12 40 68h24l-8 48 40-64H72V12Z" fill="#fff"></path>
+      </svg>
+      <span>Pass<i>Quest</i></span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      {
+        NAV_LINKS.map((l) => (
+          <a
+            href={l.href}
+            aria-current={
+              current === 'blog' && l.label === 'Blog' ? 'page' : undefined
+            }
+          >
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <span class="nav-spacer"></span>
+
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Switch color theme"
+    >
+      <svg class="tt-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"
+          fill="currentColor"></path>
+      </svg>
+      <svg class="tt-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2" fill="currentColor"></circle>
+        <path
+          d="M12 2v2.6M12 19.4V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.6M19.4 12H22M4.2 19.8 6 18M18 6l1.8-1.8"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+
+    <a
+      class="nav-cta"
+      href={SITE.playStore}
+      target="_blank"
+      rel="noopener"
+    >
+      Get the app <span aria-hidden="true">↓</span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      aria-label="Open menu"
+      aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<div class="menu-scrim" id="menuScrim"></div>
+<div class="mobile-menu" id="mobileMenu">
+  {NAV_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+  <a class="nav-cta" href={SITE.playStore} target="_blank" rel="noopener">
+    Get the app ↓
+  </a>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var tgl = document.getElementById('themeToggle');
+    function cur() {
+      return root.getAttribute('data-theme') || 'dark';
+    }
+    function set(t: string) {
+      root.setAttribute('data-theme', t);
+      try {
+        localStorage.setItem('pq-theme', t);
+      } catch (e) {}
+    }
+    if (tgl)
+      tgl.addEventListener('click', function () {
+        set(cur() === 'dark' ? 'light' : 'dark');
+      });
+
+    var nav = document.getElementById('nav');
+    function onScroll() {
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 12);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    var mt = document.getElementById('navToggle');
+    var mm = document.getElementById('mobileMenu');
+    var sc = document.getElementById('menuScrim');
+    function menu(open: boolean) {
+      if (nav) nav.classList.toggle('open', open);
+      if (mm) mm.classList.toggle('show', open);
+      if (sc) sc.classList.toggle('show', open);
+      if (mt) mt.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    if (mt)
+      mt.addEventListener('click', function () {
+        menu(!(mm && mm.classList.contains('show')));
+      });
+    if (sc) sc.addEventListener('click', function () { menu(false); });
+    if (mm)
+      mm.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { menu(false); });
+      });
+  })();
+</script>

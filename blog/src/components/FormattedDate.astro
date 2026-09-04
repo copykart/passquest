@@ -1,0 +1,14 @@
+---
+interface Props {
+  date: Date;
+  prefix?: string;
+}
+const { date, prefix } = Astro.props;
+const iso = date.toISOString();
+const human = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<time datetime={iso}>{prefix ? `${prefix} ` : ''}{human}</time>

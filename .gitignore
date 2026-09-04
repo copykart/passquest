@@ -1,0 +1,14 @@
+# This repo tracks ONLY the PassQuest web work (blog + marketing-site source).
+# The rest of ~/Documents/passquest/ is a large local workspace (brand assets,
+# training data, contracts, keys, video) that must never be committed.
+#
+# Strategy: ignore everything at the root, then allowlist the two project
+# folders. Adding anything else needs an explicit `git add -f`.
+/*
+!/blog
+!/site
+!/.gitignore
+!/README.md
+
+# macOS junk, wherever it appears
+.DS_Store

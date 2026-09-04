@@ -1,0 +1,103 @@
+---
+import { SITE } from '../site.config';
+import { getPosts, readingTime } from '../lib/posts';
+import { categoryName } from '../site.config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CategoryPills from '../components/CategoryPills.astro';
+import BlogCard from '../components/BlogCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+const posts = await getPosts();
+const featured = posts.find((p) => p.data.featured) ?? posts[0];
+const rest = posts.filter((p) => p.id !== featured?.id);
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': SITE.url + '/',
+  name: SITE.name,
+  description: SITE.description,
+  url: SITE.url + '/',
+  blogPost: posts.slice(0, 20).map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    url: `${SITE.url}/${p.id}/`,
+    datePublished: p.data.pubDate.toISOString(),
+    dateModified: (p.data.updatedDate ?? p.data.pubDate).toISOString(),
+  })),
+};
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <JsonLd slot="head" schema={itemList} />
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <h1>The PassQuest Blog</h1>
+        <p>
+          Exam guides, head-to-head comparisons, scholarship deadlines and
+          relocation news for IELTS, CELPIP, SAT, GRE and TOEFL.
+        </p>
+      </div>
+
+      <CategoryPills active="all" />
+
+      {
+        featured && (
+          <section class="featured" aria-label="Featured post">
+            <span class="section-label">Featured</span>
+            <a href={`/${featured.id}/`}>
+              <span class="thumb">
+                <img
+                  src={featured.data.heroImage}
+                  alt={featured.data.heroAlt}
+                  width="720"
+                  height="450"
+                  fetchpriority="high"
+                />
+              </span>
+              <span class="fx-body">
+                <span class="cat-chip">
+                  {categoryName(featured.data.category)}
+                </span>
+                <h2>{featured.data.title}</h2>
+                <p>{featured.data.description}</p>
+                <span class="meta-row">
+                  <FormattedDate date={featured.data.pubDate} />
+                  <span class="dot" />
+                  <span>{readingTime(featured.body)} min read</span>
+                </span>
+              </span>
+            </a>
+          </section>
+        )
+      }
+
+      {
+        rest.length > 0 ? (
+          <section aria-label="All posts">
+            <span class="section-label">Latest</span>
+            <div class="post-grid">
+              {rest.map((p) => (
+                <BlogCard post={p} showExcerpt />
+              ))}
+            </div>
+          </section>
+        ) : (
+          !featured && (
+            <p class="empty-note">
+              No posts yet — the first one is on its way.
+            </p>
+          )
+        )
+      }
+
+      {/* Pagination: add paginate() here once there are more than ~15 posts. */}
+    </div>
+  </main>
+
+  <Newsletter />
+</BaseLayout>

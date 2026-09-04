@@ -1,0 +1,1050 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PassQuest — Know when you're ready</title>
+<meta name="description" content="The AI-powered exam app with a predictive live score that updates after every session. Know exactly when you're ready for IELTS, CELPIP, SAT, GRE or TOEFL.">
+<meta name="theme-color" content="#0b0b0f">
+<meta property="og:title" content="PassQuest — Know when you're ready">
+<meta property="og:description" content="The AI-powered exam app with a predictive live score that updates after every session.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cpath d='M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z' fill='%237C6AFF'/%3E%3Cpath d='M63.998 108C88.2986 108 107.998 88.3008 107.998 64.0002C107.998 39.6997 88.2986 20.0002 63.998 20.0002C39.6975 20.0002 19.998 39.6997 19.998 64.0002C19.998 88.3008 39.6975 108 63.998 108Z' fill='url(%23fav)'/%3E%3Cpath d='M71.999 12.0002L39.999 68.0002H63.999L55.999 116L95.999 52.0002H71.999V12.0002Z' fill='white' stroke='white' stroke-width='3.16832' stroke-linejoin='round'/%3E%3Cdefs%3E%3ClinearGradient id='fav' x1='19.998' y1='20.0002' x2='107.998' y2='108' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%237C6AFF'/%3E%3Cstop offset='1' stop-color='%233A1FA0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+  document.documentElement.classList.add('js');
+  /* apply saved theme before first paint to avoid a flash */
+  try{
+    var pqt = localStorage.getItem('pq-theme');
+    if(pqt === 'dark' || pqt === 'light'){
+      document.documentElement.setAttribute('data-theme', pqt);
+    }
+  }catch(e){}
+</script>
+
+<link rel="stylesheet" href="passquest.css">
+</head>
+<body>
+
+<!-- =====================  NAV  ===================== -->
+<header class="nav" id="nav">
+  <div class="container">
+    <a class="brand" href="#top" aria-label="PassQuest home">
+      <svg class="brand-logo" viewBox="0 0 632 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PassQuest">
+        <path d="M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z" fill="#7C6AFF"/>
+        <path d="M63.998 108C88.2986 108 107.998 88.3008 107.998 64.0002C107.998 39.6997 88.2986 20.0002 63.998 20.0002C39.6975 20.0002 19.998 39.6997 19.998 64.0002C19.998 88.3008 39.6975 108 63.998 108Z" fill="url(#pqNav)"/>
+        <path d="M71.999 12.0002L39.999 68.0002H63.999L55.999 116L95.999 52.0002H71.999V12.0002Z" fill="white" stroke="white" stroke-width="3.16832" stroke-linejoin="round"/>
+        <path d="M155.884 101V26.994H185.082C190.695 26.994 195.477 28.0661 199.428 30.2101C203.379 32.3301 206.39 35.2812 208.462 39.0634C210.558 42.8215 211.606 47.1578 211.606 52.0722C211.606 56.9867 210.546 61.323 208.426 65.0811C206.306 68.8392 203.234 71.7662 199.211 73.8621C195.212 75.9579 190.37 77.0059 184.684 77.0059H166.075V64.4668H182.155C185.166 64.4668 187.648 63.9488 189.599 62.9129C191.574 61.853 193.044 60.3955 194.007 58.5405C194.995 56.6615 195.489 54.5054 195.489 52.0722C195.489 49.615 194.995 47.4709 194.007 45.6401C193.044 43.7851 191.574 42.3517 189.599 41.3399C187.624 40.304 185.118 39.7861 182.083 39.7861H171.531V101H155.884ZM228.693 102.048C225.152 102.048 221.996 101.434 219.226 100.205C216.455 98.9523 214.263 97.1094 212.649 94.6762C211.059 92.219 210.264 89.1595 210.264 85.4978C210.264 82.4142 210.83 79.8245 211.963 77.7286C213.095 75.6327 214.637 73.9464 216.588 72.6696C218.539 71.3928 220.756 70.4292 223.237 69.7787C225.742 69.1283 228.368 68.6706 231.115 68.4056C234.343 68.0683 236.944 67.7551 238.92 67.466C240.895 67.1529 242.329 66.6952 243.22 66.0929C244.111 65.4906 244.557 64.5993 244.557 63.4188V63.202C244.557 60.9134 243.834 59.1428 242.389 57.8901C240.968 56.6374 238.944 56.011 236.318 56.011C233.548 56.011 231.343 56.6253 229.705 57.8539C228.067 59.0585 226.983 60.5762 226.453 62.407L212.216 61.2507C212.938 57.878 214.36 54.9631 216.48 52.5059C218.6 50.0245 221.334 48.1214 224.682 46.7964C228.055 45.4473 231.958 44.7728 236.39 44.7728C239.474 44.7728 242.425 45.1342 245.244 45.8569C248.086 46.5796 250.604 47.6998 252.796 49.2175C255.012 50.7352 256.759 52.6865 258.036 55.0715C259.312 57.4324 259.951 60.263 259.951 63.5634V101H245.352V93.3031H244.918C244.027 95.0376 242.835 96.5674 241.341 97.8923C239.847 99.1932 238.053 100.217 235.957 100.964C233.861 101.687 231.44 102.048 228.693 102.048ZM233.102 91.424C235.367 91.424 237.366 90.9784 239.101 90.087C240.835 89.1716 242.196 87.943 243.184 86.4012C244.172 84.8594 244.665 83.1128 244.665 81.1615V75.2714C244.184 75.5845 243.521 75.8736 242.678 76.1386C241.859 76.3795 240.931 76.6084 239.896 76.8252C238.86 77.0179 237.824 77.1986 236.788 77.3672C235.752 77.5118 234.812 77.6443 233.969 77.7647C232.162 78.0297 230.585 78.4513 229.235 79.0295C227.886 79.6077 226.838 80.3906 226.092 81.3783C225.345 82.3419 224.971 83.5464 224.971 84.9919C224.971 87.0877 225.73 88.6898 227.248 89.7979C228.79 90.882 230.741 91.424 233.102 91.424ZM310.952 61.323L296.859 62.1902C296.618 60.9857 296.1 59.9016 295.305 58.938C294.51 57.9503 293.462 57.1674 292.162 56.5892C290.885 55.9869 289.355 55.6858 287.572 55.6858C285.187 55.6858 283.176 56.1917 281.538 57.2035C279.899 58.1912 279.08 59.5162 279.08 61.1784C279.08 62.5034 279.61 63.6236 280.67 64.5391C281.73 65.4545 283.549 66.1893 286.127 66.7433L296.173 68.7669C301.569 69.8751 305.592 71.6578 308.242 74.115C310.892 76.5723 312.217 79.8004 312.217 83.7994C312.217 87.4371 311.145 90.629 309.001 93.3754C306.881 96.1217 303.966 98.2657 300.256 99.8075C296.57 101.325 292.318 102.084 287.5 102.084C280.152 102.084 274.298 100.554 269.938 97.4948C265.602 94.4113 263.06 90.2195 262.313 84.9196L277.454 84.1246C277.912 86.365 279.02 88.0755 280.779 89.2559C282.537 90.4122 284.79 90.9904 287.536 90.9904C290.234 90.9904 292.402 90.4725 294.041 89.4366C295.703 88.3766 296.546 87.0155 296.57 85.3532C296.546 83.956 295.956 82.8117 294.799 81.9203C293.643 81.0049 291.86 80.3063 289.451 79.8245L279.839 77.9093C274.419 76.8252 270.384 74.9461 267.734 72.2721C265.108 69.5981 263.795 66.1893 263.795 62.0457C263.795 58.4803 264.759 55.4088 266.686 52.8311C268.637 50.2534 271.371 48.2659 274.889 46.8687C278.43 45.4714 282.574 44.7728 287.319 44.7728C294.33 44.7728 299.846 46.2544 303.869 49.2175C307.917 52.1806 310.278 56.2158 310.952 61.323ZM360.969 61.323L346.876 62.1902C346.635 60.9857 346.117 59.9016 345.322 58.938C344.527 57.9503 343.479 57.1674 342.178 56.5892C340.901 55.9869 339.372 55.6858 337.589 55.6858C335.204 55.6858 333.192 56.1917 331.554 57.2035C329.916 58.1912 329.097 59.5162 329.097 61.1784C329.097 62.5034 329.627 63.6236 330.687 64.5391C331.747 65.4545 333.566 66.1893 336.143 66.7433L346.189 68.7669C351.585 69.8751 355.608 71.6578 358.258 74.115C360.908 76.5723 362.233 79.8004 362.233 83.7994C362.233 87.4371 361.161 90.629 359.017 93.3754C356.897 96.1217 353.982 98.2657 350.272 99.8075C346.587 101.325 342.335 102.084 337.517 102.084C330.169 102.084 324.315 100.554 319.955 97.4948C315.618 94.4113 313.077 90.2195 312.33 84.9196L327.471 84.1246C327.929 86.365 329.037 88.0755 330.795 89.2559C332.554 90.4122 334.806 90.9904 337.553 90.9904C340.251 90.9904 342.419 90.4725 344.057 89.4366C345.719 88.3766 346.563 87.0155 346.587 85.3532C346.563 83.956 345.972 82.8117 344.816 81.9203C343.66 81.0049 341.877 80.3063 339.468 79.8245L329.856 77.9093C324.435 76.8252 320.4 74.9461 317.75 72.2721C315.124 69.5981 313.812 66.1893 313.812 62.0457C313.812 58.4803 314.775 55.4088 316.702 52.8311C318.654 50.2534 321.388 48.2659 324.905 46.8687C328.446 45.4714 332.59 44.7728 337.336 44.7728C344.346 44.7728 349.863 46.2544 353.886 49.2175C357.933 52.1806 360.294 56.2158 360.969 61.323Z" fill="currentColor"/>
+        <path d="M393.026 75.2714H406.324L413.009 83.8717L419.585 91.5324L431.98 107.071H417.381L408.853 96.5914L404.481 90.3761L393.026 75.2714ZM433.1 63.997C433.1 72.0673 431.57 78.9331 428.511 84.5944C425.476 90.2556 421.332 94.5799 416.08 97.5671C410.853 100.53 404.975 102.012 398.446 102.012C391.869 102.012 385.967 100.518 380.74 97.531C375.512 94.5438 371.38 90.2195 368.345 84.5582C365.31 78.897 363.792 72.0432 363.792 63.997C363.792 55.9267 365.31 49.0609 368.345 43.3997C371.38 37.7384 375.512 33.4262 380.74 30.4631C385.967 27.4758 391.869 25.9822 398.446 25.9822C404.975 25.9822 410.853 27.4758 416.08 30.4631C421.332 33.4262 425.476 37.7384 428.511 43.3997C431.57 49.0609 433.1 55.9267 433.1 63.997ZM417.237 63.997C417.237 58.7694 416.454 54.3608 414.888 50.7713C413.346 47.1819 411.166 44.4596 408.347 42.6047C405.529 40.7497 402.228 39.8222 398.446 39.8222C394.664 39.8222 391.363 40.7497 388.545 42.6047C385.726 44.4596 383.534 47.1819 381.968 50.7713C380.426 54.3608 379.656 58.7694 379.656 63.997C379.656 69.2247 380.426 73.6332 381.968 77.2227C383.534 80.8122 385.726 83.5344 388.545 85.3894C391.363 87.2443 394.664 88.1718 398.446 88.1718C402.228 88.1718 405.529 87.2443 408.347 85.3894C411.166 83.5344 413.346 80.8122 414.888 77.2227C416.454 73.6332 417.237 69.2247 417.237 63.997ZM472.872 77.3672V45.4955H488.266V101H473.487V90.9181H472.908C471.656 94.1703 469.572 96.7842 466.657 98.7596C463.766 100.735 460.237 101.723 456.069 101.723C452.359 101.723 449.095 100.88 446.276 99.1932C443.458 97.5069 441.254 95.1099 439.664 92.0022C438.098 88.8945 437.303 85.1726 437.279 80.8363V45.4955H452.672V78.09C452.697 81.3663 453.576 83.956 455.31 85.8591C457.045 87.7623 459.37 88.7139 462.285 88.7139C464.139 88.7139 465.874 88.2923 467.488 87.4491C469.102 86.5818 470.403 85.3051 471.391 83.6187C472.403 81.9324 472.896 79.8486 472.872 77.3672ZM518.751 102.084C513.042 102.084 508.127 100.928 504.008 98.615C499.913 96.2783 496.757 92.9779 494.54 88.7139C492.324 84.4257 491.216 79.3547 491.216 73.5007C491.216 67.7913 492.324 62.7805 494.54 58.4683C496.757 54.1561 499.876 50.7954 503.899 48.3864C507.947 45.9773 512.693 44.7728 518.137 44.7728C521.799 44.7728 525.208 45.363 528.363 46.5435C531.543 47.6998 534.314 49.4464 536.675 51.7831C539.06 54.1199 540.915 57.059 542.24 60.6003C543.564 64.1175 544.227 68.2369 544.227 72.9587V77.1866H497.359V67.6467H529.737C529.737 65.4304 529.255 63.467 528.291 61.7566C527.327 60.0462 525.99 58.7092 524.28 57.7455C522.594 56.7578 520.63 56.264 518.39 56.264C516.053 56.264 513.981 56.806 512.175 57.8901C510.392 58.9501 508.995 60.3834 507.983 62.1902C506.971 63.9729 506.453 65.9604 506.429 68.1526V77.2227C506.429 79.969 506.935 82.3419 507.947 84.3414C508.983 86.3409 510.44 87.8827 512.319 88.9668C514.198 90.0509 516.427 90.5929 519.004 90.5929C520.715 90.5929 522.281 90.352 523.702 89.8702C525.123 89.3884 526.34 88.6657 527.352 87.7021C528.363 86.7384 529.134 85.558 529.664 84.1608L543.902 85.1003C543.179 88.5211 541.697 91.5083 539.457 94.0619C537.241 96.5914 534.374 98.5669 530.857 99.9882C527.364 101.385 523.328 102.084 518.751 102.084ZM593.331 61.323L579.238 62.1902C578.997 60.9857 578.479 59.9016 577.684 58.938C576.889 57.9503 575.841 57.1674 574.541 56.5892C573.264 55.9869 571.734 55.6858 569.951 55.6858C567.566 55.6858 565.555 56.1917 563.917 57.2035C562.278 58.1912 561.459 59.5162 561.459 61.1784C561.459 62.5034 561.989 63.6236 563.049 64.5391C564.109 65.4545 565.928 66.1893 568.506 66.7433L578.552 68.7669C583.948 69.8751 587.971 71.6578 590.621 74.115C593.271 76.5723 594.596 79.8004 594.596 83.7994C594.596 87.4371 593.524 90.629 591.38 93.3754C589.26 96.1217 586.345 98.2657 582.635 99.8075C578.949 101.325 574.697 102.084 569.879 102.084C562.531 102.084 556.677 100.554 552.317 97.4948C547.981 94.4113 545.439 90.2195 544.692 84.9196L559.833 84.1246C560.291 86.365 561.399 88.0755 563.158 89.2559C564.916 90.4122 567.169 90.9904 569.915 90.9904C572.613 90.9904 574.781 90.4725 576.42 89.4366C578.082 88.3766 578.925 87.0155 578.949 85.3532C578.925 83.956 578.335 82.8117 577.178 81.9203C576.022 81.0049 574.239 80.3063 571.83 79.8245L562.218 77.9093C556.798 76.8252 552.763 74.9461 550.113 72.2721C547.487 69.5981 546.174 66.1893 546.174 62.0457C546.174 58.4803 547.138 55.4088 549.065 52.8311C551.016 50.2534 553.75 48.2659 557.268 46.8687C560.809 45.4714 564.953 44.7728 569.698 44.7728C576.709 44.7728 582.225 46.2544 586.248 49.2175C590.296 52.1806 592.657 56.2158 593.331 61.323ZM626.689 45.4955V57.059H593.263V45.4955H626.689ZM600.852 32.1976H616.246V83.9439C616.246 85.3653 616.463 86.4734 616.896 87.2684C617.33 88.0393 617.932 88.5814 618.703 88.8945C619.498 89.2077 620.413 89.3643 621.449 89.3643C622.172 89.3643 622.895 89.3041 623.617 89.1836C624.34 89.0391 624.894 88.9307 625.28 88.8584L627.701 100.313C626.93 100.554 625.846 100.831 624.449 101.145C623.051 101.482 621.353 101.687 619.353 101.759C615.644 101.903 612.391 101.41 609.597 100.277C606.826 99.145 604.67 97.3864 603.129 95.0015C601.587 92.6165 600.828 89.6052 600.852 85.9675V32.1976Z" fill="#7D6AFF"/>
+        <defs>
+          <linearGradient id="pqNav" x1="19.998" y1="20.0002" x2="107.998" y2="108" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7C6AFF"/><stop offset="1" stop-color="#3A1FA0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#exams">Exams</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">
+      <svg class="tt-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/></svg>
+      <svg class="tt-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2v2.6M12 19.4V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.6M19.4 12H22M4.2 19.8 6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Get the app <span aria-hidden="true">↓</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<div class="menu-scrim" id="menuScrim"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">Features</a>
+  <a href="#exams">Exams</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <div class="mm-cta">
+    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Get the app ↓</a>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- =====================  HERO  ===================== -->
+  <section class="hero">
+    <div class="container">
+
+      <div class="hero-copy">
+        <div class="trust reveal">
+          <span class="trust-avatars" aria-hidden="true"><span>🇳🇬</span><span>🇬🇧</span><span>🇨🇦</span><span>🇦🇺</span><span>🇺🇸</span></span>
+          <span class="trust-stars" aria-hidden="true">★★★★★</span>
+          <span class="trust-text"><b>4.8</b> · Trusted by 2,978+ students</span>
+        </div>
+
+        <h1 class="reveal">Know exactly when you&rsquo;re ready for <span class="exam-rotator" aria-label="IELTS, CELPIP, SAT, GRE, or TOEFL"><span class="er-word">IELTS</span><span class="er-word">CELPIP</span><span class="er-word">SAT</span><span class="er-word">GRE</span><span class="er-word">TOEFL</span></span></h1>
+        <p class="hero-sub reveal">The AI-powered exam app with a predictive live score that updates after every session.</p>
+
+        <div class="store-row reveal">
+          <a class="store-btn filled" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener" aria-label="Get PassQuest on Google Play">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1Z" fill="#00C3FF"/>
+              <path d="m16.3 15.9-3.2-3.2v-.2l3.2-3.2.1.1 3.8 2.2c1.1.6 1.1 1.6 0 2.2l-3.9 2.1Z" fill="#FFD400"/>
+              <path d="m16.4 15.8-3.3-3.3-9.4 9.4c.4.4 1 .4 1.7.1l11-6.2" fill="#FF3333"/>
+              <path d="M16.4 9.2 5.4 3C4.7 2.6 4.1 2.7 3.7 3.1l9.4 9.4 3.3-3.3Z" fill="#00D26A"/>
+            </svg>
+            <span class="lbl"><small>GET IT ON</small><b>Google Play</b></span>
+          </a>
+          <a class="store-btn outline" href="#download" aria-label="PassQuest coming soon to the App Store">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.2 1-4.1 2.5-1.7 3-.4 7.4 1.3 9.9.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.5ZM14 5.4c.7-.8 1.1-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3Z"/></svg>
+            <span class="lbl"><small>COMING SOON TO</small><b>App Store</b></span>
+          </a>
+        </div>
+
+        <p class="hero-note reveal">Free on Google Play · iOS coming soon · No card to start</p>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="hero-device">
+          <div class="hero-device-screen"><div class="hds-inner">
+            <div class="status-bar">
+              <span class="tabular">9:41</span>
+              <span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span>
+            </div>
+            <p class="screen-greeting">Good morning, Adaeze 👋</p>
+            <div class="readiness-card">
+              <div class="rc-top"><span class="rc-label">Readiness</span><span class="rc-score tabular">62%</span></div>
+              <div class="rc-bar"><i></i></div>
+              <p class="rc-note">Band 6.0 → 7.0 at this pace <b>⭐</b></p>
+            </div>
+            <div class="screen-stats">
+              <div><div class="s-num tabular">14</div><div class="s-lbl">Streak 🔥</div></div>
+              <div><div class="s-num tabular">347</div><div class="s-lbl">Questions</div></div>
+              <div><div class="s-num tabular">↑8%</div><div class="s-lbl">This week</div></div>
+            </div>
+            <a class="screen-cta" href="#download">Continue training →</a>
+            <div class="skill-row sk-teal"><span class="sk-name">Listening</span><span class="sk-track"><i style="width:74%"></i></span><span class="sk-val">74%</span></div>
+            <div class="skill-row sk-purple"><span class="sk-name">Reading</span><span class="sk-track"><i style="width:55%"></i></span><span class="sk-val">55%</span></div>
+            <div class="skill-row sk-red"><span class="sk-name">Writing ⚠</span><span class="sk-track"><i style="width:48%"></i></span><span class="sk-val">48%</span></div>
+            <div class="skill-row sk-gold"><span class="sk-name">Speaking</span><span class="sk-track"><i style="width:61%"></i></span><span class="sk-val">61%</span></div>
+          </div></div>
+          <img class="hero-device-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a612b72e8f9c68f1.webp" alt="The PassQuest app open on a phone" width="800" height="1076">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================  EXAM TICKER  ===================== -->
+  <section class="ticker" aria-label="Exams students prepare for with PassQuest">
+    <p class="ticker-label reveal">Trusted by students preparing for</p>
+    <div class="ticker-viewport">
+      <div class="ticker-track" aria-hidden="true">
+        <div class="ticker-set">
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568d9a153ac43f467a2.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a1f3f48f4bbe7d83.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a612b72e8f9c68ed.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568f8c3a55cc26e3163.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c56a4f0181579a423f11.png" alt=""></span>
+        </div>
+        <div class="ticker-set">
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568d9a153ac43f467a2.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a1f3f48f4bbe7d83.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a612b72e8f9c68ed.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568f8c3a55cc26e3163.png" alt=""></span>
+          <span class="ticker-item"><img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c56a4f0181579a423f11.png" alt=""></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  FEATURES  ===================== -->
+  <section class="section features" id="features">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <div class="sh-left">
+          <span class="section-tag">How it works</span>
+          <h2>Built for clarity. Designed for precision.</h2>
+        </div>
+        <p>PassQuest replaces blind studying with a precision system built around your exact gaps.</p>
+      </div>
+
+      <div class="feature-grid">
+
+        <!-- 1 — Scan your gaps -->
+        <article class="feature-card reveal">
+          <div class="fc-mock">
+            <div class="card-phone"><div class="cp-screen">
+              <div class="cp-notch"></div>
+              <div class="cp-title"><span>Gap Map</span><span>IELTS</span></div>
+              <div class="cp-bar"><span class="b-name">Listening</span><span class="b-track"><i style="width:74%;background:var(--teal)"></i></span><span class="b-val" style="color:var(--teal)">74</span></div>
+              <div class="cp-bar"><span class="b-name">Reading</span><span class="b-track"><i style="width:55%;background:var(--purple-lt)"></i></span><span class="b-val" style="color:var(--purple-lt)">55</span></div>
+              <div class="cp-bar"><span class="b-name">Writing</span><span class="b-track"><i style="width:48%;background:var(--red)"></i></span><span class="b-val" style="color:var(--red)">48</span></div>
+              <div class="cp-bar"><span class="b-name">Speaking</span><span class="b-track"><i style="width:61%;background:var(--gold)"></i></span><span class="b-val" style="color:var(--gold)">61</span></div>
+              <div class="cp-alert">⚠ Writing Task 2 — Coherence is costing your band the most</div>
+            </div></div>
+          </div>
+          <div class="fc-copy">
+            <h3>Scan your gaps</h3>
+            <p>A short AI diagnostic builds a precision map of exactly where your score is leaking — not a generic question bank.</p>
+          </div>
+        </article>
+
+        <!-- 2 — Train every day -->
+        <article class="feature-card reveal">
+          <div class="fc-mock">
+            <div class="card-phone"><div class="cp-screen">
+              <div class="cp-notch"></div>
+              <div class="cp-title"><span>Deep Session</span><span>7 / 10</span></div>
+              <div class="cp-q">The filtered water flows directly into the…
+                <div class="cp-opts">
+                  <span>storage tank</span>
+                  <span class="ok">reservoir ✓</span>
+                  <span>main pipe</span>
+                </div>
+              </div>
+              <div class="cp-xp"><span>Streak 14 🔥</span><span>+120 XP</span></div>
+            </div></div>
+          </div>
+          <div class="fc-copy">
+            <h3>Train every day</h3>
+            <p>15-minute adaptive sessions with XP, streaks, ranks and Boss Battles that keep you in the optimal challenge zone.</p>
+          </div>
+        </article>
+
+        <!-- 3 — Know when you're ready -->
+        <article class="feature-card reveal">
+          <div class="fc-mock">
+            <div class="card-phone"><div class="cp-screen">
+              <div class="cp-notch"></div>
+              <div class="cp-title"><span>Readiness</span><span>Live</span></div>
+              <div class="cp-ring-wrap">
+                <div class="cp-ring"><b class="tabular">74%</b></div>
+                <div class="cp-climb"><i style="height:34%"></i><i style="height:46%"></i><i style="height:41%"></i><i style="height:62%"></i><i style="height:70%"></i><i style="height:88%"></i></div>
+                <div class="cp-ok">✓ Predicted band 6.0 → 7.0</div>
+              </div>
+            </div></div>
+          </div>
+          <div class="fc-copy">
+            <h3>Know when you're ready</h3>
+            <p>A live readiness score updates after every session, so you watch your predicted band climb in real time.</p>
+          </div>
+        </article>
+
+        <!-- 4 — Track every sub-skill -->
+        <article class="feature-card reveal">
+          <div class="fc-mock">
+            <div class="card-phone"><div class="cp-screen">
+              <div class="cp-notch"></div>
+              <div class="cp-title"><span>Skill breakdown</span><span>Target 7.0</span></div>
+              <div class="cp-skill"><span class="s-name">Listening</span><span class="s-right"><span class="s-tag">on track</span><span class="s-band" style="color:var(--teal)">7.0</span></span></div>
+              <div class="cp-skill"><span class="s-name">Reading</span><span class="s-right"><span class="s-tag">on track</span><span class="s-band">6.5</span></span></div>
+              <div class="cp-skill low"><span class="s-name">Writing</span><span class="s-right"><span class="s-tag">below target</span><span class="s-band">5.5</span></span></div>
+              <div class="cp-skill"><span class="s-name">Speaking</span><span class="s-right"><span class="s-tag">on track</span><span class="s-band">6.5</span></span></div>
+              <div class="cp-alert">🔔 Writing dropped below Band 7.0 — focus here next</div>
+            </div></div>
+          </div>
+          <div class="fc-copy">
+            <h3>Track every sub-skill</h3>
+            <p>Individual scores for Listening, Reading, Writing and Speaking — with an alert the moment one drops below your target band.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  BENEFITS  ===================== -->
+  <section class="section benefits" id="benefits">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <span class="section-tag">Benefits</span>
+        <h2>Everything you need. All in one place.</h2>
+      </div>
+
+      <div class="benefits-stage reveal">
+
+        <div class="benefit-col">
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M4 2a1 1 0 0 1 1 1v15a.5.5 0 0 0 .5.5H21a1 1 0 1 1 0 2H4a2 2 0 0 1-2-2V3a1 1 0 0 1 1-1Z"/><path d="M20.3 6.7a1 1 0 0 0-1.6-.4l-4.2 4.2-2.3-2.3a1 1 0 0 0-1.4 0l-4 4a1 1 0 1 0 1.4 1.4l3.3-3.3 2.3 2.3a1 1 0 0 0 1.4 0l5-5a1 1 0 0 0 .3-.9Z"/></svg>
+            </span>
+            <h4>Live band prediction</h4>
+            <p>Your predicted score updates the moment you finish a session.</p>
+          </div>
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z"/><path d="M12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"/></svg>
+            </span>
+            <h4>Gap Map alerts</h4>
+            <p>Know which topic is costing you points before you study the wrong thing.</p>
+          </div>
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M15 4H9a5 5 0 0 0-5 5v6a5 5 0 0 0 5 5h6a5 5 0 0 0 5-5V9a5 5 0 0 0-5-5Zm-1 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1Z"/><path d="M9 4a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm6 0a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1ZM9 23a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm6 0a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1ZM4 10a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2H4Zm0 6a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2H4Zm16-6h-1a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2Zm0 6h-1a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2Z"/></svg>
+            </span>
+            <h4>AI adaptive engine</h4>
+            <p>Drops what you already know and locks onto the 20% that moves your score.</p>
+          </div>
+        </div>
+
+        <div class="benefits-mid">
+          <div class="bm-device">
+            <div class="bm-screen"><div class="bm-inner">
+              <div class="status-bar">
+                <span class="tabular">9:41</span>
+                <span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span>
+              </div>
+              <p class="screen-greeting">Good morning, Adaeze 👋</p>
+              <div class="readiness-card">
+                <div class="rc-top"><span class="rc-label">Readiness</span><span class="rc-score tabular">62%</span></div>
+                <div class="rc-bar"><i></i></div>
+                <p class="rc-note">Band 6.0 → 7.0 at this pace <b>⭐</b></p>
+              </div>
+              <div class="screen-stats">
+                <div><div class="s-num tabular">14</div><div class="s-lbl">Day streak</div></div>
+                <div><div class="s-num tabular">42</div><div class="s-lbl">Sessions</div></div>
+                <div><div class="s-num tabular">+0.6</div><div class="s-lbl">Band gain</div></div>
+              </div>
+              <div class="skill-row sk-teal"><span class="sk-name">Listening</span><span class="sk-track"><i style="width:74%"></i></span><span class="sk-val">74%</span></div>
+              <div class="skill-row sk-purple"><span class="sk-name">Reading</span><span class="sk-track"><i style="width:55%"></i></span><span class="sk-val">55%</span></div>
+              <div class="skill-row sk-red"><span class="sk-name">Writing ⚠</span><span class="sk-track"><i style="width:48%"></i></span><span class="sk-val">48%</span></div>
+              <div class="skill-row sk-gold"><span class="sk-name">Speaking</span><span class="sk-track"><i style="width:61%"></i></span><span class="sk-val">61%</span></div>
+              <div class="cp-alert">⚠ Writing Task 2 · Coherence — your #1 score leak</div>
+              <div class="bp-next" style="margin-top:8px">⚔ Boss Battle unlocks at Level 20</div>
+              <a class="screen-cta" href="#download" style="margin-top:14px">Continue training →</a>
+            </div></div>
+            <img class="bm-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c5680e3d7a2f06e20ec3.png" alt="" aria-hidden="true" width="595" height="1024">
+          </div>
+        </div>
+
+        <div class="benefit-col r">
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M17 3H7a2 2 0 0 0-2 2v3a5 5 0 0 0 5 5h4a5 5 0 0 0 5-5V5a2 2 0 0 0-2-2Z"/><path d="M5 5H4a2 2 0 0 0-2 2 3 3 0 0 0 3 3h1a1 1 0 0 0 .8-1.6A6.9 6.9 0 0 1 5.5 5.3 1 1 0 0 0 5 5Zm15 0h-1a1 1 0 0 0-.5.3 6.9 6.9 0 0 1-1.3 4.1A1 1 0 0 0 18 10h1a3 3 0 0 0 3-3 2 2 0 0 0-2-2Zm-7 8.9V17h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-3.1a1 1 0 1 1 2 0Z"/></svg>
+            </span>
+            <h4>XP, streaks &amp; ranks</h4>
+            <p>Climb from Bronze to Legend — consistency that finally feels rewarding.</p>
+          </div>
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M11.2 2.2 5 4.7A3 3 0 0 0 3 7.5v4.2c0 5.3 3.7 8.4 6.8 10a4.7 4.7 0 0 0 4.4 0c3.1-1.6 6.8-4.7 6.8-10V7.5a3 3 0 0 0-2-2.8l-6.2-2.5a2 2 0 0 0-1.6 0Z"/><path d="M14.8 9.1a1 1 0 0 0-1.7-1L10 12.4a1 1 0 0 0 .1 1.3l1.4 1.4-1.3 1.9a1 1 0 0 0 1.7 1l2-3a1 1 0 0 0-.1-1.3l-1.4-1.4Z"/></svg>
+            </span>
+            <h4>Boss Battles</h4>
+            <p>Milestone challenges that make quitting feel like a personal failure.</p>
+          </div>
+          <div class="benefit-item">
+            <span class="bi-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M16 2H8a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3Z"/><path d="M13.5 5.8h-3a.8.8 0 1 1 0-1.6h3a.8.8 0 1 1 0 1.6ZM12 20a1.8 1.8 0 1 1 0-3.6A1.8 1.8 0 0 1 12 20Z"/></svg>
+            </span>
+            <h4>Built for real life</h4>
+            <p>15-minute sessions for the commute, between classes, before sleep.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  PRODUCT DEEP DIVE  ===================== -->
+  <section class="section deep" id="system">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <span class="section-tag">The system</span>
+        <h2>Put the precision in your preparation.</h2>
+      </div>
+
+      <!-- Row 1 — Gap Map -->
+      <div class="deep-row reveal">
+        <div class="deep-visual">
+          <div class="stage">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-bar"><span class="tabular">9:41</span><span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span></div>
+                <div class="scr-title"><span>Gap Map</span><small>IELTS Academic</small></div>
+                <div class="cp-bar"><span class="b-name">Listening</span><span class="b-track"><i style="width:74%;background:var(--teal)"></i></span><span class="b-val" style="color:var(--teal)">74</span></div>
+                <div class="cp-bar"><span class="b-name">Reading</span><span class="b-track"><i style="width:55%;background:var(--purple-lt)"></i></span><span class="b-val" style="color:var(--purple-lt)">55</span></div>
+                <div class="cp-bar"><span class="b-name">Writing</span><span class="b-track"><i style="width:48%;background:var(--red)"></i></span><span class="b-val" style="color:var(--red)">48</span></div>
+                <div class="cp-bar"><span class="b-name">Speaking</span><span class="b-track"><i style="width:61%;background:var(--gold)"></i></span><span class="b-val" style="color:var(--gold)">61</span></div>
+                <div class="cp-alert">⚠ Writing Task 2 · Coherence — your biggest score leak</div>
+                <div class="cp-alert amber" style="margin-top:8px">◷ True / False / Not Given · 58% accuracy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deep-copy">
+          <h3>Stop studying everything. Fix the one thing costing you your band.</h3>
+          <p>A short AI diagnostic maps where your score is leaking — down to the sub-topic. Writing Task 2 coherence. True/False/Not Given. The exact things, not general advice.</p>
+          <a class="link-btn" href="#download">See your Gap Map <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <!-- Row 2 — Live Readiness Score -->
+      <div class="deep-row flip reveal">
+        <div class="deep-visual">
+          <div class="stage">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-bar"><span class="tabular">9:41</span><span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span></div>
+                <div class="scr-title"><span>Readiness</span><small>updates live</small></div>
+                <div class="cp-ring-wrap">
+                  <div class="cp-ring"><b class="tabular">74%</b></div>
+                  <div class="cp-climb"><i style="height:30%"></i><i style="height:42%"></i><i style="height:38%"></i><i style="height:58%"></i><i style="height:69%"></i><i style="height:86%"></i></div>
+                  <div class="cp-ok">✓ Predicted band 6.0 → 7.0</div>
+                </div>
+                <div class="cp-alert amber" style="margin-top:14px">▲ +0.4 band this week — keep the streak going</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deep-copy">
+          <h3>Watch your predicted band climb every time you train.</h3>
+          <p>After every session your readiness score updates — based on whether the right things are improving, not how many questions you answered. Know you're ready before you book the exam.</p>
+          <a class="link-btn" href="#download">Track your readiness <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <!-- Row 3 — The game that keeps you coming back -->
+      <div class="deep-row reveal">
+        <div class="deep-visual">
+          <div class="stage">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="status-bar"><span class="tabular">9:41</span><span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span></div>
+                <div class="scr-title"><span>Your progress</span><small>Season 4</small></div>
+                <div class="bp-rank"><span class="bp-badge" aria-hidden="true">🏅</span><div><b>Level 18</b><small>Rank · Gold III</small></div></div>
+                <div class="bp-streak"><b class="tabular">14</b><span>day streak 🔥<br><small>Top 8% this week</small></span></div>
+                <div class="bp-xp"><div class="bp-xp-top"><span>XP</span><span class="tabular">2,340 / 3,000</span></div><div class="bp-xp-bar"><i style="width:78%"></i></div></div>
+                <div class="bp-next">⚔ Boss Battle unlocks at Level 20</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="deep-copy">
+          <h3>A game you actually want to play. Every single day.</h3>
+          <p>XP, streaks, ranks, and Boss Battles turn showing up into a progression you don't want to break. The hardest part of prep isn't the content — it's consistency. This makes consistency the easy path.</p>
+          <a class="link-btn" href="#download">Start your streak <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================  EXAMS  ===================== -->
+  <section class="section exams" id="exams">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <span class="section-tag">Exams</span>
+        <h2>Built for the exam that decides your next chapter.</h2>
+        <p>Full IELTS coverage today. More exams in active development.</p>
+      </div>
+
+      <div class="exams-layout reveal">
+
+        <div class="exam-tabs" role="tablist" aria-label="Exams">
+          <button class="exam-tab" role="tab" id="tab-ielts"  aria-selected="true"  aria-controls="panel-ielts">
+            <img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568d9a153ac43f467a2.png" alt="IELTS">
+            <span class="et-status live">Live</span>
+          </button>
+          <button class="exam-tab" role="tab" id="tab-celpip" aria-selected="false" aria-controls="panel-celpip">
+            <img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a1f3f48f4bbe7d83.png" alt="CELPIP">
+            <span class="et-status soon">In dev</span>
+          </button>
+          <button class="exam-tab" role="tab" id="tab-gre"    aria-selected="false" aria-controls="panel-gre">
+            <img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568a612b72e8f9c68ed.png" alt="GRE">
+            <span class="et-status soon">In dev</span>
+          </button>
+          <button class="exam-tab" role="tab" id="tab-sat"    aria-selected="false" aria-controls="panel-sat">
+            <img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c568f8c3a55cc26e3163.png" alt="SAT">
+            <span class="et-status soon">In dev</span>
+          </button>
+          <button class="exam-tab" role="tab" id="tab-toefl"  aria-selected="false" aria-controls="panel-toefl">
+            <img class="xlogo-img" src="https://assets.cdn.filesafe.space/TgPLClN8VgRVHxdVTIml/media/6a99c56a4f0181579a423f11.png" alt="TOEFL">
+            <span class="et-status soon">In dev</span>
+          </button>
+        </div>
+
+        <!-- IELTS -->
+        <div class="exam-panel" id="panel-ielts" role="tabpanel" aria-labelledby="tab-ielts">
+          <div class="skill-grid">
+
+            <div class="skill-card s-listening">
+              <span class="sc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M12 3a9 9 0 0 0-9 9v4a1 1 0 1 0 2 0v-4a7 7 0 0 1 14 0v4a1 1 0 1 0 2 0v-4a9 9 0 0 0-9-9Z"/><path d="M6 13a2 2 0 0 0-2 2v3a2 2 0 1 0 4 0v-3a2 2 0 0 0-2-2Zm12 0a2 2 0 0 0-2 2v3a2 2 0 1 0 4 0v-3a2 2 0 0 0-2-2Z"/></svg>
+              </span>
+              <h4>Listening</h4>
+              <p>Section 4 accuracy tracked on its own — where most bands slip.</p>
+            </div>
+
+            <div class="skill-card s-reading">
+              <span class="sc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M6 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h13a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6Z"/><path d="M7 7a1 1 0 0 1 1-1h7a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h7a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Z"/></svg>
+              </span>
+              <h4>Reading</h4>
+              <p>Detects the True / False / Not Given traps that cost you marks.</p>
+            </div>
+
+            <div class="skill-card s-writing">
+              <span class="sc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M5 15.5 15.6 4.9a3 3 0 0 1 4.2 4.2L9.2 19.7a2 2 0 0 1-.9.5l-4 1a1 1 0 0 1-1.2-1.2l1-4a2 2 0 0 1 .6-1Z"/><path d="M14.5 6 18 9.5l1.8-1.8a2.5 2.5 0 0 0-3.5-3.5L14.5 6Z"/></svg>
+              </span>
+              <h4>Writing</h4>
+              <p>Scored against all four band descriptors, not a vague overall.</p>
+            </div>
+
+            <div class="skill-card s-speaking">
+              <span class="sc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path opacity=".4" d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4Z"/><path d="M6 11a1 1 0 0 1 1 1 5 5 0 0 0 10 0 1 1 0 1 1 2 0 7 7 0 0 1-6 6.9V21a1 1 0 1 1-2 0v-2.1A7 7 0 0 1 5 12a1 1 0 0 1 1-1Z"/></svg>
+              </span>
+              <h4>Speaking</h4>
+              <p>Part 2 fluency and coherence tracked turn by turn.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CELPIP -->
+        <div class="exam-panel soon" id="panel-celpip" role="tabpanel" aria-labelledby="tab-celpip" hidden>
+          <div class="soon-card">
+            <div class="sp-pct tabular">35%<span>built</span></div>
+            <div class="soon-bar"><i style="width:35%"></i></div>
+            <p>Listening and Reading modules are in testing. Join the list to hear when it opens.</p>
+            <form class="soon-form" onsubmit="return false"><input type="email" placeholder="Email address" aria-label="Email address"><button type="submit">Notify me</button></form>
+          </div>
+        </div>
+
+        <!-- GRE -->
+        <div class="exam-panel soon" id="panel-gre" role="tabpanel" aria-labelledby="tab-gre" hidden>
+          <div class="soon-card">
+            <div class="sp-pct tabular">15%<span>built</span></div>
+            <div class="soon-bar"><i style="width:15%"></i></div>
+            <p>Quant question bank is being built first. Join the list to hear when it opens.</p>
+            <form class="soon-form" onsubmit="return false"><input type="email" placeholder="Email address" aria-label="Email address"><button type="submit">Notify me</button></form>
+          </div>
+        </div>
+
+        <!-- SAT -->
+        <div class="exam-panel soon" id="panel-sat" role="tabpanel" aria-labelledby="tab-sat" hidden>
+          <div class="soon-card">
+            <div class="sp-pct tabular">10%<span>built</span></div>
+            <div class="soon-bar"><i style="width:10%"></i></div>
+            <p>Early scoping of the Reading &amp; Writing section. Join the list to hear when it opens.</p>
+            <form class="soon-form" onsubmit="return false"><input type="email" placeholder="Email address" aria-label="Email address"><button type="submit">Notify me</button></form>
+          </div>
+        </div>
+
+        <!-- TOEFL -->
+        <div class="exam-panel soon" id="panel-toefl" role="tabpanel" aria-labelledby="tab-toefl" hidden>
+          <div class="soon-card">
+            <div class="sp-pct tabular">8%<span>built</span></div>
+            <div class="soon-bar"><i style="width:8%"></i></div>
+            <p>Just getting started. Join the list to hear when it opens.</p>
+            <form class="soon-form" onsubmit="return false"><input type="email" placeholder="Email address" aria-label="Email address"><button type="submit">Notify me</button></form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  TESTIMONIALS  ===================== -->
+  <section class="section reviews" id="reviews">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <span class="section-tag">What people are saying</span>
+        <h2>Loved by students across the world.</h2>
+      </div>
+
+      <div class="rv-carousel reveal">
+        <div class="rv-track" id="rvTrack">
+
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5">★★★★★</div>
+            <p class="rv-quote">Two failed attempts stuck at Band 6.5 — PassQuest showed me my Writing coherence was the leak and I fixed it in three weeks.</p>
+            <div class="rv-who">
+              <span class="rv-avatar" aria-hidden="true">🇨🇦</span>
+              <span><span class="rv-name">Maria K.</span><br><span class="rv-role">Canadian PR applicant</span></span>
+            </div>
+          </article>
+
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5">★★★★★</div>
+            <p class="rv-quote">The readiness score is the killer feature — every other app makes you guess if you're ready, PassQuest just tells you.</p>
+            <div class="rv-who">
+              <span class="rv-avatar" aria-hidden="true">🇬🇧</span>
+              <span><span class="rv-name">James A.</span><br><span class="rv-role">UK Student Visa</span></span>
+            </div>
+          </article>
+
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5">★★★★★</div>
+            <p class="rv-quote">Fifteen minutes a day was all I had as a night-shift nurse, and the streaks kept me consistent enough to pass first try.</p>
+            <div class="rv-who">
+              <span class="rv-avatar" aria-hidden="true">🇦🇺</span>
+              <span><span class="rv-name">Priya N.</span><br><span class="rv-role">Australian PR</span></span>
+            </div>
+          </article>
+
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5">★★★★★</div>
+            <p class="rv-quote">Went from not knowing what was costing me my band to a 7.5 overall — the Gap Map is everything.</p>
+            <div class="rv-who">
+              <span class="rv-avatar" aria-hidden="true">🇳🇬</span>
+              <span><span class="rv-name">Chidi O.</span><br><span class="rv-role">Lagos, Nigeria</span></span>
+            </div>
+          </article>
+
+          <article class="rv-card">
+            <div class="rv-stars" aria-label="5 out of 5">★★★★★</div>
+            <p class="rv-quote">The first IELTS app that felt built for my situation, not a generic question bank.</p>
+            <div class="rv-who">
+              <span class="rv-avatar" aria-hidden="true">🇺🇸</span>
+              <span><span class="rv-name">Aisha M.</span><br><span class="rv-role">US-based · Academic IELTS</span></span>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="rv-nav">
+          <button class="rv-btn" id="rvPrev" aria-label="Previous testimonials">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18 9 12l6-6"/></svg>
+          </button>
+          <button class="rv-btn" id="rvNext" aria-label="Next testimonials">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  PRICING  ===================== -->
+  <section class="section pricing" id="pricing">
+    <div class="container">
+
+      <div class="section-head reveal">
+        <span class="section-tag">Pricing</span>
+        <h2>Start free. Go Pro when you're ready.</h2>
+        <p>No card to start. Upgrade when the streak becomes a habit.</p>
+      </div>
+
+      <div class="pr-toggles reveal">
+        <div class="seg" role="group" aria-label="Billing period">
+          <button data-bill="monthly" aria-pressed="true">Monthly</button>
+          <button data-bill="annual" aria-pressed="false">Annual</button>
+        </div>
+        <span class="pr-save">Save 45%</span>
+      </div>
+
+      <div class="pr-grid reveal">
+
+        <!-- Free -->
+        <article class="pr-card">
+          <div class="pr-name">Free</div>
+          <div class="pr-price">
+            <span class="pr-amount" data-price data-usd-monthly="$0" data-usd-annual="$0">$0</span>
+            <span class="pr-suffix">forever</span>
+          </div>
+          <div class="pr-sub">No card needed</div>
+          <a class="pr-cta outline" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Download free</a>
+          <ul class="pr-feats">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>10 questions a day</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Basic readiness tracking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Daily streaks &amp; XP</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Full IELTS access</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Boss Battles (first 10 a day)</li>
+          </ul>
+        </article>
+
+        <!-- Pro -->
+        <article class="pr-card featured">
+          <span class="pr-badge">Most popular</span>
+          <div class="pr-name">Pro</div>
+          <div class="pr-price">
+            <span class="pr-amount" data-price data-usd-monthly="$9" data-usd-annual="$59">$9</span>
+            <span class="pr-suffix" data-suffix data-monthly="/month" data-annual="/year">/month</span>
+          </div>
+          <div class="pr-sub" data-prosub data-monthly="Billed monthly" data-annual="≈ 45% off vs monthly">Billed monthly</div>
+          <a class="pr-cta solid" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Start 7-day free trial</a>
+          <ul class="pr-feats">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Unlimited questions</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Full AI adaptive engine</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Live readiness score + band prediction</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Complete skill breakdown + Gap Map alerts</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Streak Shield &amp; unlimited Boss Battles</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>15-minute Deep Study Sessions</li>
+          </ul>
+        </article>
+
+        <!-- Teams -->
+        <article class="pr-card">
+          <div class="pr-name">Teams</div>
+          <div class="pr-price">
+            <span class="pr-amount">Custom</span>
+            <span class="pr-suffix">per seat</span>
+          </div>
+          <div class="pr-sub">For tutors &amp; cohorts</div>
+          <a class="pr-cta outline" href="mailto:support@passquest.app">Contact sales</a>
+          <ul class="pr-feats">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Everything in Pro</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Cohort dashboard + tutor seat</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Group leaderboards</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Bulk seat management</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Priority support</li>
+          </ul>
+        </article>
+
+      </div>
+
+      <p class="pr-note reveal">All paid plans include a 7-day free trial. No charge until it ends. Cancel anytime.</p>
+    </div>
+  </section>
+
+  <!-- =====================  FAQ  ===================== -->
+  <section class="section faq" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-tag">FAQs</span>
+        <h2>Got questions? We've got answers.</h2>
+      </div>
+
+      <div class="faq-list reveal">
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Is PassQuest really free to start?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. The Free plan needs no card and has no time limit — 10 questions a day, basic readiness tracking, daily streaks and XP. Upgrade to Pro for the full targeting system.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Does it work for both IELTS Academic and General Training?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Yes. Both test types are covered with content specific to each — General Training Task 1 is letter writing, Academic Task 1 is data description — and they're tracked separately.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">What happens after the 7-day free trial?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>You choose whether to continue on Pro. If you don't, you drop to the Free plan automatically — no surprise charges, ever.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">Is PassQuest available on iPhone?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>PassQuest is live on Google Play now. The iOS version is coming very soon — join the waitlist to be notified the moment it goes live.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">How is PassQuest different from other IELTS apps?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Every other app gives you more questions. PassQuest shows you which questions actually matter for your band — the Gap Map and live readiness score are features no other IELTS app has.</p></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">How long does it take to see results?<span class="faq-icon" aria-hidden="true"></span></button>
+          <div class="faq-a"><p>Most students see their readiness score move within the first week of consistent daily sessions, and the Gap Map updates after every session so progress is visible in real time.</p></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================  FOOTER CTA  ===================== -->
+  <section class="footer-cta" id="download">
+    <div class="container">
+      <div class="fc-text reveal">
+        <h2>Your band is closer than you think.</h2>
+        <p>Download PassQuest and start closing the gap today.</p>
+        <div class="store-row">
+          <a class="store-btn filled" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener" aria-label="Get PassQuest on Google Play">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1Z" fill="#00C3FF"/>
+              <path d="m16.3 15.9-3.2-3.2v-.2l3.2-3.2.1.1 3.8 2.2c1.1.6 1.1 1.6 0 2.2l-3.9 2.1Z" fill="#FFD400"/>
+              <path d="m16.4 15.8-3.3-3.3-9.4 9.4c.4.4 1 .4 1.7.1l11-6.2" fill="#FF3333"/>
+              <path d="M16.4 9.2 5.4 3C4.7 2.6 4.1 2.7 3.7 3.1l9.4 9.4 3.3-3.3Z" fill="#00D26A"/>
+            </svg>
+            <span class="lbl"><small>GET IT ON</small><b>Google Play</b></span>
+          </a>
+          <a class="store-btn outline" href="#download" aria-label="PassQuest coming soon to the App Store">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.2 1-4.1 2.5-1.7 3-.4 7.4 1.3 9.9.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.5ZM14 5.4c.7-.8 1.1-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3Z"/></svg>
+            <span class="lbl"><small>COMING SOON TO</small><b>App Store</b></span>
+          </a>
+        </div>
+        <p class="fc-note">Free to download · 7-day Pro trial · No card</p>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="tabular">9:41</span>
+              <span class="dots"><i></i><i></i><i></i><i></i><span class="batt"></span></span>
+            </div>
+            <p class="screen-greeting">You're exam ready 🎉</p>
+            <div class="readiness-card">
+              <div class="rc-top"><span class="rc-label">Readiness</span><span class="rc-score tabular">91%</span></div>
+              <div class="rc-bar"><i style="width:91%"></i></div>
+              <p class="rc-note">Predicted band <b>7.5</b> — booked for Saturday</p>
+            </div>
+            <div class="screen-stats">
+              <div><div class="s-num tabular">42</div><div class="s-lbl">Streak 🔥</div></div>
+              <div><div class="s-num tabular">1,204</div><div class="s-lbl">Questions</div></div>
+              <div><div class="s-num tabular">Legend</div><div class="s-lbl">Rank</div></div>
+            </div>
+            <a class="screen-cta" href="#download">Review weak spots →</a>
+            <div class="skill-row sk-teal"><span class="sk-name">Listening</span><span class="sk-track"><i style="width:88%"></i></span><span class="sk-val">88%</span></div>
+            <div class="skill-row sk-purple"><span class="sk-name">Reading</span><span class="sk-track"><i style="width:85%"></i></span><span class="sk-val">85%</span></div>
+            <div class="skill-row sk-gold"><span class="sk-name">Writing</span><span class="sk-track"><i style="width:79%"></i></span><span class="sk-val">79%</span></div>
+            <div class="skill-row sk-teal"><span class="sk-name">Speaking</span><span class="sk-track"><i style="width:82%"></i></span><span class="sk-val">82%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+
+    <div class="newsletter reveal">
+      <div>
+        <h3>Stay in the loop</h3>
+        <p>Get notified when new exams and the iOS app go live.</p>
+      </div>
+      <form class="nl-form" onsubmit="return false">
+        <input type="email" placeholder="Email address" aria-label="Email address">
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a class="brand" href="#top" aria-label="PassQuest home">
+          <svg class="brand-logo" viewBox="0 0 632 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PassQuest">
+            <path d="M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z" fill="#7C6AFF"/>
+            <path d="M63.998 108C88.2986 108 107.998 88.3008 107.998 64.0002C107.998 39.6997 88.2986 20.0002 63.998 20.0002C39.6975 20.0002 19.998 39.6997 19.998 64.0002C19.998 88.3008 39.6975 108 63.998 108Z" fill="url(#pqFoot)"/>
+            <path d="M71.999 12.0002L39.999 68.0002H63.999L55.999 116L95.999 52.0002H71.999V12.0002Z" fill="white" stroke="white" stroke-width="3.16832" stroke-linejoin="round"/>
+            <path d="M155.884 101V26.994H185.082C190.695 26.994 195.477 28.0661 199.428 30.2101C203.379 32.3301 206.39 35.2812 208.462 39.0634C210.558 42.8215 211.606 47.1578 211.606 52.0722C211.606 56.9867 210.546 61.323 208.426 65.0811C206.306 68.8392 203.234 71.7662 199.211 73.8621C195.212 75.9579 190.37 77.0059 184.684 77.0059H166.075V64.4668H182.155C185.166 64.4668 187.648 63.9488 189.599 62.9129C191.574 61.853 193.044 60.3955 194.007 58.5405C194.995 56.6615 195.489 54.5054 195.489 52.0722C195.489 49.615 194.995 47.4709 194.007 45.6401C193.044 43.7851 191.574 42.3517 189.599 41.3399C187.624 40.304 185.118 39.7861 182.083 39.7861H171.531V101H155.884ZM228.693 102.048C225.152 102.048 221.996 101.434 219.226 100.205C216.455 98.9523 214.263 97.1094 212.649 94.6762C211.059 92.219 210.264 89.1595 210.264 85.4978C210.264 82.4142 210.83 79.8245 211.963 77.7286C213.095 75.6327 214.637 73.9464 216.588 72.6696C218.539 71.3928 220.756 70.4292 223.237 69.7787C225.742 69.1283 228.368 68.6706 231.115 68.4056C234.343 68.0683 236.944 67.7551 238.92 67.466C240.895 67.1529 242.329 66.6952 243.22 66.0929C244.111 65.4906 244.557 64.5993 244.557 63.4188V63.202C244.557 60.9134 243.834 59.1428 242.389 57.8901C240.968 56.6374 238.944 56.011 236.318 56.011C233.548 56.011 231.343 56.6253 229.705 57.8539C228.067 59.0585 226.983 60.5762 226.453 62.407L212.216 61.2507C212.938 57.878 214.36 54.9631 216.48 52.5059C218.6 50.0245 221.334 48.1214 224.682 46.7964C228.055 45.4473 231.958 44.7728 236.39 44.7728C239.474 44.7728 242.425 45.1342 245.244 45.8569C248.086 46.5796 250.604 47.6998 252.796 49.2175C255.012 50.7352 256.759 52.6865 258.036 55.0715C259.312 57.4324 259.951 60.263 259.951 63.5634V101H245.352V93.3031H244.918C244.027 95.0376 242.835 96.5674 241.341 97.8923C239.847 99.1932 238.053 100.217 235.957 100.964C233.861 101.687 231.44 102.048 228.693 102.048ZM233.102 91.424C235.367 91.424 237.366 90.9784 239.101 90.087C240.835 89.1716 242.196 87.943 243.184 86.4012C244.172 84.8594 244.665 83.1128 244.665 81.1615V75.2714C244.184 75.5845 243.521 75.8736 242.678 76.1386C241.859 76.3795 240.931 76.6084 239.896 76.8252C238.86 77.0179 237.824 77.1986 236.788 77.3672C235.752 77.5118 234.812 77.6443 233.969 77.7647C232.162 78.0297 230.585 78.4513 229.235 79.0295C227.886 79.6077 226.838 80.3906 226.092 81.3783C225.345 82.3419 224.971 83.5464 224.971 84.9919C224.971 87.0877 225.73 88.6898 227.248 89.7979C228.79 90.882 230.741 91.424 233.102 91.424ZM310.952 61.323L296.859 62.1902C296.618 60.9857 296.1 59.9016 295.305 58.938C294.51 57.9503 293.462 57.1674 292.162 56.5892C290.885 55.9869 289.355 55.6858 287.572 55.6858C285.187 55.6858 283.176 56.1917 281.538 57.2035C279.899 58.1912 279.08 59.5162 279.08 61.1784C279.08 62.5034 279.61 63.6236 280.67 64.5391C281.73 65.4545 283.549 66.1893 286.127 66.7433L296.173 68.7669C301.569 69.8751 305.592 71.6578 308.242 74.115C310.892 76.5723 312.217 79.8004 312.217 83.7994C312.217 87.4371 311.145 90.629 309.001 93.3754C306.881 96.1217 303.966 98.2657 300.256 99.8075C296.57 101.325 292.318 102.084 287.5 102.084C280.152 102.084 274.298 100.554 269.938 97.4948C265.602 94.4113 263.06 90.2195 262.313 84.9196L277.454 84.1246C277.912 86.365 279.02 88.0755 280.779 89.2559C282.537 90.4122 284.79 90.9904 287.536 90.9904C290.234 90.9904 292.402 90.4725 294.041 89.4366C295.703 88.3766 296.546 87.0155 296.57 85.3532C296.546 83.956 295.956 82.8117 294.799 81.9203C293.643 81.0049 291.86 80.3063 289.451 79.8245L279.839 77.9093C274.419 76.8252 270.384 74.9461 267.734 72.2721C265.108 69.5981 263.795 66.1893 263.795 62.0457C263.795 58.4803 264.759 55.4088 266.686 52.8311C268.637 50.2534 271.371 48.2659 274.889 46.8687C278.43 45.4714 282.574 44.7728 287.319 44.7728C294.33 44.7728 299.846 46.2544 303.869 49.2175C307.917 52.1806 310.278 56.2158 310.952 61.323ZM360.969 61.323L346.876 62.1902C346.635 60.9857 346.117 59.9016 345.322 58.938C344.527 57.9503 343.479 57.1674 342.178 56.5892C340.901 55.9869 339.372 55.6858 337.589 55.6858C335.204 55.6858 333.192 56.1917 331.554 57.2035C329.916 58.1912 329.097 59.5162 329.097 61.1784C329.097 62.5034 329.627 63.6236 330.687 64.5391C331.747 65.4545 333.566 66.1893 336.143 66.7433L346.189 68.7669C351.585 69.8751 355.608 71.6578 358.258 74.115C360.908 76.5723 362.233 79.8004 362.233 83.7994C362.233 87.4371 361.161 90.629 359.017 93.3754C356.897 96.1217 353.982 98.2657 350.272 99.8075C346.587 101.325 342.335 102.084 337.517 102.084C330.169 102.084 324.315 100.554 319.955 97.4948C315.618 94.4113 313.077 90.2195 312.33 84.9196L327.471 84.1246C327.929 86.365 329.037 88.0755 330.795 89.2559C332.554 90.4122 334.806 90.9904 337.553 90.9904C340.251 90.9904 342.419 90.4725 344.057 89.4366C345.719 88.3766 346.563 87.0155 346.587 85.3532C346.563 83.956 345.972 82.8117 344.816 81.9203C343.66 81.0049 341.877 80.3063 339.468 79.8245L329.856 77.9093C324.435 76.8252 320.4 74.9461 317.75 72.2721C315.124 69.5981 313.812 66.1893 313.812 62.0457C313.812 58.4803 314.775 55.4088 316.702 52.8311C318.654 50.2534 321.388 48.2659 324.905 46.8687C328.446 45.4714 332.59 44.7728 337.336 44.7728C344.346 44.7728 349.863 46.2544 353.886 49.2175C357.933 52.1806 360.294 56.2158 360.969 61.323Z" fill="currentColor"/>
+            <path d="M393.026 75.2714H406.324L413.009 83.8717L419.585 91.5324L431.98 107.071H417.381L408.853 96.5914L404.481 90.3761L393.026 75.2714ZM433.1 63.997C433.1 72.0673 431.57 78.9331 428.511 84.5944C425.476 90.2556 421.332 94.5799 416.08 97.5671C410.853 100.53 404.975 102.012 398.446 102.012C391.869 102.012 385.967 100.518 380.74 97.531C375.512 94.5438 371.38 90.2195 368.345 84.5582C365.31 78.897 363.792 72.0432 363.792 63.997C363.792 55.9267 365.31 49.0609 368.345 43.3997C371.38 37.7384 375.512 33.4262 380.74 30.4631C385.967 27.4758 391.869 25.9822 398.446 25.9822C404.975 25.9822 410.853 27.4758 416.08 30.4631C421.332 33.4262 425.476 37.7384 428.511 43.3997C431.57 49.0609 433.1 55.9267 433.1 63.997ZM417.237 63.997C417.237 58.7694 416.454 54.3608 414.888 50.7713C413.346 47.1819 411.166 44.4596 408.347 42.6047C405.529 40.7497 402.228 39.8222 398.446 39.8222C394.664 39.8222 391.363 40.7497 388.545 42.6047C385.726 44.4596 383.534 47.1819 381.968 50.7713C380.426 54.3608 379.656 58.7694 379.656 63.997C379.656 69.2247 380.426 73.6332 381.968 77.2227C383.534 80.8122 385.726 83.5344 388.545 85.3894C391.363 87.2443 394.664 88.1718 398.446 88.1718C402.228 88.1718 405.529 87.2443 408.347 85.3894C411.166 83.5344 413.346 80.8122 414.888 77.2227C416.454 73.6332 417.237 69.2247 417.237 63.997ZM472.872 77.3672V45.4955H488.266V101H473.487V90.9181H472.908C471.656 94.1703 469.572 96.7842 466.657 98.7596C463.766 100.735 460.237 101.723 456.069 101.723C452.359 101.723 449.095 100.88 446.276 99.1932C443.458 97.5069 441.254 95.1099 439.664 92.0022C438.098 88.8945 437.303 85.1726 437.279 80.8363V45.4955H452.672V78.09C452.697 81.3663 453.576 83.956 455.31 85.8591C457.045 87.7623 459.37 88.7139 462.285 88.7139C464.139 88.7139 465.874 88.2923 467.488 87.4491C469.102 86.5818 470.403 85.3051 471.391 83.6187C472.403 81.9324 472.896 79.8486 472.872 77.3672ZM518.751 102.084C513.042 102.084 508.127 100.928 504.008 98.615C499.913 96.2783 496.757 92.9779 494.54 88.7139C492.324 84.4257 491.216 79.3547 491.216 73.5007C491.216 67.7913 492.324 62.7805 494.54 58.4683C496.757 54.1561 499.876 50.7954 503.899 48.3864C507.947 45.9773 512.693 44.7728 518.137 44.7728C521.799 44.7728 525.208 45.363 528.363 46.5435C531.543 47.6998 534.314 49.4464 536.675 51.7831C539.06 54.1199 540.915 57.059 542.24 60.6003C543.564 64.1175 544.227 68.2369 544.227 72.9587V77.1866H497.359V67.6467H529.737C529.737 65.4304 529.255 63.467 528.291 61.7566C527.327 60.0462 525.99 58.7092 524.28 57.7455C522.594 56.7578 520.63 56.264 518.39 56.264C516.053 56.264 513.981 56.806 512.175 57.8901C510.392 58.9501 508.995 60.3834 507.983 62.1902C506.971 63.9729 506.453 65.9604 506.429 68.1526V77.2227C506.429 79.969 506.935 82.3419 507.947 84.3414C508.983 86.3409 510.44 87.8827 512.319 88.9668C514.198 90.0509 516.427 90.5929 519.004 90.5929C520.715 90.5929 522.281 90.352 523.702 89.8702C525.123 89.3884 526.34 88.6657 527.352 87.7021C528.363 86.7384 529.134 85.558 529.664 84.1608L543.902 85.1003C543.179 88.5211 541.697 91.5083 539.457 94.0619C537.241 96.5914 534.374 98.5669 530.857 99.9882C527.364 101.385 523.328 102.084 518.751 102.084ZM593.331 61.323L579.238 62.1902C578.997 60.9857 578.479 59.9016 577.684 58.938C576.889 57.9503 575.841 57.1674 574.541 56.5892C573.264 55.9869 571.734 55.6858 569.951 55.6858C567.566 55.6858 565.555 56.1917 563.917 57.2035C562.278 58.1912 561.459 59.5162 561.459 61.1784C561.459 62.5034 561.989 63.6236 563.049 64.5391C564.109 65.4545 565.928 66.1893 568.506 66.7433L578.552 68.7669C583.948 69.8751 587.971 71.6578 590.621 74.115C593.271 76.5723 594.596 79.8004 594.596 83.7994C594.596 87.4371 593.524 90.629 591.38 93.3754C589.26 96.1217 586.345 98.2657 582.635 99.8075C578.949 101.325 574.697 102.084 569.879 102.084C562.531 102.084 556.677 100.554 552.317 97.4948C547.981 94.4113 545.439 90.2195 544.692 84.9196L559.833 84.1246C560.291 86.365 561.399 88.0755 563.158 89.2559C564.916 90.4122 567.169 90.9904 569.915 90.9904C572.613 90.9904 574.781 90.4725 576.42 89.4366C578.082 88.3766 578.925 87.0155 578.949 85.3532C578.925 83.956 578.335 82.8117 577.178 81.9203C576.022 81.0049 574.239 80.3063 571.83 79.8245L562.218 77.9093C556.798 76.8252 552.763 74.9461 550.113 72.2721C547.487 69.5981 546.174 66.1893 546.174 62.0457C546.174 58.4803 547.138 55.4088 549.065 52.8311C551.016 50.2534 553.75 48.2659 557.268 46.8687C560.809 45.4714 564.953 44.7728 569.698 44.7728C576.709 44.7728 582.225 46.2544 586.248 49.2175C590.296 52.1806 592.657 56.2158 593.331 61.323ZM626.689 45.4955V57.059H593.263V45.4955H626.689ZM600.852 32.1976H616.246V83.9439C616.246 85.3653 616.463 86.4734 616.896 87.2684C617.33 88.0393 617.932 88.5814 618.703 88.8945C619.498 89.2077 620.413 89.3643 621.449 89.3643C622.172 89.3643 622.895 89.3041 623.617 89.1836C624.34 89.0391 624.894 88.9307 625.28 88.8584L627.701 100.313C626.93 100.554 625.846 100.831 624.449 101.145C623.051 101.482 621.353 101.687 619.353 101.759C615.644 101.903 612.391 101.41 609.597 100.277C606.826 99.145 604.67 97.3864 603.129 95.0015C601.587 92.6165 600.828 89.6052 600.852 85.9675V32.1976Z" fill="#7D6AFF"/>
+            <defs>
+              <linearGradient id="pqFoot" x1="19.998" y1="20.0002" x2="107.998" y2="108" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#7C6AFF"/><stop offset="1" stop-color="#3A1FA0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </a>
+        <p>The AI-powered IELTS app that tells you when you're ready.</p>
+        <div class="socials">
+          <a href="https://www.tiktok.com/@passquest.app" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.3 2.3 1.6 3.9 3.8 4v2.8c-1.4.1-2.7-.3-3.8-1v6.6c0 3.6-2.6 6.1-6 6.1A5.9 5.9 0 0 1 4 21.6a6 6 0 0 0 4.6 2.1c3.4 0 6-2.5 6-6.1V11c1.1.7 2.4 1.1 3.8 1V9.2c-2.2-.1-3.5-1.7-3.8-4H16Z" opacity=".35"/><path d="M15 2h-3v14.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1v-3a5.6 5.6 0 1 0 4.8 5.5V9.4c1.1.7 2.4 1.1 3.8 1V7.6c-2.2-.1-3.5-1.7-3.8-4A4 4 0 0 1 15 3V2Z"/></svg></a>
+          <a href="https://www.instagram.com/passquest.app" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.linkedin.com/company/passquestapp/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 8H3.7v12h2.8V8ZM5.1 3.5A1.6 1.6 0 1 0 5 6.7a1.6 1.6 0 0 0 .1-3.2ZM20.3 20v-6.6c0-3.5-1.9-5.2-4.4-5.2-2 0-2.9 1.1-3.4 1.9V8H9.7v12h2.8v-6.3c0-.3 0-.7.1-.9.3-.7.9-1.4 2-1.4 1.4 0 2 1.1 2 2.7V20h2.7Z"/></svg></a>
+          <a href="https://x.com/passquestapp" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3.3l-7.2 8.2L22 21h-6.6l-5.2-6.8L4.3 21H1l7.7-8.8L2 3h6.8l4.7 6.2L17.5 3Zm-1.2 16h1.8L7.8 4.9H5.9L16.3 19Z"/></svg></a>
+          <a href="https://www.youtube.com/@passquest" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-2.6-.2-3.8-.5-4.4a2.6 2.6 0 0 0-1.8-1.8C18.4 5.5 12 5.5 12 5.5s-6.4 0-7.7.3a2.6 2.6 0 0 0-1.8 1.8C2.2 8.2 2 9.4 2 12s.2 3.8.5 4.4a2.6 2.6 0 0 0 1.8 1.8c1.3.3 7.7.3 7.7.3s6.4 0 7.7-.3a2.6 2.6 0 0 0 1.8-1.8c.3-.6.5-1.8.5-4.4Zm-12 3V9l5 3-5 3Z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#exams">Exams</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="https://passquest.app/privacy/">Privacy</a>
+        <a href="https://passquest.app/terms/">Terms</a>
+        <a href="https://passquest.app/disclaimer/">Disclaimer</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@passquest.app">support@passquest.app</a>
+        <a href="tel:+2347064783766">(234) 706-4783-766</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 PassQuest App · Powered by OneDoc AI LLC</span>
+      <div class="store-row">
+        <a class="store-btn filled" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener" aria-label="Get PassQuest on Google Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1Z" fill="#00C3FF"/>
+            <path d="m16.3 15.9-3.2-3.2v-.2l3.2-3.2.1.1 3.8 2.2c1.1.6 1.1 1.6 0 2.2l-3.9 2.1Z" fill="#FFD400"/>
+            <path d="m16.4 15.8-3.3-3.3-9.4 9.4c.4.4 1 .4 1.7.1l11-6.2" fill="#FF3333"/>
+            <path d="M16.4 9.2 5.4 3C4.7 2.6 4.1 2.7 3.7 3.1l9.4 9.4 3.3-3.3Z" fill="#00D26A"/>
+          </svg>
+          <span class="lbl"><small>GET IT ON</small><b>Google Play</b></span>
+        </a>
+        <a class="store-btn outline" href="#download" aria-label="PassQuest coming soon to the App Store">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.8-1.7 0-3.2 1-4.1 2.5-1.7 3-.4 7.4 1.3 9.9.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.5ZM14 5.4c.7-.8 1.1-2 1-3.2-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.3Z"/></svg>
+          <span class="lbl"><small>COMING SOON TO</small><b>App Store</b></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+/* theme toggle — DARK is the site default; light is opt-in and persists */
+(() => {
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const current = () => root.getAttribute('data-theme') || 'dark';
+  const apply = (theme) => {
+    root.setAttribute('data-theme', theme);
+    try { localStorage.setItem('pq-theme', theme); } catch (e) {}
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#ffffff' : '#0b0b0f');
+  };
+  const toggle = () => apply(current() === 'light' ? 'dark' : 'light');
+  if (meta) meta.setAttribute('content', current() === 'light' ? '#ffffff' : '#0b0b0f');
+  ['themeToggle', 'themeToggleM'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.addEventListener('click', toggle);
+  });
+})();
+
+/* nav darken on scroll */
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 12);
+onScroll();
+window.addEventListener('scroll', onScroll, {passive:true});
+
+/* mobile menu */
+const navToggle = document.getElementById('navToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuScrim = document.getElementById('menuScrim');
+const setMenu = (open) => {
+  nav.classList.toggle('open', open);
+  mobileMenu.classList.toggle('show', open);
+  if (menuScrim) menuScrim.classList.toggle('show', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+};
+navToggle.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+if (menuScrim) menuScrim.addEventListener('click', () => setMenu(false));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+/* scroll reveal + safety net */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(el => io.observe(el));
+setTimeout(() => reveals.forEach(el => el.classList.add('in')), 1500);
+
+/* exams — tab switching */
+const examTabs = document.querySelectorAll('.exam-tab');
+examTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    examTabs.forEach(t => {
+      const selected = t === tab;
+      t.setAttribute('aria-selected', selected ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !selected;
+    });
+  });
+  tab.addEventListener('keydown', (e) => {
+    const arr = [...examTabs];
+    let i = arr.indexOf(tab);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') i = (i + 1) % arr.length;
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') i = (i - 1 + arr.length) % arr.length;
+    else return;
+    e.preventDefault();
+    arr[i].focus();
+    arr[i].click();
+  });
+});
+
+/* testimonials — arrow carousel */
+const rvTrack = document.getElementById('rvTrack');
+if (rvTrack) {
+  const step = () => {
+    const card = rvTrack.querySelector('.rv-card');
+    return card ? card.getBoundingClientRect().width + 20 : 320;
+  };
+  document.getElementById('rvPrev').addEventListener('click', () => rvTrack.scrollBy({left: -step(), behavior: 'smooth'}));
+  document.getElementById('rvNext').addEventListener('click', () => rvTrack.scrollBy({left: step(), behavior: 'smooth'}));
+}
+
+/* pricing — monthly / annual toggle (USD only) */
+(() => {
+  const seg = document.querySelector('.pricing .seg');
+  if (!seg) return;
+  const apply = (bill) => {
+    document.querySelectorAll('.pr-card [data-price]').forEach(el => {
+      const v = el.getAttribute('data-usd-' + bill);
+      if (v) el.textContent = v;
+    });
+    document.querySelectorAll('.pr-card [data-suffix], .pr-card [data-prosub]').forEach(el => {
+      const v = el.getAttribute('data-' + bill);
+      if (v) el.textContent = v;
+    });
+  };
+  seg.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      apply(btn.dataset.bill);
+    });
+  });
+})();
+
+/* faq — accordion */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const open = q.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.faq-q').forEach(other => {
+      other.setAttribute('aria-expanded', 'false');
+      other.nextElementSibling.style.maxHeight = null;
+    });
+    if (!open) {
+      q.setAttribute('aria-expanded', 'true');
+      const a = q.nextElementSibling;
+      a.style.maxHeight = a.scrollHeight + 'px';
+    }
+  });
+});
+
+/* exam ticker — seamless infinite marquee, constant speed */
+(() => {
+  const track = document.querySelector('.ticker-track');
+  if (!track) return;
+  const SPEED = 55; // px per second — constant regardless of set width
+  const sets = () => track.querySelectorAll('.ticker-set');
+
+  const build = () => {
+    // collapse back to a single set, then measure it
+    sets().forEach((s, i) => { if (i > 0) s.remove(); });
+    const base = track.querySelector('.ticker-set');
+    if (!base) return;
+    const setWidth = base.getBoundingClientRect().width;
+    if (setWidth < 20) return false; // images not sized yet — retry later
+    // enough copies that one set is wider than the viewport (no gap ever)
+    const copies = Math.max(2, Math.ceil((window.innerWidth * 1.6) / setWidth) + 1);
+    for (let i = 1; i < copies; i++) track.appendChild(base.cloneNode(true));
+    track.style.setProperty('--ticker-shift', setWidth.toFixed(2) + 'px');
+    track.style.setProperty('--ticker-dur', (setWidth / SPEED).toFixed(2) + 's');
+    return true;
+  };
+
+  if (!build()) {
+    // wait for the logo images to load, then measure for real
+    Promise.all([...track.querySelectorAll('img')].map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(res => { img.onload = img.onerror = res; })
+    )).then(build);
+  }
+  let t;
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 200); }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+---
+import { SITE } from '../site.config';
+
+interface Props {
+  title: string;
+  description: string;
+  /* absolute or root-relative path to a 1200x630 image */
+  image?: string;
+  /* 'website' for listing pages, 'article' for posts */
+  type?: 'website' | 'article';
+  /* ISO date strings for articles */
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = SITE.defaultOgImage,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = new URL(image, SITE.url).href;
+const fullTitle =
+  title === SITE.title ? title : `${title} — ${SITE.name}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta
+  name="robots"
+  content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'}
+/>
+<meta name="theme-color" content="#0b0b0f" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:locale" content="en_US" />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Icons -->
+<link
+  rel="icon"
+  href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='64' fill='%237C6AFF'/%3E%3Cpath d='M72 12 40 68h24l-8 48 40-64H72V12Z' fill='white'/%3E%3C/svg%3E"
+/>
+
+<!-- Feed discovery -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} — RSS`}
+  href={new URL('/rss.xml', SITE.url).href}
+/>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Theme: apply stored preference before paint to avoid a flash -->
+<script is:inline>
+  document.documentElement.classList.add('js');
+  try {
+    var t = localStorage.getItem('pq-theme');
+    if (t === 'dark' || t === 'light')
+      document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>

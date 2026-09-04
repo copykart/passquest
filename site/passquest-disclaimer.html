@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disclaimer — PassQuest</title>
+<meta name="description" content="What PassQuest can and cannot do — affiliation, readiness estimates, AI feedback, and outcome guarantees.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='64' fill='%237C6AFF'/%3E%3Cpath d='M72 12 40 68h24l-8 48 40-64H72V12Z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   PASSQUEST — LEGAL PAGES (Privacy · Terms · Disclaimer)
+   Shared chrome + readable article styling. Same design system / theme
+   tokens as passquest.html so the pages feel like one site.
+   ===================================================================== */
+
+/* DARK is the default; light is opt-in via [data-theme="light"] */
+:root{
+  --bg:#0b0b0f;
+  --ink:#f1f1f3;
+  --grey:#a1a1aa;
+  --grey-soft:#7b7b85;
+  --line:rgba(255,255,255,0.13);
+  --line-soft:rgba(255,255,255,0.07);
+  --line-strong:rgba(255,255,255,0.22);
+  --line-hover:rgba(255,255,255,0.34);
+  --card:#15151b;
+  --elev:#1b1b22;
+  --fill-soft:rgba(255,255,255,0.06);
+  --nav-bg-scrolled:rgba(17,17,22,0.55);
+  --menu-bg:rgba(15,15,20,0.68);
+  --purple:#7856FF;
+  --purple-lt:#9a80ff;
+  --maxw:1160px;
+  --readw:760px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+:root[data-theme="light"]{
+  --bg:#ffffff;
+  --ink:#0a0a0a;
+  --grey:#646464;
+  --grey-soft:#8a8a8a;
+  --line:rgba(10,10,10,0.10);
+  --line-soft:rgba(10,10,10,0.06);
+  --line-strong:rgba(10,10,10,0.16);
+  --line-hover:rgba(10,10,10,0.28);
+  --card:#ffffff;
+  --elev:#ffffff;
+  --fill-soft:rgba(10,10,10,0.05);
+  --nav-bg-scrolled:rgba(255,255,255,0.62);
+  --menu-bg:rgba(255,255,255,0.74);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-weight:400;line-height:1.65;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+svg{display:block}
+.container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* =====================================================================
+   NAV — transparent at the top, condenses into a glass pill on scroll
+   (matches passquest.html). No border / demarcation.
+   ===================================================================== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;padding:14px 16px 0;pointer-events:none;
+}
+.nav .container{
+  pointer-events:auto;display:flex;align-items:center;gap:16px;
+  width:100%;max-width:var(--maxw);padding:8px 10px;
+  border-radius:999px;border:0;background:transparent;
+  transition:max-width .5s var(--ease),padding .5s var(--ease),
+             background .35s var(--ease),box-shadow .35s var(--ease);
+}
+.nav.scrolled .container{
+  max-width:720px;padding:8px 10px 8px 22px;
+  background:var(--nav-bg-scrolled);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  backdrop-filter:blur(28px) saturate(180%);
+  box-shadow:0 14px 44px -18px rgba(20,10,40,0.24);
+}
+.brand{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;color:var(--ink);font-weight:700;font-size:19px;letter-spacing:-0.02em}
+.brand-mark{width:26px;height:26px;flex-shrink:0}
+.brand span{white-space:nowrap}
+.brand i{color:var(--purple);font-style:normal}
+.nav-spacer{display:none}
+.nav-links{display:flex;align-items:center;gap:24px;margin:0 auto}
+.nav-links a{font-size:14px;color:var(--ink);opacity:.8;transition:opacity .2s var(--ease)}
+.nav-links a:hover{opacity:1}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:var(--bg);
+  font-size:14px;font-weight:500;border-radius:999px;padding:11px 20px;flex-shrink:0;
+  transition:opacity .2s var(--ease),transform .18s var(--ease);
+}
+.nav-cta:hover{opacity:.88}
+.nav-cta:active{transform:scale(.97)}
+.theme-toggle,.nav-toggle{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  border:1px solid var(--line);background:var(--elev);color:var(--ink);
+  display:grid;place-items:center;
+  transition:border-color .2s var(--ease),transform .18s var(--ease);
+}
+.theme-toggle:hover,.nav-toggle:hover{border-color:var(--line-hover)}
+.theme-toggle:active,.nav-toggle:active{transform:scale(.92)}
+.theme-toggle svg{width:18px;height:18px}
+/* default = dark → show the sun (click to go light); light shows the moon */
+.theme-toggle .tt-moon{display:none}
+.theme-toggle .tt-sun{display:block}
+:root[data-theme="light"] .theme-toggle .tt-sun{display:none}
+:root[data-theme="light"] .theme-toggle .tt-moon{display:block}
+.nav-toggle{display:none}
+.nav-toggle span,.nav-toggle span::before,.nav-toggle span::after{
+  content:"";display:block;width:16px;height:2px;border-radius:2px;background:var(--ink);
+  position:relative;transition:transform .28s var(--ease),opacity .2s var(--ease);
+}
+.nav-toggle span::before{position:absolute;top:-5.5px}
+.nav-toggle span::after{position:absolute;top:5.5px}
+.nav.open .nav-toggle span{background:transparent}
+.nav.open .nav-toggle span::before{transform:translateY(5.5px) rotate(45deg)}
+.nav.open .nav-toggle span::after{transform:translateY(-5.5px) rotate(-45deg)}
+
+.menu-scrim{position:fixed;inset:0;z-index:98;background:rgba(0,0,0,0.42);opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+.menu-scrim.show{opacity:1;pointer-events:auto}
+.mobile-menu{
+  display:none;position:fixed;top:72px;left:16px;right:16px;z-index:99;
+  background:var(--menu-bg);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid var(--line);border-radius:26px;padding:14px;
+  box-shadow:0 34px 70px -22px rgba(20,10,40,0.45);
+  transform:translateY(-14px) scale(.97);transform-origin:top center;
+  opacity:0;pointer-events:none;transition:transform .3s var(--ease),opacity .3s var(--ease);
+}
+.mobile-menu.show{transform:none;opacity:1;pointer-events:auto}
+.mobile-menu a{display:block;font-size:18px;font-weight:500;padding:14px 12px;border-radius:14px}
+.mobile-menu a:hover{background:var(--fill-soft)}
+.mobile-menu .nav-cta{width:100%;justify-content:center;margin-top:8px;padding:14px}
+
+/* =====================================================================
+   LEGAL ARTICLE
+   ===================================================================== */
+.legal{padding:150px 0 100px}
+.legal .container{max-width:calc(var(--readw) + 48px)}
+.legal-head{margin-bottom:44px}
+.legal-eyebrow{
+  display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:14px;
+}
+.legal-head h1{
+  font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.12;
+  letter-spacing:-0.04em;color:var(--ink);
+}
+.legal-updated{margin-top:14px;font-size:14px;color:var(--grey-soft)}
+.legal-intro{margin-top:22px;font-size:16px;color:var(--grey);max-width:var(--readw)}
+.legal-intro a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
+
+.legal-toc{
+  margin:34px 0 8px;padding:20px 22px;border:1px solid var(--line);
+  border-radius:18px;background:var(--card);
+}
+.legal-toc h2{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-soft);margin-bottom:12px}
+.legal-toc ol{list-style:none;counter-reset:toc;display:grid;gap:8px}
+.legal-toc li{counter-increment:toc;font-size:14px}
+.legal-toc a{color:var(--grey);transition:color .15s var(--ease)}
+.legal-toc a::before{content:counter(toc) ". ";color:var(--grey-soft)}
+.legal-toc a:hover{color:var(--ink)}
+
+.legal-body{max-width:var(--readw)}
+.legal-body section{padding-top:40px;scroll-margin-top:110px}
+.legal-body h2{
+  font-weight:500;font-size:21px;letter-spacing:-0.02em;color:var(--ink);
+  margin-bottom:14px;
+}
+.legal-body h3{
+  font-weight:600;font-size:15px;letter-spacing:-0.01em;color:var(--ink);
+  margin:22px 0 8px;
+}
+.legal-body p{font-size:15px;color:var(--grey);margin-bottom:14px}
+.legal-body p:last-child{margin-bottom:0}
+.legal-body strong{color:var(--ink);font-weight:600}
+.legal-body a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
+.legal-body ul{list-style:none;margin:0 0 14px;display:grid;gap:10px}
+.legal-body ul li{position:relative;padding-left:20px;font-size:15px;color:var(--grey)}
+.legal-body ul li::before{
+  content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;
+  border-radius:50%;background:var(--purple);opacity:.7;
+}
+.legal-body hr{border:0;height:1px;background:var(--line);margin:16px 0}
+.legal-contact{
+  margin-top:56px;padding:24px 26px;border:1px solid var(--line);border-radius:20px;
+  background:var(--card);font-size:15px;color:var(--grey);
+}
+.legal-contact a{color:var(--purple);text-decoration:underline;text-underline-offset:2px}
+
+.legal-nav{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:40px;
+}
+.legal-nav a{
+  font-size:13px;font-weight:500;color:var(--ink);
+  border:1px solid var(--line);border-radius:999px;padding:9px 16px;
+  transition:border-color .2s var(--ease),background .2s var(--ease);
+}
+.legal-nav a:hover{border-color:var(--line-hover);background:var(--fill-soft)}
+.legal-nav a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* =====================================================================
+   FOOTER — slim
+   ===================================================================== */
+.site-foot{border-top:1px solid var(--line-soft);padding:40px 0 48px}
+.site-foot .container{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.site-foot .brand{font-size:16px}
+.site-foot .brand-mark{width:22px;height:22px}
+.foot-links{display:flex;flex-wrap:wrap;gap:20px;font-size:13px;color:var(--grey)}
+.foot-links a:hover{color:var(--ink)}
+.foot-copy{width:100%;font-size:12px;color:var(--grey-soft);margin-top:6px}
+
+@media (max-width:820px){
+  .nav-links,.nav .container > .nav-cta{display:none}
+  .nav .container{gap:10px;padding:8px 8px 8px 16px}
+  .nav.scrolled .container{max-width:none;padding:8px 8px 8px 20px}
+  .nav-spacer{display:block;flex:1}
+  .nav-toggle{display:grid}
+  .mobile-menu{display:block}
+}
+@media (max-width:560px){
+  .container{padding:0 20px}
+  .legal{padding:128px 0 72px}
+  .legal-body section{padding-top:34px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important}
+}
+</style>
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('pq-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container">
+    <a class="brand" href="https://passquest.app/" aria-label="PassQuest home">
+      <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="64" fill="#7C6AFF"/><path d="M72 12 40 68h24l-8 48 40-64H72V12Z" fill="#fff"/></svg><span>Pass<i>Quest</i></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="https://passquest.app/#features">Features</a>
+      <a href="https://passquest.app/#exams">Exams</a>
+      <a href="https://passquest.app/#pricing">Pricing</a>
+      <a href="https://passquest.app/#faq">FAQ</a>
+    </nav>
+    <span class="nav-spacer"></span>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">
+      <svg class="tt-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/></svg>
+      <svg class="tt-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2v2.6M12 19.4V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.6M19.4 12H22M4.2 19.8 6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Get the app <span aria-hidden="true">↓</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<div class="menu-scrim" id="menuScrim"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="https://passquest.app/#features">Features</a>
+  <a href="https://passquest.app/#exams">Exams</a>
+  <a href="https://passquest.app/#pricing">Pricing</a>
+  <a href="https://passquest.app/#faq">FAQ</a>
+  <a class="nav-cta" href="https://play.google.com/store/apps/details?id=com.passquest.app" target="_blank" rel="noopener">Get the app ↓</a>
+</div>
+
+<main class="legal">
+  <div class="container">
+
+    <div class="legal-head">
+      <span class="legal-eyebrow">Legal</span>
+      <h1>Disclaimer</h1>
+      <p class="legal-updated">Last updated: 15 June 2026</p>
+      <p class="legal-intro">This Disclaimer explains important limitations on the content and services PassQuest provides. Please read it. It exists to be honest with you about what the app can and cannot do.</p>
+    </div>
+
+    <nav class="legal-toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ol>
+        <li><a href="#s1">Not affiliated with the IELTS examination bodies</a></li>
+        <li><a href="#s2">Readiness scores are estimates, not official scores</a></li>
+        <li><a href="#s3">AI Writing feedback is not official examiner marking</a></li>
+        <li><a href="#s4">Pronunciation is not assessed in Speaking practice</a></li>
+        <li><a href="#s5">No guarantee of exam, immigration, or admission outcomes</a></li>
+        <li><a href="#s6">Service availability</a></li>
+        <li><a href="#s7">Third-party references</a></li>
+        <li><a href="#s8">Contact</a></li>
+      </ol>
+    </nav>
+
+    <div class="legal-body">
+
+      <section id="s1">
+        <h2>1. PassQuest is not affiliated with the IELTS examination bodies</h2>
+        <p>PassQuest is an independent exam preparation tool. It is not affiliated with, endorsed by, or connected to any organisation that administers or owns the IELTS examination, including the University of Cambridge ESOL Examinations (Cambridge English), the British Council, or IDP Education Australia.</p>
+        <p>IELTS&reg; is a registered trademark of Cambridge English, the British Council, and IDP Education Australia. Its use here is solely to identify the examination students are preparing for. Practice questions in PassQuest are independently created and designed to reflect the style and difficulty of IELTS questions. They are not sourced from official IELTS question banks.</p>
+        <p>For official IELTS practice materials, refer to Cambridge IELTS books published by Cambridge University Press, or the official IELTS websites at ielts.org, britishcouncil.org/exam/ielts, and ielts.idp.com. We recommend using PassQuest alongside official Cambridge past papers, not as a substitute for them.</p>
+      </section>
+
+      <section id="s2">
+        <h2>2. Readiness scores and projected bands are estimates, not official scores</h2>
+        <p>PassQuest provides a Readiness Score and Projected Band estimate based on your in-app performance. These are statistical approximations &mdash; not official IELTS band scores.</p>
+        <p>Your official IELTS band score can only be obtained by sitting the IELTS examination at an authorised test centre and being assessed by a qualified IELTS examiner. PassQuest does not guarantee that any readiness level in the app corresponds to any specific result in your official examination.</p>
+        <p><strong>Do not substitute a PassQuest readiness estimate for an official IELTS score</strong> in any immigration, university admission, or professional registration application. Official IELTS scores are the only accepted evidence for these purposes.</p>
+      </section>
+
+      <section id="s3">
+        <h2>3. AI Writing feedback is not official examiner marking</h2>
+        <p>Writing feedback in PassQuest is generated by artificial intelligence (OpenAI gpt-4o-mini) and is not produced by a certified IELTS examiner. The band estimates within Writing feedback are AI approximations intended for coaching guidance &mdash; not official assessment.</p>
+        <p>AI assessment has known limitations, including in evaluating nuanced language, complex argumentation, and cultural references. For high-stakes preparation, we recommend supplementing AI feedback with feedback from a qualified IELTS tutor or examiner.</p>
+      </section>
+
+      <section id="s4">
+        <h2>4. Pronunciation is not assessed in Speaking practice</h2>
+        <p>The AI Speaking examiner in PassQuest (Phase 2) assesses Fluency &amp; Coherence, Lexical Resource, and Grammatical Range &amp; Accuracy. Pronunciation is not assessed. Pronunciation represents 25% of the official IELTS Speaking score and requires a qualified human examiner to assess fairly and accurately across diverse accents and first languages.</p>
+        <p>Any Speaking band estimate shown in the app reflects only three of the four criteria and should be read as a partial assessment. For pronunciation coaching, we recommend Elsa Speak alongside your PassQuest practice.</p>
+      </section>
+
+      <section id="s5">
+        <h2>5. No guarantee of exam, immigration, or admission outcomes</h2>
+        <p>PassQuest makes no guarantee of any specific outcome resulting from use of the app. We cannot and do not guarantee:</p>
+        <ul>
+          <li>Any specific IELTS band score in your official examination.</li>
+          <li>Any immigration, visa, or permanent residency decision.</li>
+          <li>Admission to any university or educational institution.</li>
+          <li>Any professional registration or employment outcome.</li>
+        </ul>
+        <p>PassQuest is a study tool. Our commitment is to provide high-quality, relevant practice. Outcomes that depend on external factors &mdash; test day performance, examiner assessment, institutional decisions &mdash; are beyond our control.</p>
+      </section>
+
+      <section id="s6">
+        <h2>6. Service availability</h2>
+        <p>PassQuest is provided &ldquo;as available&rdquo;. AI-powered features require an active internet connection and depend on the availability of third-party services including Google Firebase and OpenAI&rsquo;s API. We are not responsible for service disruptions caused by third-party outages, scheduled maintenance, or circumstances beyond our reasonable control. We will use reasonable efforts to provide advance notice of planned maintenance.</p>
+      </section>
+
+      <section id="s7">
+        <h2>7. Third-party references</h2>
+        <p>PassQuest may reference or recommend third-party services, including Elsa Speak for pronunciation coaching and official IELTS resources. These references are not commercial endorsements. We have no control over third-party content, availability, or practices, and are not responsible for any third-party service.</p>
+      </section>
+
+      <section id="s8">
+        <h2>8. Contact</h2>
+        <p>If you have questions about anything in this Disclaimer, or believe any content in PassQuest is inaccurate, contact us at <a href="mailto:support@passquest.app">support@passquest.app</a>. This Disclaimer is available at passquest.app/disclaimer and in the app under Settings &rarr; Disclaimer.</p>
+      </section>
+
+    </div>
+
+    <div class="legal-contact">
+      Think something in the app is inaccurate? Tell us at <a href="mailto:support@passquest.app">support@passquest.app</a>.
+    </div>
+
+    <nav class="legal-nav" aria-label="Legal pages">
+      <a href="https://passquest.app/">&larr; Back to site</a>
+      <a href="https://passquest.app/privacy/">Privacy</a>
+      <a href="https://passquest.app/terms/">Terms</a>
+      <a href="https://passquest.app/disclaimer/" aria-current="page">Disclaimer</a>
+    </nav>
+
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="container">
+    <a class="brand" href="https://passquest.app/" aria-label="PassQuest home">
+      <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="64" fill="#7C6AFF"/><path d="M72 12 40 68h24l-8 48 40-64H72V12Z" fill="#fff"/></svg><span>Pass<i>Quest</i></span>
+    </a>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="https://passquest.app/">Home</a>
+      <a href="https://passquest.app/privacy/">Privacy</a>
+      <a href="https://passquest.app/terms/">Terms</a>
+      <a href="https://passquest.app/disclaimer/">Disclaimer</a>
+      <a href="mailto:support@passquest.app">Contact</a>
+    </nav>
+    <span class="foot-copy">&copy; 2026 PassQuest App &middot; Operated by OneDoc AI LLC</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,tgl=document.getElementById('themeToggle');
+  function cur(){var a=root.getAttribute('data-theme');return a||'dark';}
+  function set(t){root.setAttribute('data-theme',t);try{localStorage.setItem('pq-theme',t);}catch(e){}}
+  if(tgl)tgl.addEventListener('click',function(){set(cur()==='dark'?'light':'dark');});
+  var nav=document.getElementById('nav');
+  function onScroll(){nav.classList.toggle('scrolled',window.scrollY>12);}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  var mt=document.getElementById('navToggle'),mm=document.getElementById('mobileMenu'),sc=document.getElementById('menuScrim');
+  function menu(open){nav.classList.toggle('open',open);mm.classList.toggle('show',open);sc.classList.toggle('show',open);if(mt)mt.setAttribute('aria-expanded',open);document.body.style.overflow=open?'hidden':'';}
+  if(mt)mt.addEventListener('click',function(){menu(!mm.classList.contains('show'));});
+  if(sc)sc.addEventListener('click',function(){menu(false);});
+  if(mm)mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu(false);});});
+})();
+</script>
+
+</body>
+</html>

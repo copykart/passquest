@@ -1,0 +1,206 @@
+---
+import type { MarkdownHeading } from 'astro';
+import type { Post } from '../lib/posts';
+import { readingTime } from '../lib/posts';
+import {
+  SITE,
+  categoryName,
+  resolveAuthor,
+} from '../site.config';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Toc from '../components/Toc.astro';
+import Faq from '../components/Faq.astro';
+import ShareRow from '../components/ShareRow.astro';
+import BlogCard from '../components/BlogCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+interface Props {
+  post: Post;
+  headings: MarkdownHeading[];
+  related: Post[];
+}
+const { post, headings, related } = Astro.props;
+const d = post.data;
+const path = `/${post.id}/`;
+const url = new URL(path, SITE.url).href;
+const author = resolveAuthor(d.author);
+const mins = readingTime(post.body);
+const ogImage = d.ogImage ?? d.heroImage;
+const heroAbs = new URL(d.heroImage, SITE.url).href;
+const publishedISO = d.pubDate.toISOString();
+const modifiedISO = (d.updatedDate ?? d.pubDate).toISOString();
+
+const blogPosting = {
+  '@type': 'BlogPosting',
+  '@id': url + '#article',
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  headline: d.title,
+  description: d.description,
+  image: [heroAbs],
+  datePublished: publishedISO,
+  dateModified: modifiedISO,
+  articleSection: categoryName(d.category),
+  author: {
+    '@type': 'Organization',
+    name: author.name,
+    url: author.url ?? SITE.mainSite,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.publisher.name,
+    legalName: SITE.publisher.legalName,
+    logo: {
+      '@type': 'ImageObject',
+      url: SITE.publisher.logo,
+    },
+  },
+};
+
+const breadcrumbs = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Blog', item: SITE.url + '/' },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: categoryName(d.category),
+      item: `${SITE.url}/topic/${d.category}/`,
+    },
+    { '@type': 'ListItem', position: 3, name: d.title, item: url },
+  ],
+};
+
+const faqSchema =
+  d.faqs.length > 0
+    ? {
+        '@type': 'FAQPage',
+        mainEntity: d.faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.a.replace(/<[^>]+>/g, ''),
+          },
+        })),
+      }
+    : null;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': faqSchema
+    ? [blogPosting, breadcrumbs, faqSchema]
+    : [blogPosting, breadcrumbs],
+};
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  image={ogImage}
+  type="article"
+  publishedTime={publishedISO}
+  modifiedTime={modifiedISO}
+>
+  <JsonLd slot="head" schema={schema} />
+
+  <main class="post">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Blog</a>
+        <span class="sep">/</span>
+        <a href={`/topic/${d.category}/`}>{categoryName(d.category)}</a>
+        <span class="sep">/</span>
+        <span aria-current="page">{d.title}</span>
+      </nav>
+
+      <header class="post-header">
+        <a class="cat-chip" href={`/topic/${d.category}/`}>
+          {categoryName(d.category)}
+        </a>
+        <h1>{d.title}</h1>
+        <p class="lede">{d.description}</p>
+        <div class="byline">
+          <img src={author.avatar} alt={author.name} width="38" height="38" />
+          <div>
+            <div class="who">{author.name}</div>
+            <div class="when">
+              <FormattedDate date={d.pubDate} />
+              {
+                d.updatedDate && (
+                  <> · <FormattedDate date={d.updatedDate} prefix="updated" /></>
+                )
+              }
+              · {mins} min read
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <figure class="post-hero">
+        <img
+          src={d.heroImage}
+          alt={d.heroAlt}
+          width="1200"
+          height="675"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <div class="post-shell">
+        <div>
+          <article class="prose">
+            <slot />
+          </article>
+
+          <Faq faqs={d.faqs} />
+
+          <div class="post-cta">
+            <div>
+              <h3>Know exactly when you're ready</h3>
+              <p>
+                PassQuest gives you a predictive live score that updates after
+                every practice session.
+              </p>
+            </div>
+            <a
+              class="nav-cta"
+              href={SITE.playStore}
+              target="_blank"
+              rel="noopener">Get the app ↓</a
+            >
+          </div>
+
+          <ShareRow title={d.title} path={path} />
+
+          <aside class="author-box">
+            <img src={author.avatar} alt={author.name} width="52" height="52" />
+            <div>
+              <div class="name">{author.name}</div>
+              <div class="role">{author.role}</div>
+              <p class="bio">{author.bio}</p>
+            </div>
+          </aside>
+        </div>
+
+        <Toc headings={headings} />
+      </div>
+
+      {
+        related.length > 0 && (
+          <section class="related">
+            <span class="section-label">You might also like</span>
+            <div class="post-grid">
+              {related.map((p) => (
+                <BlogCard post={p} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </main>
+
+  <Newsletter />
+</BaseLayout>

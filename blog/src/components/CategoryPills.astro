@@ -1,0 +1,22 @@
+---
+import { CATEGORIES } from '../site.config';
+
+interface Props {
+  active?: string; // category slug, or 'all'
+}
+const { active = 'all' } = Astro.props;
+---
+
+<nav class="topic-pills" aria-label="Filter posts by topic">
+  <a href="/" aria-current={active === 'all' ? 'page' : undefined}>All</a>
+  {
+    CATEGORIES.map((c) => (
+      <a
+        href={`/topic/${c.slug}/`}
+        aria-current={active === c.slug ? 'page' : undefined}
+      >
+        {c.name}
+      </a>
+    ))
+  }
+</nav>
