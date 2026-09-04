@@ -123,6 +123,14 @@ const jsonLd = [
 
   <main class="calc-page">
     <div class="container">
+      <nav class="breadcrumb calc-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Blog</a>
+        <span class="sep">/</span>
+        <a href="/tools/">Free Tools</a>
+        <span class="sep">/</span>
+        <span aria-current="page">Canada PR Points Calculator</span>
+      </nav>
+
       <div class="page-head calc-head">
         <span class="cat-chip">Free tool</span>
         <h1>Canada PR Points Calculator</h1>
@@ -781,8 +789,12 @@ const jsonLd = [
     display: none !important;
   }
 
-  .calc-head {
+  .calc-breadcrumb {
     padding-top: 132px;
+    margin-bottom: 18px;
+  }
+  .calc-head {
+    padding-top: 0;
   }
   .calc-head .cat-chip {
     margin-bottom: 14px;
@@ -1094,7 +1106,7 @@ const jsonLd = [
   }
 
   @media (max-width: 640px) {
-    .calc-head {
+    .calc-breadcrumb {
       padding-top: 116px;
     }
     .cf-grid-2,

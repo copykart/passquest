@@ -87,11 +87,25 @@ const faqSchema =
       }
     : null;
 
+const howToSchema = d.howTo
+  ? {
+      '@type': 'HowTo',
+      name: d.howTo.name,
+      description: d.howTo.description,
+      ...(d.howTo.totalTime ? { totalTime: d.howTo.totalTime } : {}),
+      step: d.howTo.steps.map((s) => ({
+        '@type': 'HowToStep',
+        name: s.name,
+        text: s.text,
+      })),
+    }
+  : null;
+
 const schema = {
   '@context': 'https://schema.org',
-  '@graph': faqSchema
-    ? [blogPosting, breadcrumbs, faqSchema]
-    : [blogPosting, breadcrumbs],
+  '@graph': [blogPosting, breadcrumbs, faqSchema, howToSchema].filter(
+    Boolean
+  ),
 };
 ---
 

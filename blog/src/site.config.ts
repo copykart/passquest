@@ -26,9 +26,11 @@ export const SITE = {
   defaultOgImage: '/images/og-default.jpg',
 } as const;
 
-/* Primary nav — deep-links to sections on the marketing site. The blog's
-   own home is reached via the logo (see Nav.astro), so no "Blog" item here. */
+/* Primary nav — deep-links to sections on the marketing site, plus the one
+   blog-internal item (Free Tools). The blog's own home is reached via the
+   logo (see Nav.astro), so no "Blog" item here. */
 export const NAV_LINKS = [
+  { label: 'Free Tools', href: '/tools/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
@@ -48,7 +50,7 @@ export const FOOTER_TAGLINE =
 
 export const FOOTER_PRODUCT_LINKS = [
   { label: 'Blog', href: '/' },
-  { label: 'PR Points Calculator', href: '/tools/canada-pr-points-calculator/' },
+  { label: 'Free Tools', href: '/tools/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
@@ -97,6 +99,34 @@ export type CategorySlug = (typeof CATEGORIES)[number]['slug'];
 
 export function categoryName(slug: string): string {
   return CATEGORIES.find((c) => c.slug === slug)?.name ?? slug;
+}
+
+/* Free tools registry — every interactive tool page lives under
+   /tools/<slug>/ and gets one entry here. The /tools/ index (see
+   pages/tools/index.astro) renders this list as a grid automatically, so
+   shipping a new tool is: build the page, add one entry below, done — no
+   other file needs to change. `accent` picks which of the brand's four
+   fixed data-accent colours (see global.css) tints that tool's card;
+   cycle through them as the list grows so the grid doesn't read as
+   monochrome. `icon` keys into the ICONS map in pages/tools/index.astro —
+   add a matching entry there when you add a tool, or leave it unset to
+   fall back to the generic tool glyph. */
+export type ToolAccent = 'purple' | 'teal' | 'gold' | 'red';
+
+export const TOOLS = [
+  {
+    slug: 'canada-pr-points-calculator',
+    title: 'Canada PR Points Calculator',
+    description:
+      'Estimate your Express Entry CRS score from age, education, language, work experience, spouse factors and more — free, and it updates live.',
+    tag: 'Immigration',
+    accent: 'purple' as ToolAccent,
+    icon: 'crs-calculator',
+  },
+] as const;
+
+export function toolHref(slug: string): string {
+  return `/tools/${slug}/`;
 }
 
 /* Author registry. Frontmatter `author: passquest-team` resolves here. */

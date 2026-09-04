@@ -34,6 +34,16 @@ const blog = defineCollection({
       .default([]),
     /* optional explicit tags for internal search / future use */
     tags: z.array(z.string()).default([]),
+    /* optional: for step-by-step guides — adds HowTo structured data.
+       totalTime is an ISO 8601 duration, e.g. "P30D" (30 days), "PT2H" (2h) */
+    howTo: z
+      .object({
+        name: z.string(),
+        description: z.string(),
+        totalTime: z.string().optional(),
+        steps: z.array(z.object({ name: z.string(), text: z.string() })),
+      })
+      .optional(),
   }),
 });
 

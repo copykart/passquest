@@ -1,0 +1,210 @@
+---
+/* =====================================================================
+   FREE TOOLS — grid index of every interactive tool (currently just the
+   CRS calculator; more will land here over time). Adding a new tool is a
+   one-line addition to the TOOLS array in site.config.ts — this page,
+   the nav link and the footer link all pick it up automatically.
+   ===================================================================== */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import { SITE, TOOLS, toolHref, type ToolAccent } from '../../site.config';
+
+// brand accent -> RGB triplet, used to tint each card's hover glow/border.
+// Keep in sync with the four fixed data-accent colours in global.css.
+const ACCENT_RGB: Record<ToolAccent, string> = {
+  purple: '120, 86, 255',
+  teal: '0, 200, 150',
+  gold: '245, 166, 35',
+  red: '255, 77, 77',
+};
+
+// one small duotone glyph per tool (solid path + opacity=".4" secondary,
+// matching the icon style used across passquest.app). Add a matching key
+// here whenever a tool sets a new `icon` value; unmatched tools fall back
+// to the generic sparkle glyph so the grid never breaks.
+const ICONS: Record<string, string> = {
+  'crs-calculator': `<path opacity=".4" d="M5 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M6 5h12v4H6V5Zm0 6h3v3H6v-3Zm5 0h3v3h-3v-3Zm5 0h3v3h-3v-3ZM6 15h3v3H6v-3Zm5 0h3v3h-3v-3Zm5 0h3v3h-3v-3Z"/>`,
+  default: `<path opacity=".4" d="M12 2c.6 0 1 .5 1.1 1l1 4.2 4.2 1a1 1 0 0 1 0 2l-4.2 1-1 4.2a1 1 0 0 1-2 0l-1-4.2-4.2-1a1 1 0 0 1 0-2l4.2-1 1-4.2c.1-.5.5-1 1.1-1Z"/><path d="M19 15c.4 0 .7.3.8.6l.4 1.6 1.6.4a.8.8 0 0 1 0 1.6l-1.6.4-.4 1.6a.8.8 0 0 1-1.6 0l-.4-1.6-1.6-.4a.8.8 0 0 1 0-1.6l1.6-.4.4-1.6c.1-.3.4-.6.8-.6Z"/>`,
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Free Tools',
+  url: SITE.url + '/tools/',
+  description:
+    'Free calculators and tools for IELTS, Express Entry and studying abroad, built by the PassQuest team.',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: TOOLS.map((t, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: SITE.url + toolHref(t.slug),
+      name: t.title,
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title="Free Tools"
+  description="Free calculators and tools for IELTS, Express Entry and studying abroad — built by the PassQuest team. Start with the Canada PR Points (CRS) Calculator."
+  type="website"
+>
+  <JsonLd slot="head" schema={jsonLd} />
+
+  <main>
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Blog</a>
+        <span class="sep">/</span>
+        <span aria-current="page">Free Tools</span>
+      </nav>
+
+      <div class="page-head">
+        <h1>Free Tools</h1>
+        <p>
+          Calculators and utilities for IELTS, Express Entry and studying
+          abroad — free, no sign-up, and built by the team behind PassQuest.
+          New tools land here regularly.
+        </p>
+      </div>
+
+      {
+        TOOLS.length > 0 ? (
+          <section aria-label="Available tools">
+            <span class="section-label">
+              {TOOLS.length} {TOOLS.length === 1 ? 'tool' : 'tools'} available
+            </span>
+            <div class="tool-grid">
+              {TOOLS.map((tool) => (
+                <a
+                  class="tool-card"
+                  href={toolHref(tool.slug)}
+                  style={`--accent:${ACCENT_RGB[tool.accent]}`}
+                >
+                  <div class="tc-top">
+                    <span class="tc-icon" set:html={`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${ICONS[tool.icon] ?? ICONS.default}</svg>`} />
+                    <span class="cat-chip tc-chip">Free</span>
+                  </div>
+                  <h2>{tool.title}</h2>
+                  <p>{tool.description}</p>
+                  <span class="tc-cta">
+                    Open tool <span aria-hidden="true">→</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <p class="empty-note">More tools are on the way — check back soon.</p>
+        )
+      }
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .breadcrumb {
+    padding-top: 132px;
+  }
+  .page-head {
+    padding: 18px 0 8px;
+  }
+  @media (max-width: 560px) {
+    .breadcrumb {
+      padding-top: 116px;
+    }
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+    margin: 22px 0 40px;
+  }
+
+  .tool-card {
+    --accent: 120, 86, 255;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 26px;
+    background: var(--card);
+    transition: background 0.3s var(--ease), border-color 0.25s var(--ease),
+      transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .tool-card:hover {
+    background: radial-gradient(
+      120% 110% at 100% 100%,
+      rgba(var(--accent), 0.1),
+      var(--card) 58%
+    );
+    border-color: rgba(var(--accent), 0.34);
+    transform: translateY(-4px);
+    box-shadow: 0 34px 70px -34px rgba(20, 10, 40, 0.35);
+  }
+
+  .tc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .tc-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba(var(--accent), 0.14);
+    color: rgb(var(--accent));
+    flex-shrink: 0;
+  }
+  .tc-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .tc-chip {
+    color: rgb(var(--accent));
+    background: rgba(var(--accent), 0.12);
+    border-color: rgba(var(--accent), 0.28);
+  }
+
+  .tool-card h2 {
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .tool-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--grey);
+    flex: 1;
+  }
+  .tc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tc-cta span {
+    transition: transform 0.2s var(--ease);
+  }
+  .tool-card:hover .tc-cta span {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 560px) {
+    .tool-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
