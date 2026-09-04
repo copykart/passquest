@@ -81,7 +81,7 @@ export const AUTHORS: Record<
     name: 'PassQuest Team',
     role: 'Exam prep, PassQuest',
     bio: 'The people building PassQuest — an AI exam-prep app with a predictive live score that tells you when you are actually ready.',
-    avatar: '/images/authors/passquest-team.png',
+    avatar: '/images/authors/passquest-team.svg',
     url: 'https://passquest.app',
   },
 };
@@ -92,7 +92,7 @@ export function resolveAuthor(id: string) {
       name: id,
       role: '',
       bio: '',
-      avatar: '/images/authors/passquest-team.png',
+      avatar: '/images/authors/passquest-team.svg',
     }
   );
 }

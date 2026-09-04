@@ -12,8 +12,30 @@ const { current } = Astro.props;
   <div class="container">
     <a class="brand" href={`${SITE.mainSite}/`} aria-label="PassQuest home">
       <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true">
-        <circle cx="64" cy="64" r="64" fill="#7C6AFF"></circle>
-        <path d="M72 12 40 68h24l-8 48 40-64H72V12Z" fill="#fff"></path>
+        <path
+          d="M64 128C99.3462 128 128 99.3462 128 64C128 28.6538 99.3462 0 64 0C28.6538 0 0 28.6538 0 64C0 99.3462 28.6538 128 64 128Z"
+          fill="#7C6AFF"></path>
+        <path
+          d="M63.998 108C88.2986 108 107.998 88.3008 107.998 64.0002C107.998 39.6997 88.2986 20.0002 63.998 20.0002C39.6975 20.0002 19.998 39.6997 19.998 64.0002C19.998 88.3008 39.6975 108 63.998 108Z"
+          fill="url(#pq-mark-nav)"></path>
+        <path
+          d="M71.999 12.0002L39.999 68.0002H63.999L55.999 116L95.999 52.0002H71.999V12.0002Z"
+          fill="#fff"
+          stroke="#fff"
+          stroke-width="3.16832"
+          stroke-linejoin="round"></path>
+        <defs>
+          <linearGradient
+            id="pq-mark-nav"
+            x1="19.998"
+            y1="20.0002"
+            x2="107.998"
+            y2="108"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#7C6AFF"></stop>
+            <stop offset="1" stop-color="#3A1FA0"></stop>
+          </linearGradient>
+        </defs>
       </svg>
       <span>Pass<i>Quest</i></span>
     </a>
