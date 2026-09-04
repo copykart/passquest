@@ -23,7 +23,7 @@ export const SITE = {
     logo: 'https://blog.passquest.app/images/passquest-logo-512.png',
   },
   /* Default OG image when a post has no hero (1200x630) */
-  defaultOgImage: '/images/og-default.png',
+  defaultOgImage: '/images/og-default.jpg',
 } as const;
 
 /* Primary nav — points back to the marketing site, plus the blog itself */

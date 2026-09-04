@@ -52,10 +52,30 @@ src/
     rss.xml.js             # /rss.xml
     404.astro
 public/
-  images/blog/             # hero images (replace the placeholder SVGs)
-  images/authors/          # author avatars
+  favicon.svg               # brand mark — see "Brand icon" below
+  images/blog/               # hero images (replace the placeholder SVGs)
+  images/authors/            # author avatars
+  images/passquest-logo-512.png  # JSON-LD publisher logo (square raster)
+  images/og-default.jpg      # fallback social-share card (1200x630)
   robots.txt
 ```
+
+## Brand icon
+
+Everything icon-shaped on the blog derives from one source file — the current
+one lives at `Brand Materials/New Fav Logo 2026 .svg` in the wider PassQuest
+workspace (not in this repo; it's brand source, not web source). To update it
+site-wide when a new mark is issued, replace all of these together so nothing
+drifts out of sync:
+
+| Where | File / component | Notes |
+|---|---|---|
+| Browser tab icon | `public/favicon.svg` | referenced from `BaseHead.astro` |
+| Nav bar logo | inline `<svg class="brand-mark">` in `Nav.astro` | has its own gradient `id` (`pq-mark-nav`) |
+| Footer logo | inline `<svg class="brand-mark">` in `Footer.astro` | own gradient `id` (`pq-mark-footer`) — inline SVG `id`s must stay unique per component or gradients can collide |
+| Author avatar (placeholder) | `public/images/authors/passquest-team.svg`, path set in `site.config.ts` → `AUTHORS['passquest-team'].avatar` | swap for a real photo once a named author is assigned to posts |
+| JSON-LD publisher logo | `public/images/passquest-logo-512.png`, path in `site.config.ts` → `SITE.publisher.logo` | square raster (Google's structured-data guidance prefers non-SVG here); regenerate at 512×512 |
+| Default social-share card | `public/images/og-default.jpg`, path in `site.config.ts` → `SITE.defaultOgImage` | 1200×630, icon + wordmark on the dark brand background; only used when a post has no `ogImage`/`heroImage` |
 
 ## SEO baseline (already wired)
 
@@ -67,9 +87,8 @@ public/
 - Heading anchor IDs, semantic `<article>` / `<time datetime>` / breadcrumb nav.
 - No client JS except the theme toggle, nav, TOC scroll-spy and copy-link.
 
-**Still to do by hand:** add a real 512×512 `public/images/passquest-logo-512.png`
-(referenced as the publisher logo in `site.config.ts`) and a
-`public/images/og-default.png` (1200×630 fallback social image).
+Brand assets (favicon, nav/footer mark, publisher logo, default social card,
+author placeholder) all derive from the one brand SVG — see "Brand icon" below.
 
 ## Newsletter
 
