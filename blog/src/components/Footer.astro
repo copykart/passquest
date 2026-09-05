@@ -7,8 +7,16 @@ import {
   FOOTER_CONTACT_LINKS,
   SOCIAL_LINKS,
 } from '../site.config';
+import { getPosts } from '../lib/posts';
 
 const year = new Date().getFullYear();
+
+/* Top Posts column: featured post(s) first, then newest — real posts and
+   their actual SEO titles, capped at 5. Grows/shrinks with the blog. */
+const allPosts = await getPosts();
+const featuredPosts = allPosts.filter((p) => p.data.featured);
+const restPosts = allPosts.filter((p) => !p.data.featured);
+const topPosts = [...featuredPosts, ...restPosts].slice(0, 5);
 
 /* one bespoke icon per platform, matching passquest.app's footer */
 const SOCIAL_ICONS: Record<string, string> = {
@@ -55,6 +63,7 @@ const SOCIAL_ICONS: Record<string, string> = {
           </defs>
         </svg>
         <span>Pass<i>Quest</i></span>
+        <span class="brand-badge">Blog</span>
       </a>
       <p>{FOOTER_TAGLINE}</p>
       <div class="socials">
@@ -78,6 +87,17 @@ const SOCIAL_ICONS: Record<string, string> = {
             rel={'external' in l && l.external ? 'noopener' : undefined}
           >
             {l.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="footer-col">
+      <h4>Top Posts</h4>
+      {
+        topPosts.map((p) => (
+          <a class="fp-link" href={`/${p.id}/`}>
+            {p.data.title}
           </a>
         ))
       }

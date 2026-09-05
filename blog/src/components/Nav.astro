@@ -32,6 +32,7 @@ import { SITE, NAV_LINKS, MAIN_SITE_LINK } from '../site.config';
         </defs>
       </svg>
       <span>Pass<i>Quest</i></span>
+      <span class="brand-badge">Blog</span>
     </a>
 
     <nav class="nav-links" aria-label="Primary">
@@ -117,8 +118,19 @@ import { SITE, NAV_LINKS, MAIN_SITE_LINK } from '../site.config';
       });
 
     var nav = document.getElementById('nav');
+    var footerBrand = document.querySelector('.site-foot .footer-brand');
     function onScroll() {
-      if (nav) nav.classList.toggle('scrolled', window.scrollY > 12);
+      if (!nav) return;
+      nav.classList.toggle('scrolled', window.scrollY > 12);
+      /* on short pages the footer can be taller than the viewport, so its
+         own logo ends up sitting directly behind the blurred nav pill —
+         a frosted "ghost duplicate" of the same mark. Drop the blur and
+         go solid whenever that's about to happen. */
+      if (footerBrand) {
+        var navH = nav.getBoundingClientRect().height || 70;
+        var top = footerBrand.getBoundingClientRect().top;
+        nav.classList.toggle('over-footer', top < navH + 20);
+      }
     }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });

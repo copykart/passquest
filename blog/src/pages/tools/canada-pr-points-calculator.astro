@@ -204,7 +204,7 @@ const jsonLd = [
             <div class="cf-grid-2">
               <div class="cf-row">
                 <label for="age">Your age</label>
-                <input type="number" id="age" name="age" min="16" max="90" value="29" inputmode="numeric" />
+                <input type="number" id="age" name="age" min="16" max="90" inputmode="numeric" placeholder="e.g. 29" />
               </div>
               <div class="cf-row">
                 <label for="education">Highest level of education</label>
@@ -672,6 +672,45 @@ const jsonLd = [
     const secondLangEnabled = $('#secondLangEnabled') as HTMLInputElement;
     const lang2Block = $('#lang2Block') as HTMLElement;
 
+    // ---------------------------------------------------------------------
+    // Per-browser autosave. A brand-new browser (no saved data) starts
+    // completely blank — no score is shown until the visitor actually
+    // enters something. Returning to the SAME browser restores exactly
+    // what was there before. Nothing is sent anywhere; localStorage only.
+    // ---------------------------------------------------------------------
+    const STORAGE_KEY = 'pq-crs-calculator-v1';
+    let hasRealData = false;
+
+    function allFields(): (HTMLInputElement | HTMLSelectElement)[] {
+      return $$('input, select') as unknown as (HTMLInputElement | HTMLSelectElement)[];
+    }
+    function saveFormState() {
+      const data: Record<string, string | boolean> = {};
+      allFields().forEach((el) => {
+        if (!el.id) return;
+        data[el.id] = el instanceof HTMLInputElement && el.type === 'checkbox' ? el.checked : el.value;
+      });
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
+    function loadFormState(): Record<string, string | boolean> | null {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    function applyFormState(data: Record<string, string | boolean>) {
+      allFields().forEach((el) => {
+        if (!el.id || !(el.id in data)) return;
+        const v = data[el.id];
+        if (el instanceof HTMLInputElement && el.type === 'checkbox') el.checked = Boolean(v);
+        else el.value = String(v);
+      });
+    }
+
     function readLang1CLB(): number[] {
       const group = testType.value; // ielts | celpip | direct
       const activeGroup = firstLangChoice.value === 'french' ? 'direct' : group;
@@ -718,7 +757,22 @@ const jsonLd = [
       };
     }
 
+    function showEmptyResult() {
+      (document.getElementById('resTotal') as HTMLElement).textContent = '—';
+      (document.getElementById('resCore') as HTMLElement).textContent = '—';
+      (document.getElementById('resTransfer') as HTMLElement).textContent = '—';
+      (document.getElementById('resAdditional') as HTMLElement).textContent = '—';
+      const ring = document.getElementById('resRing') as HTMLElement;
+      ring.style.setProperty('--pct', '0');
+      const boostText = document.getElementById('resBoostText') as HTMLElement;
+      boostText.textContent = 'Fill in the form below to see your estimated CRS score.';
+    }
+
     function render() {
+      if (!hasRealData) {
+        showEmptyResult();
+        return;
+      }
       const state = readState();
       const result = computeScore(state);
 
@@ -766,13 +820,28 @@ const jsonLd = [
       lang2Block.hidden = !secondLangEnabled.checked;
     }
 
-    firstLangChoice.addEventListener('change', () => { syncTestTypeVisibility(); render(); });
-    testType.addEventListener('change', () => { syncTestTypeVisibility(); render(); });
-    marital.addEventListener('change', () => { syncSpouseVisibility(); render(); });
-    secondLangEnabled.addEventListener('change', () => { syncLang2Visibility(); render(); });
-    form.addEventListener('input', render);
-    form.addEventListener('change', render);
+    function handleChange() {
+      hasRealData = true;
+      saveFormState();
+      render();
+    }
+
+    firstLangChoice.addEventListener('change', () => { syncTestTypeVisibility(); handleChange(); });
+    testType.addEventListener('change', () => { syncTestTypeVisibility(); handleChange(); });
+    marital.addEventListener('change', () => { syncSpouseVisibility(); handleChange(); });
+    secondLangEnabled.addEventListener('change', () => { syncLang2Visibility(); handleChange(); });
+    form.addEventListener('input', handleChange);
+    form.addEventListener('change', handleChange);
     form.addEventListener('submit', (e) => e.preventDefault());
+
+    // Restore this browser's own previous session, if any. A brand-new
+    // browser has nothing to load, so it stays blank until the visitor
+    // types/selects something themselves.
+    const saved = loadFormState();
+    if (saved) {
+      applyFormState(saved);
+      hasRealData = true;
+    }
 
     syncTestTypeVisibility();
     syncSpouseVisibility();

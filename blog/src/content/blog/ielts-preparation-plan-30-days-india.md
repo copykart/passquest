@@ -9,6 +9,7 @@ heroAlt: "An open monthly planner with dated squares, resting on a wooden desk"
 heroCredit:
   name: "Eric Rothermel"
   url: "https://unsplash.com/@erothermel?utm_source=passquest_blog&utm_medium=referral"
+featured: true
 tags:
   - "IELTS preparation India"
   - "IELTS study plan"

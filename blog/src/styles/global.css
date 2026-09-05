@@ -143,12 +143,19 @@ img {
     background 0.35s var(--ease), box-shadow 0.35s var(--ease);
 }
 .nav.scrolled .container {
-  max-width: 760px;
+  max-width: 880px;
   padding: 8px 10px 8px 22px;
   background: var(--nav-bg-scrolled);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   backdrop-filter: blur(28px) saturate(180%);
   box-shadow: 0 14px 44px -18px rgba(20, 10, 40, 0.24);
+}
+/* short pages: once the footer's own logo is about to sit behind the
+   pill, drop the blur and go fully solid instead of ghosting it */
+.nav.scrolled.over-footer .container {
+  background: var(--bg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 .brand {
   display: inline-flex;
@@ -168,6 +175,19 @@ img {
 .brand span {
   white-space: nowrap;
 }
+.brand-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--purple-ink);
+  border: 1px solid rgba(120, 86, 255, 0.35);
+  background: rgba(120, 86, 255, 0.1);
+  border-radius: 6px;
+  padding: 3px 6px;
+  flex-shrink: 0;
+}
 .brand i {
   color: var(--purple);
   font-style: normal;
@@ -185,6 +205,7 @@ img {
   font-size: 14px;
   color: var(--ink);
   opacity: 0.8;
+  white-space: nowrap;
   transition: opacity 0.2s var(--ease);
 }
 .nav-links a:hover,
@@ -649,7 +670,7 @@ a.cat-chip:hover {
 }
 .post-hero .ph-img {
   width: 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 2.4 / 1;
   object-fit: cover;
   display: block;
 }
@@ -693,7 +714,7 @@ a.cat-chip:hover {
 }
 @media (max-width: 560px) {
   .post-hero .ph-img {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3;
   }
   .post-hero .ph-overlay {
     padding: 22px 20px 20px;
@@ -1193,6 +1214,7 @@ a.cat-chip:hover {
    ===================================================================== */
 .app-showcase {
   --ink: #0a0a0a;
+  --bg: #ffffff;
   --grey: #3f3f46;
   --elev: #ffffff;
   --line: rgba(10, 10, 10, 0.12);
@@ -1653,7 +1675,7 @@ a.cat-chip:hover {
 }
 .footer-main {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.3fr) repeat(4, minmax(0, 1fr));
   gap: 40px;
   padding: 56px 0 40px;
 }
@@ -1707,6 +1729,13 @@ a.cat-chip:hover {
   color: var(--grey);
   margin-bottom: 10px;
   transition: color 0.2s var(--ease);
+}
+.footer-col a.fp-link {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.4;
 }
 .footer-col a:hover {
   color: var(--ink);

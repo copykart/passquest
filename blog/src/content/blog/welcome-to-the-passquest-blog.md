@@ -9,7 +9,6 @@ heroAlt: "A fountain pen resting on an open spiral notebook on a wooden desk"
 heroCredit:
   name: "Aaron Burden"
   url: "https://unsplash.com/@aaronburden?utm_source=passquest_blog&utm_medium=referral"
-featured: true
 tags: ["about", "announcements"]
 faqs:
   - q: "How often do you publish?"
