@@ -66,7 +66,11 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
+  /* `clip`, not `hidden` — `hidden` turns <html>/<body> into a scroll
+     container, which silently breaks `position: sticky` on the post
+     page's TOC rail. `clip` contains horizontal overflow the same way
+     without establishing a scrollport. */
+  overflow-x: clip;
   width: 100%;
 }
 body {
@@ -78,7 +82,7 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
 }
 a {
@@ -599,7 +603,9 @@ a.cat-chip:hover {
    POST PAGE
    ===================================================================== */
 .post {
-  padding: 128px 0 90px;
+  /* no bottom padding here — the gap above the footer is owned solely
+     by `.site-foot { margin-top }` so it's identical on every page */
+  padding: 128px 0 0;
 }
 .post .container {
   max-width: calc(var(--readw) + 48px);
@@ -1671,7 +1677,10 @@ a.cat-chip:hover {
    ===================================================================== */
 .site-foot {
   border-top: 1px solid var(--line-soft);
-  margin-top: 40px;
+  /* single source of truth for the space between page content and the
+     footer's demarcation line — keeps it consistent across every page
+     type (post, index, topic, tools, calculator) */
+  margin-top: 80px;
 }
 .footer-main {
   display: grid;
@@ -1762,6 +1771,9 @@ a.cat-chip:hover {
   }
 }
 @media (max-width: 560px) {
+  .site-foot {
+    margin-top: 56px;
+  }
   .footer-main {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1840,7 +1852,7 @@ a.cat-chip:hover {
     padding: 116px 0 4px;
   }
   .post {
-    padding: 112px 0 72px;
+    padding: 112px 0 0;
   }
   .post-grid {
     grid-template-columns: minmax(0, 1fr);
