@@ -157,7 +157,7 @@ section[id]{scroll-margin-top:90px}
 }
 /* condensed capsule = frosted glass: translucent fill + heavy backdrop blur */
 .nav.scrolled .container{
-  max-width:720px;                    /* condensed, centred capsule */
+  max-width:1040px;                   /* room for the shared 6-item nav */
   padding:8px 10px 8px 22px;
   background:var(--nav-bg-scrolled);
   -webkit-backdrop-filter:blur(28px) saturate(180%);
@@ -914,7 +914,7 @@ footer{background:var(--bg)}
 .nl-form button:hover{opacity:.9}
 .nl-form button:active{transform:scale(.97)}
 
-.footer-main{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;padding:56px 0 40px}
+.footer-main{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:40px;padding:56px 0 40px}
 .footer-brand .brand{margin-bottom:14px}
 .footer-brand p{font-size:13px;color:var(--grey);line-height:1.6;max-width:30ch;margin-bottom:18px}
 .socials{display:flex;gap:10px}
