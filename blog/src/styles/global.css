@@ -41,8 +41,10 @@
 :root[data-theme='light'] {
   --bg: #ffffff;
   --ink: #0a0a0a;
-  --grey: #646464;
-  --grey-soft: #8a8a8a;
+  /* body copy (`.prose`) is --grey, so keep it dark enough for long-form
+     reading on white — ~9:1 on #fff */
+  --grey: #3f3f46;
+  --grey-soft: #71717a;
   --line: rgba(10, 10, 10, 0.1);
   --line-soft: rgba(10, 10, 10, 0.06);
   --line-strong: rgba(10, 10, 10, 0.16);
@@ -147,7 +149,9 @@ img {
     background 0.35s var(--ease), box-shadow 0.35s var(--ease);
 }
 .nav.scrolled .container {
-  max-width: 880px;
+  /* wide enough for the 6-item shared nav + Visit + toggle + CTA without
+     the links wrapping or spilling past the rounded edge */
+  max-width: 1040px;
   padding: 8px 10px 8px 22px;
   background: var(--nav-bg-scrolled);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -1738,13 +1742,6 @@ a.cat-chip:hover {
   color: var(--grey);
   margin-bottom: 10px;
   transition: color 0.2s var(--ease);
-}
-.footer-col a.fp-link {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  line-height: 1.4;
 }
 .footer-col a:hover {
   color: var(--ink);

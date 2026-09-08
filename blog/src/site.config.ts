@@ -26,14 +26,17 @@ export const SITE = {
   defaultOgImage: '/images/og-default.jpg',
 } as const;
 
-/* Primary nav — deep-links to sections on the marketing site, plus the one
-   blog-internal item (Free Tools). The blog's own home is reached via the
-   logo (see Nav.astro), so no "Blog" item here. */
+/* Primary nav — ONE shared link set across the blog, the marketing site and
+   the legal pages. Blog + Free Tools are blog-internal; Features / Exams /
+   Pricing / FAQ deep-link to the marketing site. Keep this in sync with the
+   `<nav class="nav-links">` blocks in site/passquest*.html. */
 export const NAV_LINKS = [
+  { label: 'Blog', href: '/' },
   { label: 'Free Tools', href: '/tools/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
+  { label: 'FAQ', href: `${SITE.mainSite}/#faq` },
 ] as const;
 
 /* The one explicit, visually distinct way off the blog and onto the main
@@ -43,19 +46,30 @@ export const MAIN_SITE_LINK = {
   href: `${SITE.mainSite}/`,
 } as const;
 
-/* Footer — mirrors passquest.app's own 4-column footer (minus the email
-   opt-in strip; the blog handles that with the Newsletter slide-in instead) */
+/* Footer — ONE shared 4-column layout across the blog, marketing site and
+   legal pages: Product / Resources / Legal / Contact. Keep these lists in
+   sync with the <footer> blocks in site/passquest*.html. (The blog omits the
+   marketing site's email opt-in strip; the Newsletter slide-in covers it.) */
 export const FOOTER_TAGLINE =
   "The AI-powered IELTS app that tells you when you're ready.";
 
+/* Product column — the app-side items */
 export const FOOTER_PRODUCT_LINKS = [
-  { label: 'Blog', href: '/' },
-  { label: 'Free Tools', href: '/tools/' },
   { label: 'Features', href: `${SITE.mainSite}/#features` },
   { label: 'Exams', href: `${SITE.mainSite}/#exams` },
   { label: 'Pricing', href: `${SITE.mainSite}/#pricing` },
   { label: 'FAQ', href: `${SITE.mainSite}/#faq` },
   { label: 'PassQuest App', href: `${SITE.mainSite}/`, external: true },
+] as const;
+
+/* Resources column — the blog-side items. Static (identical everywhere) so
+   the marketing/legal HTML can carry the same column without a build step. */
+export const FOOTER_RESOURCE_LINKS = [
+  { label: 'Blog', href: '/' },
+  { label: 'Free Tools', href: '/tools/' },
+  { label: 'IELTS Guides', href: '/topic/ielts/' },
+  { label: 'Comparisons', href: '/topic/comparisons/' },
+  { label: 'Japa / Relocation', href: '/topic/japa/' },
 ] as const;
 
 export const FOOTER_LEGAL_LINKS = [
