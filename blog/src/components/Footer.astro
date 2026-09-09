@@ -5,7 +5,7 @@ import {
   FOOTER_PRODUCT_LINKS,
   FOOTER_RESOURCE_LINKS,
   FOOTER_LEGAL_LINKS,
-  FOOTER_CONTACT_LINKS,
+  FOOTER_SUPPORT_LINKS,
   SOCIAL_LINKS,
 } from '../site.config';
 
@@ -91,13 +91,13 @@ const SOCIAL_ICONS: Record<string, string> = {
     </div>
 
     <div class="footer-col">
-      <h4>Legal</h4>
-      {FOOTER_LEGAL_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+      <h4>Support</h4>
+      {FOOTER_SUPPORT_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
     </div>
 
     <div class="footer-col">
-      <h4>Contact</h4>
-      {FOOTER_CONTACT_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
+      <h4>Legal</h4>
+      {FOOTER_LEGAL_LINKS.map((l) => <a href={l.href}>{l.label}</a>)}
     </div>
   </div>
 

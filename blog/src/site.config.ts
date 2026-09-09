@@ -47,7 +47,7 @@ export const MAIN_SITE_LINK = {
 } as const;
 
 /* Footer — ONE shared 4-column layout across the blog, marketing site and
-   legal pages: Product / Resources / Legal / Contact. Keep these lists in
+   legal pages: Product / Resources / Support / Legal. Keep these lists in
    sync with the <footer> blocks in site/passquest*.html. (The blog omits the
    marketing site's email opt-in strip; the Newsletter slide-in covers it.) */
 export const FOOTER_TAGLINE =
@@ -78,9 +78,12 @@ export const FOOTER_LEGAL_LINKS = [
   { label: 'Disclaimer', href: `${SITE.mainSite}/disclaimer/` },
 ] as const;
 
-export const FOOTER_CONTACT_LINKS = [
-  { label: 'support@passquest.app', href: 'mailto:support@passquest.app' },
-  { label: '(234) 706-4783-766', href: 'tel:+2347064783766' },
+/* Support column — Help Center lives on the marketing site (GoHighLevel);
+   Contact us is the shared support inbox. Keep in sync with the <footer>
+   "Support" column in site/passquest*.html. */
+export const FOOTER_SUPPORT_LINKS = [
+  { label: 'Help Center', href: `${SITE.mainSite}/help/` },
+  { label: 'Contact us', href: 'mailto:support@passquest.app' },
 ] as const;
 
 export const SOCIAL_LINKS = [
