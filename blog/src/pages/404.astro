@@ -2,12 +2,25 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Page not found" description="That page doesn't exist." noindex>
+<BaseLayout
+  title="Page not found"
+  description="That page doesn't exist or has moved — here's the way back."
+  noindex
+>
   <main class="nf">
-    <div>
-      <h1>404</h1>
-      <p>That page has moved on, or never existed.</p>
-      <a class="nav-cta" href="/">Back to the blog</a>
+    <div class="nf-inner">
+      <p class="nf-code">Error 404</p>
+      <h1>This page took a wrong turn</h1>
+      <p class="nf-lede">
+        The link is broken or the page has moved. Try one of these instead.
+      </p>
+      <a class="nf-cta" href="/">Back to the blog</a>
+      <div class="nf-links">
+        <a href="/topic/ielts/">IELTS Guides</a>
+        <a href="/topic/comparisons/">Comparisons</a>
+        <a href="/topic/japa/">Japa / Relocation</a>
+        <a href="/tools/">Free Tools</a>
+      </div>
     </div>
   </main>
 </BaseLayout>
