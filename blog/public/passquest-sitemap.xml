@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap for the MARKETING SITE (https://passquest.app), which is hosted on
+  GoHighLevel. GHL's own /sitemap.xml generator ships an empty file, so this
+  hand-maintained sitemap is served from the blog's Vercel deploy instead and
+  pointed at from the GHL domain's robots.txt:
+
+    User-agent: *
+    Allow: /
+    Sitemap: https://blog.passquest.app/passquest-sitemap.xml
+
+  The blog itself has its own auto-generated sitemap (sitemap-index.xml).
+  Update lastmod whenever a marketing/legal page changes. Exclude /404.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://passquest.app/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://passquest.app/privacy/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://passquest.app/terms/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://passquest.app/disclaimer/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
